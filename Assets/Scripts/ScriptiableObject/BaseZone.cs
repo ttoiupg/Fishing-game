@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Zone", menuName = "Zone")]
 public class BaseZone : ScriptableObject
 {
-    public string Name = "Default zone";
     public string Description = "This is the default zone.";
     public Vector2 position;
     public Vector2 size;

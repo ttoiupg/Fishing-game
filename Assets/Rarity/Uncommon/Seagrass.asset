@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621238b9c327b4b78a1f58e7cd807524, type: 3}
-  m_Name: defaultZone
+  m_Script: {fileID: 11500000, guid: 5dba23686e052b740842c830e43a79ed, type: 3}
+  m_Name: Seagrass
   m_EditorClassIdentifier: 
-  Name: Default zone
-  Description: This is the default zone.
-  position: {x: 7.24, y: 0.6}
-  size: {x: 15, y: 15}
-  FeaturedFish: []
+  Description: 
+  Color: {fileID: 0}
+  Weight: 200
+  OneIn: 10
