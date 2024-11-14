@@ -8,5 +8,5 @@ public class BaseFish : ScriptableObject
     public Sprite Art;
     public float Weight;
     public int Age;
-    public Rarity Rarity;
+    public BaseRarity Rarity;
 }
