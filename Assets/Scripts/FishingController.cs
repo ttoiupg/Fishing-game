@@ -57,7 +57,7 @@ public class FishingController : PlayerSystem
         }
         return catchedFish;
     }
-    private void CatchFish()
+    private void StartCatchingFish()
     {
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
@@ -133,10 +133,12 @@ public class FishingController : PlayerSystem
         }
         player.ID.playerEvents.OnExitFishingState?.Invoke();
     }
+    //利用IEnumerator 來實現平行代碼
     public IEnumerator WaitingFish()
     {
         float randTime = Random.Range(2.5f, 3.5f);
+        //yield回傳來延遲
         yield return new WaitForSeconds(randTime);
-        CatchFish();
+        StartCatchingFish();
     }
 }
