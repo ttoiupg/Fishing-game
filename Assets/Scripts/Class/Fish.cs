@@ -6,6 +6,10 @@ using UnityEngine;
 public class Fish
 {
     public BaseFish fishType;
-    public BaseRarity rarity;
     public BaseMutation mutation;
+    public Fish(BaseFish f, BaseMutation m)
+    {
+        fishType = f;
+        mutation = m;
+    }
 }

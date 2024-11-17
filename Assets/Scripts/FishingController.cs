@@ -2,26 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using TMPro;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class FishingController : MonoBehaviour
+public class FishingController : PlayerSystem
 {
     public Transform playerTransform;
-    public PlayerControl playerControl;
-    public bool CanFish = true;
-    public bool IsFishing = false;
     public Transform ZoneContainer;
-    public BaseZone CurrentZone;
-    public TextMeshProUGUI CatchedFishText;
-    public TextMeshProUGUI CatchedMutationText;
-    public TextMeshProUGUI CurrentZoneText;
-    public TextMeshProUGUI IsFishingText;
-    public TextMeshProUGUI RarityText;
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
     private ZoneDisplayer[] Zones;
+    Coroutine FishingCoroutine;
 
     private BaseMutation RollForMutation()
     {
@@ -65,11 +59,10 @@ public class FishingController : MonoBehaviour
     }
     private void CatchFish()
     {
-        BaseFish catchedFish = RollForFish();
-        BaseMutation catchedMutation = RollForMutation();
-        CatchedFishText.text = $"Catched : {catchedFish.name}";
-        RarityText.text = $"Rarity : {catchedFish.Rarity.name}";
-        CatchedMutationText.text = $"With mutation : {catchedMutation.name}";
+        BaseFish catchedBaseFish = RollForFish();
+        BaseMutation catchedBaseMutation = RollForMutation();
+        Fish catchedFish = new Fish(catchedBaseFish, catchedBaseMutation);
+        player.ID.playerEvents.OnFishCatched.Invoke(catchedFish);
     }
     private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
     {
@@ -82,8 +75,7 @@ public class FishingController : MonoBehaviour
     }
     private void Start()
     {
-        playerTransform = gameObject.GetComponent<Transform>();
-        playerControl = gameObject.GetComponent<PlayerControl>();
+        playerTransform = player.GetComponent<Transform>();
     }
     // Update is called once per frame
     void Update()
@@ -92,59 +84,59 @@ public class FishingController : MonoBehaviour
         for(int i=0;i< Zones.Length; i++)
         {
             if (IsInside(Zones[i].zone.position, Zones[i].zone.size, new Vector2(playerTransform.position.x, playerTransform.position.z))){
-                CurrentZone = Zones[i].zone;
+                player.ID.currentZone = Zones[i].zone;
                 break;
             }
             else
             {
-                CurrentZone = null;
+                player.ID.currentZone = null;
             };
         };
-        if (CurrentZone != null)
-        {
-            CurrentZoneText.text = $"In {CurrentZone.name}";
-        }
-        else
-        {
-            CurrentZoneText.text = "Not in fishing zone";
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PendingFishing();
-        }
     }
 
 
-    public void PendingFishing()
+    public void PendingFishing(InputAction.CallbackContext callbackContext)
     {
-        if (IsFishing == false && CanFish)
+        if (callbackContext.performed == true)
         {
-            IsFishing = true;
-            IsFishingText.text = "Is fishing";
-            ThrowFishingRod();
-        }
-        else if (IsFishing)
-        {
-            IsFishing = false;
-            IsFishingText.text = "Not fishing";
-            RetrackFishingRod();
+            if (player.ID.isFishing == false && player.ID.canFish)
+            {
+                player.ID.isFishing = true;
+                ThrowFishingRod();
+            }
+            else if (player.ID.isFishing)
+            {
+                player.ID.isFishing = false;
+                RetrackFishingRod();
+            }
         }
     }
     public void ThrowFishingRod()
     {
-        playerControl.playerSpeed = 0;
-        if (CurrentZone != null)
+        player.ID.playerEvents.OnEnterFishingState?.Invoke();
+        if (player.ID.currentZone != null)
         {
-            AvailableFishes = CurrentZone.GetSortedFeaturedFish();
-            AvaliableMutations = CurrentZone.GetSortedFeaturedMutations();
-            CatchFish();
+            AvailableFishes = player.ID.currentZone.GetSortedFeaturedFish();
+            AvaliableMutations = player.ID.currentZone.GetSortedFeaturedMutations();
+            if (FishingCoroutine != null)
+            {
+                StopCoroutine(FishingCoroutine);
+            }
+            FishingCoroutine = StartCoroutine(WaitingFish());
         }
     }
     public void RetrackFishingRod()
     {
-        CatchedFishText.text = "Catched : ";
-        CatchedMutationText.text = "With mutation : ";
-        RarityText.text = "Rarity : ";
-        playerControl.playerSpeed = 7.0f;
+        if (FishingCoroutine != null)
+        {
+            StopCoroutine(FishingCoroutine);
+        }
+        player.ID.playerEvents.OnExitFishingState?.Invoke();
+    }
+    public IEnumerator WaitingFish()
+    {
+        float randTime = Random.Range(2.5f, 3.5f);
+        yield return new WaitForSeconds(randTime);
+        CatchFish();
     }
 }
