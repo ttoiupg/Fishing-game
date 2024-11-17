@@ -15,8 +15,10 @@ MonoBehaviour:
   playerName: Momona
   canFish: 1
   isFishing: 0
+  isBoostState: 0
+  FishOnBait: 0
   stanima: 100
-  currentZone: {fileID: 11400000, guid: aac31a98b95e64827b5ee65e96b38258, type: 2}
+  currentZone: {fileID: 0}
   luckBoost: 0
   lureSpeedBoost: 0
   lureBarSizeBoost: 0

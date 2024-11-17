@@ -10,6 +10,8 @@ public class PlayerID : ScriptableObject
     public string playerName;
     public bool canFish = true;
     public bool isFishing = false;
+    public bool isBoostState = false;
+    public bool FishOnBait = false;
     public int stanima = 100;
     public BaseZone currentZone;
     public float luckBoost = 0;
@@ -18,4 +20,5 @@ public class PlayerID : ScriptableObject
 
     [Header("Events")]
     public PlayerEvents playerEvents;
+
 }

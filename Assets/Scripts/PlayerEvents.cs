@@ -18,4 +18,6 @@ public struct PlayerEvents
     public Action OnRodThrew;
     public Action OnFishBite;
     public Action<Fish> OnFishCatched;
+    public Action OnBoostStage;
+    public Action<float> FinishedBoostStage;
 }

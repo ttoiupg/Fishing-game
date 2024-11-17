@@ -10,11 +10,18 @@ using UnityEngine.InputSystem;
 
 public class FishingController : PlayerSystem
 {
+    public CanvasGroup BoostCanva;
+    public RectTransform OrangeZone;
+    public RectTransform GreenZone;
+    public RectTransform Needle;
     public Transform playerTransform;
     public Transform ZoneContainer;
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
     private ZoneDisplayer[] Zones;
+    [SerializeField]
+    private float needleSpeed = 3f;
+    private int needleDirection = 1;
     Coroutine FishingCoroutine;
 
     private BaseMutation RollForMutation()
@@ -57,12 +64,58 @@ public class FishingController : PlayerSystem
         }
         return catchedFish;
     }
-    private void StartCatchingFish()
+    private void EnterBoostState()
     {
+        player.ID.playerEvents.OnBoostStage?.Invoke();
+        player.ID.isBoostState = true;
+        BoostCanva.alpha = 1f;
+        float RandOrangePos = Random.Range(-350f, 350f);
+        Vector2 RandPos = new Vector2(RandOrangePos, 0);
+        OrangeZone.anchoredPosition = RandPos;
+        GreenZone.anchoredPosition = RandPos;
+        Needle.anchoredPosition = new Vector2(0, 0);
+    }
+    private void FishCatched()
+    {
+        player.ID.FishOnBait = false;
+        player.ID.isFishing = false;
+        player.ID.playerEvents.OnExitFishingState?.Invoke();
+        if (IsOverlap(Needle, GreenZone, Needle.rect, GreenZone.rect))
+        {
+            Debug.Log("Great!(green)");
+        }
+        else if (IsOverlap(Needle, OrangeZone, Needle.rect, OrangeZone.rect))
+        {
+            Debug.Log("nice!(orange)");
+        }
+        else
+        {
+            Debug.Log("it's ok(red)");
+        }
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
         Fish catchedFish = new Fish(catchedBaseFish, catchedBaseMutation);
-        player.ID.playerEvents.OnFishCatched.Invoke(catchedFish);
+        player.ID.playerEvents.OnFishCatched?.Invoke(catchedFish);
+    }
+
+    private void StartCatchingFish()
+    {
+        player.ID.FishOnBait = true;
+        EnterBoostState();
+    }
+    private bool IsOverlap(RectTransform At,RectTransform Bt,Rect A,Rect B)
+    {
+        if (At.localPosition.x < Bt.localPosition.x + B.width &&
+            At.localPosition.x + A.width > Bt.localPosition.x &&
+            At.localPosition.y < Bt.localPosition.y + B.height &&
+            At.localPosition.y + A.height > Bt.localPosition.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
     {
@@ -92,23 +145,46 @@ public class FishingController : PlayerSystem
                 player.ID.currentZone = null;
             };
         };
+        if (player.ID.isBoostState == true)
+        {
+            Vector2 NeedlePosDelta = new Vector2(needleDirection * 700 * needleSpeed * Time.deltaTime, 0);
+            Needle.anchoredPosition += NeedlePosDelta;
+            if (Needle.anchoredPosition.x > 350f || Needle.anchoredPosition.x < -350f)
+            {
+                needleDirection *= -1;
+            }
+        }
     }
-
-
     public void PendingFishing(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.performed == true)
         {
-            if (player.ID.isFishing == false && player.ID.canFish)
+            if (player.ID.FishOnBait == false) {
+
+                if (player.ID.isFishing == false && player.ID.canFish)
+                {
+                    player.ID.isFishing = true;
+                    ThrowFishingRod();
+                }
+                else if (player.ID.isFishing)
+                {
+                    player.ID.isFishing = false;
+                    RetrackFishingRod();
+                }
+            };
+        }
+    }
+    public void LandNeedle(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed == true)
+        {
+            Debug.Log(player.ID.isBoostState);
+            if (player.ID.isBoostState && player.ID.FishOnBait)
             {
-                player.ID.isFishing = true;
-                ThrowFishingRod();
-            }
-            else if (player.ID.isFishing)
-            {
-                player.ID.isFishing = false;
-                RetrackFishingRod();
-            }
+                BoostCanva.alpha = 0f;
+                player.ID.isBoostState = false;
+                FishCatched();
+            };
         }
     }
     public void ThrowFishingRod()
