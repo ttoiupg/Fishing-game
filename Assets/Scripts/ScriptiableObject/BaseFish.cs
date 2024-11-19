@@ -9,4 +9,6 @@ public class BaseFish : ScriptableObject
     public float Weight;
     public int Age;
     public BaseRarity Rarity;
+    public float MinFishBarChangeTime;
+    public float MaxFishBarChangeTime;
 }

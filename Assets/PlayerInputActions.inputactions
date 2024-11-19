@@ -16,12 +16,12 @@
                 },
                 {
                     "name": "ControllRod",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "f38c249d-b78a-401f-912a-b5c6e14b7349",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

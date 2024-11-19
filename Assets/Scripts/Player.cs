@@ -11,5 +11,6 @@ public class Player : MonoBehaviour
         ID.isFishing = false;
         ID.isBoostState = false;
         ID.FishOnBait = false;
+        ID.isPullState = false;
     }
 }

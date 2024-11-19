@@ -19,5 +19,6 @@ public struct PlayerEvents
     public Action OnFishBite;
     public Action<Fish> OnFishCatched;
     public Action OnBoostStage;
+    public Action OnPullStage;
     public Action<float> FinishedBoostStage;
 }
