@@ -8,31 +8,7 @@ using TMPro;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public static class RectTransformExtensions
-{
-
-    public static bool Overlaps(this RectTransform a, RectTransform b)
-    {
-        Debug.Log(a.WorldRect());
-        Debug.Log(b.WorldRect());
-        return a.WorldRect().Overlaps(b.WorldRect());
-    }
-    public static bool Overlaps(this RectTransform a, RectTransform b, bool allowInverse)
-    {
-        return a.WorldRect().Overlaps(b.WorldRect(), allowInverse);
-    }
-
-    public static Rect WorldRect(this RectTransform rectTransform)
-    {
-        Vector2 sizeDelta = rectTransform.sizeDelta;
-        float rectTransformWidth = sizeDelta.x * rectTransform.lossyScale.x;
-        float rectTransformHeight = sizeDelta.y * rectTransform.lossyScale.y;
-
-        Vector3 position = rectTransform.position;
-        return new Rect(position.x - rectTransformWidth / 2f, position.y - rectTransformHeight / 2f, Math.Abs(rectTransformWidth), Math.Abs(rectTransformHeight));
-    }
-}
+using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
@@ -43,11 +19,12 @@ public class FishingController : PlayerSystem
     public RectTransform Needle;
     public Transform ZoneContainer;
     [Header("Pull UI")]
-    public CanvasGroup PullCanva;
-    public Rigidbody2D PullingControlBarRigid;
-    public RectTransform PullingControlBar;
-    public RectTransform FishBar;
-    public RectTransform ProgressBar;
+    public UIDocument PullStateUI;
+    public VisualElement ControlBarUI;
+    public VisualElement FishBarUI;
+    public VisualElement ProgressBarUI;
+
+
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
     private ZoneDisplayer[] Zones;
@@ -56,11 +33,142 @@ public class FishingController : PlayerSystem
 
     private float needleSpeed = 3f;
     private int needleDirection = 1;
-    private float pullProgress = 0f;
-    private Vector2 fishBarPosition = Vector2.zero;
     Coroutine FishingCoroutine;
     Coroutine PullCoroutine;
 
+    [Header("Fishing bar")]
+    public StyleLength ControlBarStylePosition;
+    public float ControlBarPosition = 50f;
+    public float ControlBarGravity = 0f;
+    public float ControlBarVelocity = 0f;
+    public StyleLength FishBarStylePosition;
+    public float FishBarTargetPosition = 0f;
+    public float FishBarPosition = 0f;
+    public float PullProgress = 0f;
+
+    private float Lerpfloat(float a, float b,float t)
+    {
+        return a + (b - a) * t;
+    }
+    private bool IsOverlapOLD(RectTransform At,RectTransform Bt,Rect A,Rect B)
+    {
+        if (At.localPosition.x < Bt.localPosition.x + B.width &&
+            At.localPosition.x + A.width > Bt.localPosition.x &&
+            At.localPosition.y < Bt.localPosition.y + B.height &&
+            At.localPosition.y + A.height > Bt.localPosition.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
+    {
+        bool result = false;
+        if (A.x - SizeA.x/2f <= B.x && A.x + SizeA.x/2f >= B.x && A.y - SizeA.y/2f <= B.y && A.y + SizeA.y/2f >= B.y)
+        {
+            result = true;
+        }
+        return result;
+    }
+    private bool InBetween(float min,float max,float n)
+    {
+        if (n < max && n > min)
+        {
+            return true;
+        }
+        return false;
+    }
+    private bool IsOverlap(float a1,float a2,float b1,float b2)
+    {
+        float a_width = a2 - a1;
+        float b_width = b2 - b1;
+        if (InBetween(b1, b2, a1) || InBetween(b1, b2, a2) || InBetween(a1, a2, b1) || InBetween(a1, a2, b2))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    #region Update functions
+    private void UpdateControlBarPosition()
+    {
+
+        ControlBarVelocity += ControlBarGravity * Time.deltaTime;
+        float NextPosition = ControlBarPosition + ControlBarVelocity * Time.deltaTime;
+        //check if the bar is touching the sides, mean the position-(width/2) is smaller than "0"
+        if ((NextPosition - player.ID.pullBarSize/2) <= 0)
+        {
+            ControlBarVelocity *= -0.6f;
+            NextPosition = player.ID.pullBarSize / 2;
+        }
+        else if((NextPosition + player.ID.pullBarSize / 2) >= 100) 
+        {
+            ControlBarVelocity *= -0.6f;
+            NextPosition = 100 - player.ID.pullBarSize / 2;
+        }
+        ControlBarPosition = NextPosition;
+        ControlBarStylePosition = new StyleLength(Length.Percent((float)ControlBarPosition - 15f));
+        ControlBarUI.style.marginLeft = ControlBarStylePosition;
+        //Debug.Log(ControlBarPosition);
+    }
+    private void ZoneCheck()
+    {
+        for (int i = 0; i < Zones.Length; i++)
+        {
+            if (IsInside(Zones[i].zone.position, Zones[i].zone.size, new Vector2(playerTransform.position.x, playerTransform.position.z)))
+            {
+                player.ID.currentZone = Zones[i].zone;
+                break;
+            }
+            else
+            {
+                player.ID.currentZone = null;
+            };
+        };
+    }
+    private void BoostStateUpdateFunction()
+    {
+        if (player.ID.isBoostState == true)
+        {
+            Vector2 NeedlePosDelta = new Vector2(needleDirection * 500 * needleSpeed * Time.deltaTime, 0);
+            Needle.anchoredPosition += NeedlePosDelta;
+            if (Needle.anchoredPosition.x >= 350f || Needle.anchoredPosition.x <= -350f)
+            {
+                needleDirection *= -1;
+            }
+        }
+    }
+    private void PullStateUpdateFunction()
+    {
+        if (player.ID.isPullState == true)
+        {
+            //Update control bar's position
+            UpdateControlBarPosition();
+            //lerping fish bar's position
+            FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, 6f * Time.deltaTime);
+            FishBarUI.style.marginLeft = new StyleLength(Length.Percent(FishBarPosition));
+            //check for overlap
+            if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 6f))
+            {
+                PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
+            }
+            else
+            {
+                PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
+                if (PullProgress < 0) { PullProgress = 0; }
+            }
+            ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
+            if (PullProgress >= 100f)
+            {
+                FishCatched();
+            }
+        }
+    }
+    #endregion
+    #region Fishing
     private BaseMutation RollForMutation()
     {
         BaseMutation catchedMutation = null;
@@ -89,17 +197,100 @@ public class FishingController : PlayerSystem
         //新增一個從0到totalWeight的隨機小數
         float randomValue = UnityEngine.Random.Range(0f, totalWeight);
         //從最常見的魚種開始減，當總數小於減數時，可得知此次釣到的魚類稀有度
-        for (int i = AvailableFishes.Count-1; i >= 0 ; i--)
+        for (int i = AvailableFishes.Count - 1; i >= 0; i--)
         {
             totalWeight -= 1f / AvailableFishes[i].Rarity.OneIn;
             if (totalWeight <= randomValue)
             {
-                catchedFish = AvailableFishes[i]; 
+                catchedFish = AvailableFishes[i];
                 //Debug.Log(AvailableFishes[i].name);
                 break;
             }
         }
         return catchedFish;
+    }
+    private void FishCatched()
+    {
+        StopCoroutine(PullCoroutine);
+        player.ID.FishOnBait = false;
+        player.ID.isFishing = false;
+        player.ID.isPullState = false;
+        player.ID.playerEvents.OnExitFishingState?.Invoke();
+        player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
+        PullProgress = 0f;
+    }
+    private bool CheckFishBarOverlap(RectTransform Ft, RectTransform Ct, Rect F, Rect C)
+    {
+        if (F.yMax + Ft.localPosition.y < C.yMax + Ct.localPosition.y
+            && F.yMin + Ft.localPosition.y > C.yMin + Ct.localPosition.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void ControlPullingBar(InputAction.CallbackContext callbackContext)
+    {
+        if (player.ID.isPullState == true)
+        {
+            float Value = callbackContext.ReadValue<float>();
+            if (Value > 0)
+            {
+                Debug.Log("switched gravity!");
+                ControlBarGravity = 200f * Value;
+                //PullingControlBarRigid.gravityScale = -75f * Value;
+            }
+            else
+            {
+                Debug.Log("Back to normal!");
+                ControlBarGravity = -200f;
+                //PullingControlBarRigid.gravityScale = 75f;
+            }
+        }
+    }
+    public IEnumerator RandomFishBarPosition()
+    {
+        while (player.ID.isPullState)
+        {
+            float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
+            FishBarTargetPosition = UnityEngine.Random.Range(0, 94f);
+            yield return new WaitForSeconds(RandSecond);
+        }
+    }
+    private void EnterPullState(float Buff)
+    {
+        BaseFish catchedBaseFish = RollForFish();
+        BaseMutation catchedBaseMutation = RollForMutation();
+        CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
+        player.ID.playerEvents.OnPullStage?.Invoke();
+        player.ID.isBoostState = false;
+        player.ID.isPullState = true;
+        PullProgress = Buff;
+        PullCoroutine = StartCoroutine(RandomFishBarPosition());
+    }
+    public void LandNeedle(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed == true)
+        {
+            //Debug.Log(player.ID.isBoostState);
+            if (player.ID.isBoostState && player.ID.FishOnBait)
+            {
+                BoostCanva.alpha = 0f;
+                player.ID.isBoostState = false;
+                float buff = 0f;
+                if (IsOverlapOLD(Needle, GreenZone, Needle.rect, GreenZone.rect))
+                {
+                    buff = player.ID.GreenZonebuff;
+                }
+                else if (IsOverlapOLD(Needle, OrangeZone, Needle.rect, OrangeZone.rect))
+                {
+                    buff = player.ID.OrangeZonebuff;
+                }
+                EnterPullState(buff);
+            };
+        }
     }
     private void EnterBoostState()
     {
@@ -112,178 +303,42 @@ public class FishingController : PlayerSystem
         GreenZone.anchoredPosition = RandPos;
         Needle.anchoredPosition = new Vector2(0, 0);
     }
-    private void EnterPullState(float Buff)
-    {
-        BaseFish catchedBaseFish = RollForFish();
-        BaseMutation catchedBaseMutation = RollForMutation();
-        CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
-        player.ID.playerEvents.OnPullStage?.Invoke();
-        player.ID.isBoostState = false;
-        player.ID.isPullState = true;
-        PullCanva.alpha = 1f;
-        pullProgress = 0f;
-        PullingControlBarRigid.gravityScale = 50f;
-        PullingControlBar.anchoredPosition = new Vector2(108f,0);
-        ProgressBar.anchoredPosition = new Vector2(0, -558.7f);
-        FishBar.anchoredPosition = new Vector2(0, 0);
-        PullCoroutine = StartCoroutine(RandomFishBarPosition());
-    }
-    private void FishCatched()
-    {
-        StopCoroutine(PullCoroutine);
-        player.ID.FishOnBait = false;
-        player.ID.isFishing = false;
-        player.ID.isPullState = false;
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
-        PullCanva.alpha = 0f;
-        player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
-    }
-
-    private void StartCatchingFish()
+    private void SetHook()
     {
         player.ID.FishOnBait = true;
         EnterBoostState();
     }
-    private bool IsOverlap(RectTransform At,RectTransform Bt,Rect A,Rect B)
+    public IEnumerator WaitForbite()
     {
-        if (At.localPosition.x < Bt.localPosition.x + B.width &&
-            At.localPosition.x + A.width > Bt.localPosition.x &&
-            At.localPosition.y < Bt.localPosition.y + B.height &&
-            At.localPosition.y + A.height > Bt.localPosition.y)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        float randTime = UnityEngine.Random.Range(2.5f, 3.5f);
+        //yield回傳來延遲
+        yield return new WaitForSeconds(randTime);
+        SetHook();
     }
-    private bool CheckFishBarOverlap(RectTransform Ft, RectTransform Ct,Rect F,Rect C)
-    {
-        if(F.yMax+ Ft.localPosition.y< C.yMax + Ct.localPosition.y
-            && F.yMin + Ft.localPosition.y > C.yMin + Ct.localPosition.y)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
-    {
-        bool result = false;
-        if (A.x - SizeA.x/2f <= B.x && A.x + SizeA.x/2f >= B.x && A.y - SizeA.y/2f <= B.y && A.y + SizeA.y/2f >= B.y)
-        {
-            result = true;
-        }
-        return result;
-    }
-    private void Start()
-    {
-        playerTransform = player.GetComponent<Transform>();
-    }
-    // Update is called once per frame
-    private void Update()
-    {
-        Zones = ZoneContainer.GetComponentsInChildren<ZoneDisplayer>();
-        for(int i=0;i< Zones.Length; i++)
-        {
-            if (IsInside(Zones[i].zone.position, Zones[i].zone.size, new Vector2(playerTransform.position.x, playerTransform.position.z))){
-                player.ID.currentZone = Zones[i].zone;
-                break;
-            }
-            else
-            {
-                player.ID.currentZone = null;
-            };
-        };
-        if (player.ID.isBoostState == true)
-        {
-            Vector2 NeedlePosDelta = new Vector2(needleDirection * 500 * needleSpeed * Time.deltaTime, 0);
-            Needle.anchoredPosition += NeedlePosDelta;
-            if (Needle.anchoredPosition.x >= 350f || Needle.anchoredPosition.x <= -350f)
-            {
-                needleDirection *= -1;
-            }
-        }
-        if (player.ID.isPullState == true)
-        {
-            FishBar.anchoredPosition = Vector2.Lerp(FishBar.anchoredPosition,fishBarPosition, 6f*Time.deltaTime);
-            if (CheckFishBarOverlap(FishBar,PullingControlBar,FishBar.rect,PullingControlBar.rect))
-            {
-                pullProgress += player.ID.pullProgressSpeed*Time.deltaTime;
-            }
-            else
-            {
-                pullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
-                if(pullProgress <0) { pullProgress = 0; }
-            }
-            ProgressBar.anchoredPosition = new Vector2(0, -558.7f + pullProgress);
-            if (pullProgress >= 558.7f)
-            {
-                FishCatched();
-            }
-        }
-    }
-    public void PendingFishing(InputAction.CallbackContext callbackContext)
+
+    #endregion
+    #region Casting fishing rod
+    public void CastOrRetract(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.performed == true)
         {
-            if (player.ID.FishOnBait == false) {
+            if (player.ID.FishOnBait == false)
+            {
 
                 if (player.ID.isFishing == false && player.ID.canFish)
                 {
                     player.ID.isFishing = true;
-                    ThrowFishingRod();
+                    CastFishingRod();
                 }
                 else if (player.ID.isFishing)
                 {
                     player.ID.isFishing = false;
-                    RetrackFishingRod();
+                    RetractFishingRod();
                 }
             };
         }
     }
-    public void LandNeedle(InputAction.CallbackContext callbackContext)
-    {
-        if (callbackContext.performed == true)
-        {
-            //Debug.Log(player.ID.isBoostState);
-            if (player.ID.isBoostState && player.ID.FishOnBait)
-            {
-                BoostCanva.alpha = 0f;
-                player.ID.isBoostState = false;
-                float buff = 0f;
-                if (IsOverlap(Needle, GreenZone, Needle.rect, GreenZone.rect))
-                {
-                    buff = player.ID.GreenZonebuff;
-                }
-                else if (IsOverlap(Needle, OrangeZone, Needle.rect, OrangeZone.rect))
-                {
-                    buff = player.ID.OrangeZonebuff;
-                }
-                EnterPullState(buff);
-            };
-        }
-    }
-
-    public void ControlPullingBar(InputAction.CallbackContext callbackContext)
-    {
-        if (player.ID.isPullState == true)
-        {
-            float Value = callbackContext.ReadValue<float>();
-            if (Value > 0)
-            {
-                PullingControlBarRigid.gravityScale = -75f* Value;
-            }
-            else
-            {
-                PullingControlBarRigid.gravityScale = 75f;
-            }
-        }
-    }
-    public void ThrowFishingRod()
+    public void CastFishingRod()
     {
         player.ID.playerEvents.OnEnterFishingState?.Invoke();
         if (player.ID.currentZone != null)
@@ -294,10 +349,10 @@ public class FishingController : PlayerSystem
             {
                 StopCoroutine(FishingCoroutine);
             }
-            FishingCoroutine = StartCoroutine(WaitingFish());
+            FishingCoroutine = StartCoroutine(WaitForbite());
         }
     }
-    public void RetrackFishingRod()
+    public void RetractFishingRod()
     {
         if (FishingCoroutine != null)
         {
@@ -305,22 +360,40 @@ public class FishingController : PlayerSystem
         }
         player.ID.playerEvents.OnExitFishingState?.Invoke();
     }
-    //利用IEnumerator 來實現平行代碼
-    public IEnumerator WaitingFish()
+
+    #endregion
+    #region Unity functions
+    private void OnEnable()
     {
-        float randTime = UnityEngine.Random.Range(2.5f, 3.5f);
-        //yield回傳來延遲
-        yield return new WaitForSeconds(randTime);
-        StartCatchingFish();
+        playerInput.Fishing.Enable();
+        playerInput.Fishing.CastFishingRod.performed += CastOrRetract;
+        playerInput.Fishing.CastFishingRod.performed += LandNeedle;
+        playerInput.Fishing.ControlFishingRod.started += ControlPullingBar;
+        playerInput.Fishing.ControlFishingRod.canceled += ControlPullingBar;
     }
-    public IEnumerator RandomFishBarPosition()
+    private void OnDisable()
     {
-        while (player.ID.isPullState)
-        {
-            float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
-            float randY = UnityEngine.Random.Range(-269.24f, 269.24f);
-            fishBarPosition = new Vector2(0, randY);
-            yield return new WaitForSeconds(RandSecond);
-        }
+        playerInput.Fishing.CastFishingRod.performed -= CastOrRetract;
+        playerInput.Fishing.CastFishingRod.performed -= LandNeedle;
+        playerInput.Fishing.ControlFishingRod.started -= ControlPullingBar;
+        playerInput.Fishing.ControlFishingRod.canceled -= ControlPullingBar;
+        playerInput.Fishing.Disable();
     }
+    private void Start()
+    {
+        Zones = ZoneContainer.GetComponentsInChildren<ZoneDisplayer>();
+        playerTransform = player.GetComponent<Transform>();
+        ControlBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("ControlBar");
+        FishBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("FishBar");
+        ProgressBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("Bar");
+    }
+    // Update is called once per frame
+    private void Update()
+    {
+        ZoneCheck();
+        BoostStateUpdateFunction();
+        PullStateUpdateFunction();
+    }
+   
+    #endregion
 }

@@ -4,20 +4,26 @@
         {
             "name": "Player",
             "id": "80a5c849-3f38-44fc-a731-f8a66fdcb6ad",
+            "actions": [],
+            "bindings": []
+        },
+        {
+            "name": "Fishing",
+            "id": "274b4586-1d0c-4d21-94d6-4735f32501d4",
             "actions": [
                 {
-                    "name": "ThrowRod",
+                    "name": "CastFishingRod",
                     "type": "Button",
-                    "id": "97717c2f-093d-4660-af90-63aea3134369",
+                    "id": "09aba160-9fcd-4a08-84e1-56aadd0f0641",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ControllRod",
+                    "name": "ControlFishingRod",
                     "type": "Value",
-                    "id": "f38c249d-b78a-401f-912a-b5c6e14b7349",
+                    "id": "b950254d-ab34-4e99-96ab-1438e1478ac8",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -27,67 +33,67 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "10736296-b351-47e0-9842-508a21e57284",
+                    "id": "0ce40bd1-8155-4cb7-a546-dd57626e1da4",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ThrowRod",
+                    "action": "CastFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "c48c4bef-b0de-42bb-baa4-05ea4cdd52d6",
+                    "id": "972f7f5e-05a5-4a42-8916-6f73d4a546aa",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ThrowRod",
+                    "action": "CastFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "a7ec037b-037a-4f06-ae94-1bb8137f2f7e",
+                    "id": "3560ac05-7427-46b1-a77b-a0acb5d7fe33",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ThrowRod",
+                    "action": "CastFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "95e46404-de8a-4e78-93dd-4ed3fef40aeb",
+                    "id": "57d1f3dd-5791-401e-be65-5d0f095b52c6",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ControllRod",
+                    "action": "ControlFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ebdcb07d-4431-476c-b0cf-b5fc987f5a22",
+                    "id": "2b493c83-5b47-4484-8e17-dd46d5d69282",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ControllRod",
+                    "action": "ControlFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "69c1ebf0-675c-4240-b7c6-911a15eae23b",
+                    "id": "2b67fbc4-ed63-4e15-87c0-4852d41373e3",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ControllRod",
+                    "action": "ControlFishingRod",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

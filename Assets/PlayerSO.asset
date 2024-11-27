@@ -16,9 +16,15 @@ MonoBehaviour:
   canFish: 1
   isFishing: 0
   isBoostState: 0
+  isPullState: 0
   FishOnBait: 0
   stanima: 100
   currentZone: {fileID: 0}
+  pullProgressSpeed: 8
+  pullProgressLooseSpeed: 5
+  pullBarSize: 30
   luckBoost: 0
-  lureSpeedBoost: 0
-  lureBarSizeBoost: 0
+  pullSpeedBoost: 0
+  pullBarSizeBoost: 0
+  GreenZonebuff: 35
+  OrangeZonebuff: 15
