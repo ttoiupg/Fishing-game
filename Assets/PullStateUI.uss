@@ -12,19 +12,19 @@
 }
 
 .MainBar {
-    width: 40%;
+    width: 55%;
     height: 4%;
-    background-color: rgb(7, 17, 43);
+    background-color: rgb(20, 14, 38);
     margin-top: 0;
     border-top-width: 3px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
-    border-left-color: rgb(0, 99, 147);
-    border-right-color: rgb(0, 99, 147);
-    border-top-color: rgb(0, 99, 147);
-    border-bottom-color: rgb(0, 99, 147);
+    border-left-color: rgb(39, 67, 130);
+    border-right-color: rgb(39, 67, 130);
+    border-top-color: rgb(39, 67, 130);
+    border-bottom-color: rgb(39, 67, 130);
     border-right-width: 3px;
     border-bottom-width: 3px;
     border-left-width: 3px;
@@ -37,20 +37,29 @@
 
 .ControlBar {
     background-color: rgb(255, 255, 255);
-    height: 100%;
+    height: 147%;
     width: 30%;
     margin-right: 0;
     margin-left: 0;
     overflow: visible;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
     left: 35%;
+    position: absolute;
+    border-left-color: rgba(255, 255, 255, 0.65);
+    border-right-color: rgba(255, 255, 255, 0.65);
+    border-top-color: rgba(255, 255, 255, 0.65);
+    border-bottom-color: rgba(255, 255, 255, 0.65);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
 }
 
 .FishBar {
-    background-color: rgb(250, 63, 63);
+    background-color: rgba(31, 122, 200, 0.6);
     height: 331%;
     width: 2%;
     margin-right: 0;
@@ -68,10 +77,10 @@
     border-right-width: 2px;
     border-bottom-width: 2px;
     border-left-width: 2px;
-    border-left-color: rgb(152, 0, 0);
-    border-right-color: rgb(152, 0, 0);
-    border-top-color: rgb(152, 0, 0);
-    border-bottom-color: rgb(152, 0, 0);
+    border-left-color: rgb(1, 66, 125);
+    border-right-color: rgb(1, 66, 125);
+    border-top-color: rgb(1, 66, 125);
+    border-bottom-color: rgb(1, 66, 125);
     left: 49%;
 }
 
@@ -91,10 +100,16 @@
     border-bottom-width: 1px;
     border-left-width: 1px;
     visibility: visible;
+    border-top-left-radius: 13px;
+    border-top-right-radius: 13px;
+    border-bottom-right-radius: 13px;
+    border-bottom-left-radius: 13px;
+    overflow: hidden;
 }
 
 .bar {
     background-color: rgb(255, 255, 255);
     width: 0;
     height: 100%;
+    overflow: visible;
 }

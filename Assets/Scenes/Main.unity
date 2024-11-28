@@ -1252,7 +1252,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -2415,6 +2415,7 @@ MonoBehaviour:
   BoostStateUI: {fileID: 244549893}
   PullStateUI: {fileID: 414051948}
   ZoneContainer: {fileID: 211540311}
+  cameraTargetSize: 5
   ControlBarPosition: 0.5
   ControlBarGravity: 0
   ControlBarVelocity: 0
@@ -2426,6 +2427,8 @@ MonoBehaviour:
   NeedlePosition: 0
   needleSpeed: 100
   needleDirection: 1
+  FishBarSpeed: 6
+  RumbleLowFreq: 0.16
 --- !u!1 &1953308856
 GameObject:
   m_ObjectHideFlags: 0
