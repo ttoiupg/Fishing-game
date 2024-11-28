@@ -91,12 +91,12 @@ public class FishingController : PlayerSystem
         //check if the bar is touching the sides, mean the position-(width/2) is smaller than "0"
         if ((NextPosition - player.ID.pullBarSize/2) <= 0)
         {
-            ControlBarVelocity *= -0.6f;
+            ControlBarVelocity *= -0.4f;
             NextPosition = player.ID.pullBarSize / 2;
         }
         else if((NextPosition + player.ID.pullBarSize / 2) >= 100) 
         {
-            ControlBarVelocity *= -0.6f;
+            ControlBarVelocity *= -0.4f;
             NextPosition = 100 - player.ID.pullBarSize / 2;
         }
         ControlBarPosition = NextPosition;
@@ -171,11 +171,8 @@ public class FishingController : PlayerSystem
     private BaseMutation RollForMutation()
     {
         BaseMutation catchedMutation = null;
-        //�⦹�ϰ�i���쪺�ܺت��}����(�˼�)�[�_��
         float totalWeight = AvaliableMutations.Sum(x => 1f / x.OneIn);
-        //�s�W�@�ӱq0��totalWeight���H���p��
         float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        //�q�̱`�����ܺض}�l��A���`�Ƥp���ƮɡA�i�o���������쪺�ܺص}����
         for (int i = AvaliableMutations.Count - 1; i >= 0; i--)
         {
             totalWeight -= 1f / AvaliableMutations[i].OneIn;
@@ -191,11 +188,8 @@ public class FishingController : PlayerSystem
     private BaseFish RollForFish()
     {
         BaseFish catchedFish = null;
-        //�⦹�ϰ�i���쪺�������}����(�˼�)�[�_��
         float totalWeight = AvailableFishes.Sum(x => 1f / x.Rarity.OneIn);
-        //�s�W�@�ӱq0��totalWeight���H���p��
         float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        //�q�̱`�������ض}�l��A���`�Ƥp���ƮɡA�i�o���������쪺�����}����
         for (int i = AvailableFishes.Count - 1; i >= 0; i--)
         {
             totalWeight -= 1f / AvailableFishes[i].Rarity.OneIn;
@@ -227,15 +221,11 @@ public class FishingController : PlayerSystem
             float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
             {
-                Debug.Log("switched gravity!");
-                ControlBarGravity = 200f * Value;
-                //PullingControlBarRigid.gravityScale = -75f * Value;
+                ControlBarGravity = 300f * Value;
             }
             else
             {
-                Debug.Log("Back to normal!");
-                ControlBarGravity = -200f;
-                //PullingControlBarRigid.gravityScale = 75f;
+                ControlBarGravity = -300f;
             }
         }
     }
@@ -244,7 +234,7 @@ public class FishingController : PlayerSystem
         while (player.ID.isPullState)
         {
             float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
-            FishBarTargetPosition = UnityEngine.Random.Range(0, 94f);
+            FishBarTargetPosition = UnityEngine.Random.Range(0, 98f);
             yield return new WaitForSeconds(RandSecond);
         }
     }

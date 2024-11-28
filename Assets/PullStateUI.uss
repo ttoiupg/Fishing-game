@@ -52,14 +52,14 @@
 .FishBar {
     background-color: rgb(250, 63, 63);
     height: 331%;
-    width: 6%;
+    width: 2%;
     margin-right: 0;
     margin-left: 0;
     overflow: visible;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
     visibility: visible;
     display: flex;
     position: absolute;
@@ -72,7 +72,7 @@
     border-right-color: rgb(152, 0, 0);
     border-top-color: rgb(152, 0, 0);
     border-bottom-color: rgb(152, 0, 0);
-    left: 47%;
+    left: 49%;
 }
 
 .ProgressBar {
