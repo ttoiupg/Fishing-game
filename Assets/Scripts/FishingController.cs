@@ -13,30 +13,28 @@ using UnityEngine.UIElements;
 public class FishingController : PlayerSystem
 {
     [Header("Buff UI")]
-    public CanvasGroup BoostCanva;
-    public RectTransform OrangeZone;
-    public RectTransform GreenZone;
-    public RectTransform Needle;
-    public Transform ZoneContainer;
+    public UIDocument BoostStateUI;
+    public VisualElement OrangeChunk;
+    public VisualElement GreenChunk;
+    public VisualElement Needle;
     [Header("Pull UI")]
     public UIDocument PullStateUI;
     public VisualElement ControlBarUI;
     public VisualElement FishBarUI;
     public VisualElement ProgressBarUI;
 
-
+    public GameObject ZoneContainer;
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
     private ZoneDisplayer[] Zones;
     private Transform playerTransform;
     private Fish CurrentFish;
+    private InputAction ControlBarAction;
 
-    private float needleSpeed = 3f;
-    private int needleDirection = 1;
     Coroutine FishingCoroutine;
     Coroutine PullCoroutine;
 
-    [Header("Fishing bar")]
+    [Header("Pull state")]
     public StyleLength ControlBarStylePosition;
     public float ControlBarPosition = 50f;
     public float ControlBarGravity = 0f;
@@ -46,23 +44,19 @@ public class FishingController : PlayerSystem
     public float FishBarPosition = 0f;
     public float PullProgress = 0f;
 
+    [Header("Boost state")]
+    public StyleLength OrangeChunkStylePosition;
+    public StyleLength GreenChunkStylePosition;
+    public StyleLength NeedleStylePosition;
+    public float OrangeChunkPosition;
+    public float GreenChunkPosition;
+    public float NeedlePosition;
+    public float needleSpeed = 3f;
+    public int needleDirection = 1;
+
     private float Lerpfloat(float a, float b,float t)
     {
         return a + (b - a) * t;
-    }
-    private bool IsOverlapOLD(RectTransform At,RectTransform Bt,Rect A,Rect B)
-    {
-        if (At.localPosition.x < Bt.localPosition.x + B.width &&
-            At.localPosition.x + A.width > Bt.localPosition.x &&
-            At.localPosition.y < Bt.localPosition.y + B.height &&
-            At.localPosition.y + A.height > Bt.localPosition.y)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
     private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
     {
@@ -73,24 +67,20 @@ public class FishingController : PlayerSystem
         }
         return result;
     }
-    private bool InBetween(float min,float max,float n)
-    {
-        if (n < max && n > min)
-        {
-            return true;
-        }
-        return false;
-    }
     private bool IsOverlap(float a1,float a2,float b1,float b2)
     {
         float a_width = a2 - a1;
         float b_width = b2 - b1;
-        if (InBetween(b1, b2, a1) || InBetween(b1, b2, a2) || InBetween(a1, a2, b1) || InBetween(a1, a2, b2))
+        if (b2 > a2) return a2 >= b1;
+        if (b2 < a1) return a1 <= b2;
+        if (b2 < a2 && a1 > b2) return true;
+        return true;
+        /*if (InBetween(b1, b2, a1) || InBetween(b1, b2, a2) || InBetween(a1, a2, b1) || InBetween(a1, a2, b2))
         {
             return true;
         }
 
-        return false;
+        return false;*/
     }
     #region Update functions
     private void UpdateControlBarPosition()
@@ -111,7 +101,7 @@ public class FishingController : PlayerSystem
         }
         ControlBarPosition = NextPosition;
         ControlBarStylePosition = new StyleLength(Length.Percent((float)ControlBarPosition - 15f));
-        ControlBarUI.style.marginLeft = ControlBarStylePosition;
+        ControlBarUI.style.left = ControlBarStylePosition;
         //Debug.Log(ControlBarPosition);
     }
     private void ZoneCheck()
@@ -133,12 +123,21 @@ public class FishingController : PlayerSystem
     {
         if (player.ID.isBoostState == true)
         {
-            Vector2 NeedlePosDelta = new Vector2(needleDirection * 500 * needleSpeed * Time.deltaTime, 0);
-            Needle.anchoredPosition += NeedlePosDelta;
-            if (Needle.anchoredPosition.x >= 350f || Needle.anchoredPosition.x <= -350f)
+            float NextPosition = NeedlePosition + needleDirection * needleSpeed * Time.deltaTime;
+            if (NextPosition >= 96f)
             {
                 needleDirection *= -1;
+                NextPosition = 96f;
             }
+            else if (NextPosition <= 0)
+            {
+                needleDirection *= -1;
+                NextPosition = 0;
+            }
+            NeedlePosition = NextPosition;
+            NeedleStylePosition = new StyleLength(Length.Percent(NeedlePosition));
+            Needle.style.left = NeedleStylePosition;
+
         }
     }
     private void PullStateUpdateFunction()
@@ -149,7 +148,7 @@ public class FishingController : PlayerSystem
             UpdateControlBarPosition();
             //lerping fish bar's position
             FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, 6f * Time.deltaTime);
-            FishBarUI.style.marginLeft = new StyleLength(Length.Percent(FishBarPosition));
+            FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
             //check for overlap
             if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 6f))
             {
@@ -172,11 +171,11 @@ public class FishingController : PlayerSystem
     private BaseMutation RollForMutation()
     {
         BaseMutation catchedMutation = null;
-        //§â¦¹°Ï°ì¥i³¨¨ìªºÅÜºØªºµ}¦³«×(­Ë¼Æ)¥[°_¨Ó
+        //ï¿½â¦¹ï¿½Ï°ï¿½iï¿½ï¿½ï¿½ìªºï¿½ÜºØªï¿½ï¿½}ï¿½ï¿½ï¿½ï¿½(ï¿½Ë¼ï¿½)ï¿½[ï¿½_ï¿½ï¿½
         float totalWeight = AvaliableMutations.Sum(x => 1f / x.OneIn);
-        //·s¼W¤@­Ó±q0¨ìtotalWeightªºÀH¾÷¤p¼Æ
+        //ï¿½sï¿½Wï¿½@ï¿½Ó±q0ï¿½ï¿½totalWeightï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½pï¿½ï¿½
         float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        //±q³Ì±`¨£ªºÅÜºØ¶}©l´î¡A·íÁ`¼Æ¤p©ó´î¼Æ®É¡A¥i±oª¾¦¹¦¸³¨¨ìªºÅÜºØµ}¦³«×
+        //ï¿½qï¿½Ì±`ï¿½ï¿½ï¿½ï¿½ï¿½ÜºØ¶}ï¿½lï¿½ï¿½Aï¿½ï¿½ï¿½`ï¿½Æ¤pï¿½ï¿½ï¿½Æ®É¡Aï¿½iï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ìªºï¿½ÜºØµ}ï¿½ï¿½ï¿½ï¿½
         for (int i = AvaliableMutations.Count - 1; i >= 0; i--)
         {
             totalWeight -= 1f / AvaliableMutations[i].OneIn;
@@ -192,11 +191,11 @@ public class FishingController : PlayerSystem
     private BaseFish RollForFish()
     {
         BaseFish catchedFish = null;
-        //§â¦¹°Ï°ì¥i³¨¨ìªº³½Ãþªºµ}¦³«×(­Ë¼Æ)¥[°_¨Ó
+        //ï¿½â¦¹ï¿½Ï°ï¿½iï¿½ï¿½ï¿½ìªºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½ï¿½ï¿½ï¿½(ï¿½Ë¼ï¿½)ï¿½[ï¿½_ï¿½ï¿½
         float totalWeight = AvailableFishes.Sum(x => 1f / x.Rarity.OneIn);
-        //·s¼W¤@­Ó±q0¨ìtotalWeightªºÀH¾÷¤p¼Æ
+        //ï¿½sï¿½Wï¿½@ï¿½Ó±q0ï¿½ï¿½totalWeightï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½pï¿½ï¿½
         float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        //±q³Ì±`¨£ªº³½ºØ¶}©l´î¡A·íÁ`¼Æ¤p©ó´î¼Æ®É¡A¥i±oª¾¦¹¦¸³¨¨ìªº³½Ãþµ}¦³«×
+        //ï¿½qï¿½Ì±`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶}ï¿½lï¿½ï¿½Aï¿½ï¿½ï¿½`ï¿½Æ¤pï¿½ï¿½ï¿½Æ®É¡Aï¿½iï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ìªºï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½ï¿½ï¿½ï¿½
         for (int i = AvailableFishes.Count - 1; i >= 0; i--)
         {
             totalWeight -= 1f / AvailableFishes[i].Rarity.OneIn;
@@ -215,27 +214,17 @@ public class FishingController : PlayerSystem
         player.ID.FishOnBait = false;
         player.ID.isFishing = false;
         player.ID.isPullState = false;
+        PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
         PullProgress = 0f;
+        ControlBarPosition = 50f;
     }
-    private bool CheckFishBarOverlap(RectTransform Ft, RectTransform Ct, Rect F, Rect C)
-    {
-        if (F.yMax + Ft.localPosition.y < C.yMax + Ct.localPosition.y
-            && F.yMin + Ft.localPosition.y > C.yMin + Ct.localPosition.y)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public void ControlPullingBar(InputAction.CallbackContext callbackContext)
+    public void ControlPullingBar()
     {
         if (player.ID.isPullState == true)
         {
-            float Value = callbackContext.ReadValue<float>();
+            float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
             {
                 Debug.Log("switched gravity!");
@@ -259,49 +248,63 @@ public class FishingController : PlayerSystem
             yield return new WaitForSeconds(RandSecond);
         }
     }
-    private void EnterPullState(float Buff)
+    private IEnumerator EnterPullState(float Buff)
     {
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
         CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
         player.ID.playerEvents.OnPullStage?.Invoke();
         player.ID.isBoostState = false;
-        player.ID.isPullState = true;
         PullProgress = Buff;
+        ControlBarPosition = 50f;
+        ControlBarGravity = 0f;
+        ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
+        ControlBarStylePosition = new StyleLength(Length.Percent((float)ControlBarPosition - 15f));
+        ControlBarUI.style.left = ControlBarStylePosition;
+        PullStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
+        yield return new WaitForSeconds(0.5f);
+        player.ID.isPullState = true;
         PullCoroutine = StartCoroutine(RandomFishBarPosition());
     }
     public void LandNeedle(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true)
+        StartCoroutine(LandNeedleIEnumerator());
+    }
+    public IEnumerator LandNeedleIEnumerator()
+    {
+        //Debug.Log(player.ID.isBoostState);
+        if (player.ID.isBoostState && player.ID.FishOnBait)
         {
-            //Debug.Log(player.ID.isBoostState);
-            if (player.ID.isBoostState && player.ID.FishOnBait)
+            
+            player.ID.isBoostState = false;
+            float buff = 10f;
+            if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
             {
-                BoostCanva.alpha = 0f;
-                player.ID.isBoostState = false;
-                float buff = 0f;
-                if (IsOverlapOLD(Needle, GreenZone, Needle.rect, GreenZone.rect))
-                {
-                    buff = player.ID.GreenZonebuff;
-                }
-                else if (IsOverlapOLD(Needle, OrangeZone, Needle.rect, OrangeZone.rect))
-                {
-                    buff = player.ID.OrangeZonebuff;
-                }
-                EnterPullState(buff);
-            };
-        }
+                buff = player.ID.GreenZonebuff;
+            }
+            else if (IsOverlap(OrangeChunkPosition, OrangeChunkPosition + 44f, NeedlePosition, NeedlePosition + 4f))
+            {
+                buff = player.ID.OrangeZonebuff;
+            }
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(EnterPullState(buff));
+            BoostStateUI.rootVisualElement.style.display = DisplayStyle.None;
+        };
     }
     private void EnterBoostState()
     {
         player.ID.playerEvents.OnBoostStage?.Invoke();
         player.ID.isBoostState = true;
-        BoostCanva.alpha = 1f;
-        float RandOrangePos = UnityEngine.Random.Range(-350f, 350f);
-        Vector2 RandPos = new Vector2(RandOrangePos, 0);
-        OrangeZone.anchoredPosition = RandPos;
-        GreenZone.anchoredPosition = RandPos;
-        Needle.anchoredPosition = new Vector2(0, 0);
+        BoostStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
+        OrangeChunkPosition = UnityEngine.Random.Range(0, 66f);
+        GreenChunkPosition = OrangeChunkPosition + 12f;
+        NeedlePosition = 48f;
+        OrangeChunkStylePosition = new StyleLength(Length.Percent(OrangeChunkPosition));
+        GreenChunkStylePosition = new StyleLength(Length.Percent(GreenChunkPosition));
+        NeedleStylePosition = new StyleLength(Length.Percent(NeedlePosition));
+        OrangeChunk.style.left = OrangeChunkStylePosition;
+        GreenChunk.style.left = GreenChunkStylePosition;
+        Needle.style.left = NeedleStylePosition;
     }
     private void SetHook()
     {
@@ -311,7 +314,7 @@ public class FishingController : PlayerSystem
     public IEnumerator WaitForbite()
     {
         float randTime = UnityEngine.Random.Range(2.5f, 3.5f);
-        //yield¦^¶Ç¨Ó©µ¿ð
+        //yieldï¿½^ï¿½Ç¨Ó©ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(randTime);
         SetHook();
     }
@@ -368,15 +371,11 @@ public class FishingController : PlayerSystem
         playerInput.Fishing.Enable();
         playerInput.Fishing.CastFishingRod.performed += CastOrRetract;
         playerInput.Fishing.CastFishingRod.performed += LandNeedle;
-        playerInput.Fishing.ControlFishingRod.started += ControlPullingBar;
-        playerInput.Fishing.ControlFishingRod.canceled += ControlPullingBar;
     }
     private void OnDisable()
     {
         playerInput.Fishing.CastFishingRod.performed -= CastOrRetract;
         playerInput.Fishing.CastFishingRod.performed -= LandNeedle;
-        playerInput.Fishing.ControlFishingRod.started -= ControlPullingBar;
-        playerInput.Fishing.ControlFishingRod.canceled -= ControlPullingBar;
         playerInput.Fishing.Disable();
     }
     private void Start()
@@ -386,6 +385,12 @@ public class FishingController : PlayerSystem
         ControlBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("ControlBar");
         FishBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("FishBar");
         ProgressBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("Bar");
+        OrangeChunk = BoostStateUI.rootVisualElement.Q<VisualElement>("OrangeChunk");
+        GreenChunk = BoostStateUI.rootVisualElement.Q<VisualElement>("GreenChunk");
+        Needle = BoostStateUI.rootVisualElement.Q<VisualElement>("Needle");
+        PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
+        BoostStateUI.rootVisualElement.style.display = DisplayStyle.None;
+        ControlBarAction = playerInput.Fishing.ControlFishingRod;
     }
     // Update is called once per frame
     private void Update()
@@ -393,6 +398,7 @@ public class FishingController : PlayerSystem
         ZoneCheck();
         BoostStateUpdateFunction();
         PullStateUpdateFunction();
+        ControlPullingBar();
     }
    
     #endregion

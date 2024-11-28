@@ -423,6 +423,54 @@ Transform:
   - {fileID: 1360713776}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &244549892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 244549894}
+  - component: {fileID: 244549893}
+  m_Layer: 5
+  m_Name: BoostStateUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &244549893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244549892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 27cb43f36e06d6f4281e2e6e1e88a257, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 8da7ace1a45f64a96841623e4b180615, type: 3}
+  m_SortingOrder: 0
+--- !u!4 &244549894
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244549892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &270686942
 GameObject:
   m_ObjectHideFlags: 0
@@ -2364,15 +2412,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37263bcc5992a4333916df74ba02a48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoostCanva: {fileID: 41537108}
-  OrangeZone: {fileID: 1268835330}
-  GreenZone: {fileID: 1006127756}
-  Needle: {fileID: 158558040}
-  ZoneContainer: {fileID: 211540312}
+  BoostStateUI: {fileID: 244549893}
   PullStateUI: {fileID: 414051948}
+  ZoneContainer: {fileID: 211540311}
   ControlBarPosition: 0.5
   ControlBarGravity: 0
   ControlBarVelocity: 0
+  FishBarTargetPosition: 0
+  FishBarPosition: 0
+  PullProgress: 0
+  OrangeChunkPosition: 0
+  GreenChunkPosition: 0
+  NeedlePosition: 0
+  needleSpeed: 100
+  needleDirection: 1
 --- !u!1 &1953308856
 GameObject:
   m_ObjectHideFlags: 0
@@ -2635,3 +2688,4 @@ SceneRoots:
   - {fileID: 605162900}
   - {fileID: 2035986723}
   - {fileID: 414051949}
+  - {fileID: 244549894}

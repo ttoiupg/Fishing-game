@@ -5,6 +5,10 @@
     height: 100%;
     align-items: center;
     justify-content: flex-start;
+    display: flex;
+    visibility: visible;
+    overflow: visible;
+    opacity: 1;
 }
 
 .MainBar {
@@ -28,6 +32,7 @@
     overflow: visible;
     justify-content: center;
     margin-bottom: 73px;
+    visibility: visible;
 }
 
 .ControlBar {
@@ -35,12 +40,13 @@
     height: 100%;
     width: 30%;
     margin-right: 0;
-    margin-left: 35%;
+    margin-left: 0;
     overflow: visible;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    left: 35%;
 }
 
 .FishBar {
@@ -48,7 +54,7 @@
     height: 331%;
     width: 6%;
     margin-right: 0;
-    margin-left: 47%;
+    margin-left: 0;
     overflow: visible;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -66,6 +72,7 @@
     border-right-color: rgb(152, 0, 0);
     border-top-color: rgb(152, 0, 0);
     border-bottom-color: rgb(152, 0, 0);
+    left: 47%;
 }
 
 .ProgressBar {
@@ -83,6 +90,7 @@
     border-right-width: 1px;
     border-bottom-width: 1px;
     border-left-width: 1px;
+    visibility: visible;
 }
 
 .bar {
