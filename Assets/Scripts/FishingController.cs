@@ -45,7 +45,7 @@ public class FishingController : PlayerSystem
     public float FishBarTargetPosition = 0f;
     public float FishBarPosition = 0f;
     public float PullProgress = 0f;
-
+    public bool IsFishBarOverlaping = false;
     [Header("Boost state")]
     public StyleLength OrangeChunkStylePosition;
     public StyleLength GreenChunkStylePosition;
@@ -88,9 +88,18 @@ public class FishingController : PlayerSystem
         return false;*/
     }
     #region Update functions
+    private void GamepadVibration()
+    {
+        float lowfreq = 0.5f;
+        float highfreq = ControlBarAction.ReadValue<float>() * 0.6f;
+        if (IsFishBarOverlaping)
+        {
+            lowfreq = 0f;
+        }
+        Gamepad.current?.SetMotorSpeeds(lowfreq, highfreq);
+    }
     private void UpdateControlBarPosition()
     {
-
         ControlBarVelocity += ControlBarGravity * Time.deltaTime;
         float NextPosition = ControlBarPosition + ControlBarVelocity * Time.deltaTime;
         //check if the bar is touching the sides, mean the position-(width/2) is smaller than "0"
@@ -151,17 +160,20 @@ public class FishingController : PlayerSystem
         {
             //Update control bar's position
             UpdateControlBarPosition();
+            GamepadVibration();
             //lerping fish bar's position
             FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, FishBarSpeed * Time.deltaTime);
             FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
             //check for overlap
             if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 2f))
             {
+                IsFishBarOverlaping = true;
                 ControlBarUI.style.backgroundColor = new StyleColor(new Color(1f,1f,1f,1f));
                 PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
             }
             else
             {
+                IsFishBarOverlaping = false;
                 ControlBarUI.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f, 0.4f));
                 PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
                 if (PullProgress < 0) { 
@@ -174,7 +186,6 @@ public class FishingController : PlayerSystem
             {
                 StartCoroutine(FishCatched());
             }
-
         }
     }
     #endregion
@@ -224,6 +235,8 @@ public class FishingController : PlayerSystem
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
         PullProgress = 0f;
         ControlBarPosition = 50f;
+        FishBarPosition = 49f;
+        FishBarTargetPosition = 49;
         cameraTargetSize = 5f;
         Gamepad.current.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.2f);
@@ -243,6 +256,8 @@ public class FishingController : PlayerSystem
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         PullProgress = 0f;
         ControlBarPosition = 50f;
+        FishBarPosition = 49f;
+        FishBarTargetPosition = 49;
         cameraTargetSize = 5f;
         InputSystem.ResetHaptics();
     }
@@ -253,13 +268,13 @@ public class FishingController : PlayerSystem
             float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
             {
-                Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+                //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
                 ControlBarGravity = 300f * Value;
                 cameraTargetSize = 4.3f - 1f * Value;
             }
             else
             {
-                Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
+                //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
                 ControlBarGravity = -300f;
                 cameraTargetSize = 4.3f;
             }
@@ -270,6 +285,12 @@ public class FishingController : PlayerSystem
         while (player.ID.isPullState)
         {
             float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
+
+            float RandPosition = UnityEngine.Random.Range(0, 98f);
+            while (Math.Abs(RandPosition - FishBarTargetPosition) > CurrentFish.fishType.MaxFishBarChangeDistance)
+            {
+                RandPosition = UnityEngine.Random.Range(0, 98f);
+            }
             FishBarTargetPosition = UnityEngine.Random.Range(0, 98f);
             FishBarSpeed = UnityEngine.Random.Range(0.05f, 6f);
             yield return new WaitForSeconds(RandSecond);
@@ -288,6 +309,7 @@ public class FishingController : PlayerSystem
         ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
         ControlBarUI.style.width = new StyleLength(Length.Percent(player.ID.pullBarSize));
         ControlBarStylePosition = new StyleLength(Length.Percent((float)ControlBarPosition - player.ID.pullBarSize / 2));
+        FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
         ControlBarUI.style.left = ControlBarStylePosition;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(0.5f);
@@ -431,6 +453,9 @@ public class FishingController : PlayerSystem
         ControlPullingBar();
         Camera.orthographicSize = Lerpfloat(Camera.orthographicSize, cameraTargetSize, 5f * Time.deltaTime);
     }
-   
+    private void OnApplicationQuit()
+    {
+        InputSystem.ResetHaptics();
+    }
     #endregion
 }

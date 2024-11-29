@@ -11,4 +11,5 @@ public class BaseFish : ScriptableObject
     public BaseRarity Rarity;
     public float MinFishBarChangeTime;
     public float MaxFishBarChangeTime;
+    public float MaxFishBarChangeDistance;
 }
