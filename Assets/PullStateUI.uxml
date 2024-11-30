@@ -5,8 +5,8 @@
             <ui:VisualElement name="Bar" class="bar" style="flex-grow: 1;" />
         </ui:VisualElement>
         <ui:VisualElement name="MainBar" class="MainBar">
-            <ui:VisualElement name="FishBar" class="FishBar" />
             <ui:VisualElement name="ControlBar" class="ControlBar" />
+            <ui:VisualElement name="FishBar" class="FishBar" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

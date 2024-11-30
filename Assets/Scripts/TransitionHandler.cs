@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuUIHandler : MonoBehaviour
+public class TransitionHandler : MonoBehaviour
 {
     public Animator transition;
     public float transitionTime;
