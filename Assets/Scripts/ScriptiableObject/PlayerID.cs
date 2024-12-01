@@ -7,6 +7,7 @@ public class PlayerID : ScriptableObject
     [Header("Properties")]
     public string playerName;
     public bool canFish = true;
+    public bool canRetract = false;
     public bool isFishing = false;
     public bool isBoostState = false;
     public bool isPullState = false;

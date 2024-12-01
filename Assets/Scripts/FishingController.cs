@@ -5,9 +5,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using TMPro;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.iOS;
 using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
@@ -22,18 +27,7 @@ public class FishingController : PlayerSystem
     public VisualElement ControlBarUI;
     public VisualElement FishBarUI;
     public VisualElement ProgressBarUI;
-
     public GameObject ZoneContainer;
-    private List<BaseMutation> AvaliableMutations;
-    private List<BaseFish> AvailableFishes;
-    private ZoneDisplayer[] Zones;
-    private Transform playerTransform;
-    private Fish CurrentFish;
-    private InputAction ControlBarAction;
-    private Camera Camera;
-
-    Coroutine FishingCoroutine;
-    Coroutine PullCoroutine;
 
     [Header("Pull state")]
     public float cameraTargetSize = 5f;
@@ -45,6 +39,7 @@ public class FishingController : PlayerSystem
     public float FishBarTargetPosition = 0f;
     public float FishBarPosition = 0f;
     public float PullProgress = 0f;
+    public float FishBarSpeed = 6f;
     public bool IsFishBarOverlaping = false;
     [Header("Boost state")]
     public StyleLength OrangeChunkStylePosition;
@@ -55,10 +50,34 @@ public class FishingController : PlayerSystem
     public float NeedlePosition;
     public float needleSpeed = 3f;
     public int needleDirection = 1;
-    public float FishBarSpeed = 6f;
+
+    [Header("Sound effects")]
+    public AudioClip CastFishingRodSoundFX;
+    public AudioClip BiteNotify;
+    public AudioClip LandOnGreenSoundFX;
+    public AudioClip LandOnOrangeSoundFX;
+    public AudioClip LandOnRedSoundFX;
+    public AudioClip PullStateSoundFX;
+    public AudioClip SpinningReel;
+    public AudioClip FishCatchedSoundFX;
+    public AudioClip FishFailedSoundFX;
+    public AudioMixer FishingAudioMixer;
+
+    private AudioSource ReelSoundSource;
+    private List<BaseMutation> AvaliableMutations;
+    private List<BaseFish> AvailableFishes;
+    private ZoneDisplayer[] Zones;
+    private Transform playerTransform;
+    private Fish CurrentFish;
+    private InputAction ControlBarAction;
+    private Camera Camera;
+
+    Coroutine FishingCoroutine;
+    Coroutine PullCoroutine;
 
     [Header("Gamepad")]
     public float RumbleLowFreq = 0.25f;
+
     private float Lerpfloat(float a, float b,float t)
     {
         return a + (b - a) * t;
@@ -226,6 +245,8 @@ public class FishingController : PlayerSystem
     }
     private IEnumerator FishCatched()
     {
+        SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.8f);
+        ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
         player.ID.FishOnBait = false;
         player.ID.isFishing = false;
@@ -238,16 +259,17 @@ public class FishingController : PlayerSystem
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
         cameraTargetSize = 5f;
-        Gamepad.current.SetMotorSpeeds(1f, 1f);
+        Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.2f);
-        Gamepad.current.SetMotorSpeeds(0, 0);
+        Gamepad.current?.SetMotorSpeeds(0, 0);
         yield return new WaitForSeconds(0.1f);
-        Gamepad.current.SetMotorSpeeds(1f, 1f);
+        Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.1f);
         InputSystem.ResetHaptics();
     }
     private void FishFailed()
     {
+        ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
         player.ID.FishOnBait = false;
         player.ID.isFishing = false;
@@ -259,6 +281,7 @@ public class FishingController : PlayerSystem
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
         cameraTargetSize = 5f;
+        SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
         InputSystem.ResetHaptics();
     }
     public void ControlPullingBar()
@@ -268,12 +291,14 @@ public class FishingController : PlayerSystem
             float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
             {
+                ReelSoundSource.pitch = 0.7f+Value*0.35f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
                 ControlBarGravity = 300f * Value;
                 cameraTargetSize = 4.3f - 1f * Value;
             }
             else
             {
+                ReelSoundSource.pitch = 0.7f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
                 ControlBarGravity = -300f;
                 cameraTargetSize = 4.3f;
@@ -318,9 +343,9 @@ public class FishingController : PlayerSystem
     }
     public void LandNeedle(InputAction.CallbackContext callbackContext)
     {
-        StartCoroutine(LandNeedleIEnumerator());
+        StartCoroutine(LandNeedleCoroutine());
     }
-    public IEnumerator LandNeedleIEnumerator()
+    public IEnumerator LandNeedleCoroutine()
     {
         //Debug.Log(player.ID.isBoostState);
         if (player.ID.isBoostState && player.ID.FishOnBait)
@@ -330,11 +355,18 @@ public class FishingController : PlayerSystem
             float buff = 10f;
             if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
             {
+
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.65f);
                 buff = player.ID.GreenZonebuff;
             }
             else if (IsOverlap(OrangeChunkPosition, OrangeChunkPosition + 44f, NeedlePosition, NeedlePosition + 4f))
             {
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.6f);
                 buff = player.ID.OrangeZonebuff;
+            }
+            else
+            {
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1f);
             }
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(EnterPullState(buff));
@@ -358,6 +390,8 @@ public class FishingController : PlayerSystem
     }
     private void SetHook()
     {
+        ReelSoundSource.Play();
+        SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
         player.ID.FishOnBait = true;
         cameraTargetSize = 4.3f;
         Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
@@ -365,7 +399,7 @@ public class FishingController : PlayerSystem
     }
     public IEnumerator WaitForbite()
     {
-        float randTime = UnityEngine.Random.Range(2.5f, 3.5f);
+        float randTime = UnityEngine.Random.Range(3.5f, 6f);
         yield return new WaitForSeconds(randTime);
         SetHook();
     }
@@ -378,41 +412,47 @@ public class FishingController : PlayerSystem
         {
             if (player.ID.FishOnBait == false)
             {
-
                 if (player.ID.isFishing == false && player.ID.canFish)
                 {
-                    player.ID.isFishing = true;
-                    CastFishingRod();
+                    StartCoroutine(CastFishingRod());
                 }
                 else if (player.ID.isFishing)
                 {
-                    player.ID.isFishing = false;
                     RetractFishingRod();
                 }
             };
         }
     }
-    public void CastFishingRod()
+    public IEnumerator CastFishingRod()
     {
-        player.ID.playerEvents.OnEnterFishingState?.Invoke();
         if (player.ID.currentZone != null)
         {
+            player.ID.isFishing = true;
+            player.ID.playerEvents.OnEnterFishingState.Invoke();
+            player.ID.canRetract = false;
+            SoundFXManger.Instance.PlaySoundFXClip(CastFishingRodSoundFX, playerTransform,1f);
             AvailableFishes = player.ID.currentZone.GetSortedFeaturedFish();
             AvaliableMutations = player.ID.currentZone.GetSortedFeaturedMutations();
             if (FishingCoroutine != null)
             {
                 StopCoroutine(FishingCoroutine);
             }
+            yield return new WaitForSeconds(3f);
+            player.ID.canRetract = true;
             FishingCoroutine = StartCoroutine(WaitForbite());
         }
     }
     public void RetractFishingRod()
     {
-        if (FishingCoroutine != null)
+        if (player.ID.canRetract == true)
         {
-            StopCoroutine(FishingCoroutine);
+            player.ID.isFishing = false;
+            if (FishingCoroutine != null)
+            {
+                StopCoroutine(FishingCoroutine);
+            }
+            player.ID.playerEvents.OnExitFishingState?.Invoke();
         }
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
     }
 
     #endregion
@@ -431,6 +471,7 @@ public class FishingController : PlayerSystem
     }
     private void Start()
     {
+        ReelSoundSource = GetComponent<AudioSource>();
         Camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         Zones = ZoneContainer.GetComponentsInChildren<ZoneDisplayer>();
         playerTransform = player.GetComponent<Transform>();

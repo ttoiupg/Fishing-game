@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         ID.canFish = true;
+        ID.canRetract = false;
         ID.isFishing = false;
         ID.isBoostState = false;
         ID.FishOnBait = false;

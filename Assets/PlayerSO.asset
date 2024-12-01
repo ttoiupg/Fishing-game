@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Momona
   canFish: 1
+  canRetract: 1
   isFishing: 0
   isBoostState: 0
   isPullState: 0
   FishOnBait: 0
   stanima: 100
-  currentZone: {fileID: 0}
+  currentZone: {fileID: 11400000, guid: aac31a98b95e64827b5ee65e96b38258, type: 2}
   pullProgressSpeed: 16.15
   pullProgressLooseSpeed: 9.1
-  pullBarSize: 30
+  pullBarSize: 45
   luckBoost: 0
   pullSpeedBoost: 0
   pullBarSizeBoost: 0
