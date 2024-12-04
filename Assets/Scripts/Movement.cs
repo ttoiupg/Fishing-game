@@ -26,16 +26,19 @@ public class Movement : PlayerSystem
     // Update is called once per frame
     void Update()
     {
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
         // DOING CHARACTER MOVEMENT
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
         }
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 move = new Vector3(moveHorizontal, 0, moveVertical);
         controller.Move(move * Time.deltaTime * playerSpeed);
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+        CharacterTransform.rotation = Quaternion.LookRotation(-move);
     }
     private void freezePlayer()
     {
