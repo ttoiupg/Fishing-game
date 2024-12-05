@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using TMPro;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEditor.Timeline.Actions;
@@ -17,6 +18,8 @@ using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
+    [Header("effect")]
+    public CinemachinePositionComposer camera;
     [Header("Buff UI")]
     public UIDocument BoostStateUI;
     public VisualElement OrangeChunk;
@@ -30,7 +33,6 @@ public class FishingController : PlayerSystem
     public GameObject ZoneContainer;
 
     [Header("Pull state")]
-    public float cameraTargetSize = 5f;
     public StyleLength ControlBarStylePosition;
     public float ControlBarPosition = 50f;
     public float ControlBarGravity = 0f;
@@ -258,7 +260,7 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
-        cameraTargetSize = 5f;
+        camera.CameraDistance = 10f;
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.2f);
         Gamepad.current?.SetMotorSpeeds(0, 0);
@@ -280,7 +282,7 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
-        cameraTargetSize = 5f;
+        camera.CameraDistance = 10f;
         SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
         InputSystem.ResetHaptics();
     }
@@ -294,14 +296,14 @@ public class FishingController : PlayerSystem
                 ReelSoundSource.pitch = 0.7f+Value*0.35f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
                 ControlBarGravity = 300f * Value;
-                cameraTargetSize = 4.3f - 1f * Value;
+                camera.CameraDistance = 10f - 4f * Value;
             }
             else
             {
                 ReelSoundSource.pitch = 0.7f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
                 ControlBarGravity = -300f;
-                cameraTargetSize = 4.3f;
+                camera.CameraDistance = 10f;
             }
         }
     }
@@ -393,7 +395,7 @@ public class FishingController : PlayerSystem
         ReelSoundSource.Play();
         SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
         player.ID.FishOnBait = true;
-        cameraTargetSize = 4.3f;
+        camera.CameraDistance = 8f;
         Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
         EnterBoostState();
     }
@@ -437,6 +439,7 @@ public class FishingController : PlayerSystem
             {
                 StopCoroutine(FishingCoroutine);
             }
+            camera.CameraDistance = 18f;
             yield return new WaitForSeconds(3f);
             player.ID.canRetract = true;
             FishingCoroutine = StartCoroutine(WaitForbite());
@@ -451,6 +454,7 @@ public class FishingController : PlayerSystem
             {
                 StopCoroutine(FishingCoroutine);
             }
+            camera.CameraDistance = 10f;
             player.ID.playerEvents.OnExitFishingState?.Invoke();
         }
     }
@@ -492,7 +496,6 @@ public class FishingController : PlayerSystem
         BoostStateUpdateFunction();
         PullStateUpdateFunction();
         ControlPullingBar();
-        Camera.orthographicSize = Lerpfloat(Camera.orthographicSize, cameraTargetSize, 5f * Time.deltaTime);
     }
     private void OnApplicationQuit()
     {
