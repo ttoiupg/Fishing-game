@@ -12,6 +12,6 @@ public class StepSoundController : PlayerSystem
     }
     public void PlayStepSound()
     {
-        SoundFXManger.Instance.PlaySoundFXClip(StepSound, CharacterTransform, 1f);
+        SoundFXManger.Instance.PlaySoundFXClip(StepSound, CharacterTransform, 2f);
     }
 }
