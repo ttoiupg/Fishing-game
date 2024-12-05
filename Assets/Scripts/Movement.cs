@@ -38,7 +38,7 @@ public class Movement : PlayerSystem
         controller.Move(move * Time.deltaTime * playerSpeed);
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-        CharacterTransform.rotation = Quaternion.LookRotation(-move);
+        CharacterTransform.rotation = Quaternion.LookRotation(new Vector3(0,0,moveHorizontal));
     }
     private void freezePlayer()
     {
