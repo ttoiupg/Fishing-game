@@ -8,7 +8,7 @@ public class Movement : PlayerSystem
     private Vector3 CameraDisplace = new Vector3(0,5.22f,-8.47f);
     private Vector3 CameraRotation = new Vector3(32.02f,0,0);
     public Transform CameraTransform;
-    public Animator animator;
+    private Animator animator;
     private Transform CharacterTransform;
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -21,6 +21,7 @@ public class Movement : PlayerSystem
     // Start is called before the first frame update
     void Start()
     {
+        animator = player.GetComponent<Animator>();
         CharacterTransform = player.transform;
         controller = player.GetComponent<CharacterController>();
     }

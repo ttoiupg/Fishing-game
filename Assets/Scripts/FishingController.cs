@@ -72,6 +72,7 @@ public class FishingController : PlayerSystem
     private Transform playerTransform;
     private Fish CurrentFish;
     private InputAction ControlBarAction;
+    private Animator animator;
     private Camera Camera;
 
     Coroutine FishingCoroutine;
@@ -108,6 +109,7 @@ public class FishingController : PlayerSystem
 
         return false;*/
     }
+
     #region Update functions
     private void GamepadVibration()
     {
@@ -247,6 +249,7 @@ public class FishingController : PlayerSystem
     }
     private IEnumerator FishCatched()
     {
+        animator.SetTrigger("RetractFishingRod");
         SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.8f);
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
@@ -271,6 +274,7 @@ public class FishingController : PlayerSystem
     }
     private void FishFailed()
     {
+        animator.SetTrigger("RetractFishingRod");
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
         player.ID.FishOnBait = false;
@@ -429,16 +433,19 @@ public class FishingController : PlayerSystem
     {
         if (player.ID.currentZone != null)
         {
+            animator.SetBool("IsMoving", false);
             player.ID.isFishing = true;
             player.ID.playerEvents.OnEnterFishingState.Invoke();
             player.ID.canRetract = false;
             SoundFXManger.Instance.PlaySoundFXClip(CastFishingRodSoundFX, playerTransform,1f);
             AvailableFishes = player.ID.currentZone.GetSortedFeaturedFish();
             AvaliableMutations = player.ID.currentZone.GetSortedFeaturedMutations();
+            
             if (FishingCoroutine != null)
             {
                 StopCoroutine(FishingCoroutine);
             }
+            animator.SetTrigger("CastFishingRod");
             camera.CameraDistance = 18f;
             yield return new WaitForSeconds(3f);
             player.ID.canRetract = true;
@@ -454,6 +461,7 @@ public class FishingController : PlayerSystem
             {
                 StopCoroutine(FishingCoroutine);
             }
+            animator.SetTrigger("RetractFishingRod");
             camera.CameraDistance = 10f;
             player.ID.playerEvents.OnExitFishingState?.Invoke();
         }
@@ -475,6 +483,7 @@ public class FishingController : PlayerSystem
     }
     private void Start()
     {
+        animator = player.GetComponent<Animator>();
         ReelSoundSource = GetComponent<AudioSource>();
         Camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         Zones = ZoneContainer.GetComponentsInChildren<ZoneDisplayer>();

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 174edd2f4d8354fd9a92157dc37d012c
+guid: b5d939aa2173e5d498e061fc79eb2277
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1000
+  spritePixelsToUnits: 2000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -107,6 +107,19 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
+    buildTarget: tvOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
     buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -121,12 +134,56 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Basic fishing rod_0
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 454
+        width: 2293
+        height: 342
+      alignment: 9
+      pivot: {x: 0.104897566, y: 0.7934438}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d90d96ef001baef41bb33fe679b1c104
+      internalID: 78552723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basic fishing rod_1
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 22
+        width: 300
+        height: 369
+      alignment: 9
+      pivot: {x: 0.40834838, y: 0.6564773}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeaf0ccde6b023747aa99a355ea59134
+      internalID: 2003892950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a09152d35bee34f4eb087e4674354b70
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +192,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Basic fishing rod_0: 78552723
+      Basic fishing rod_1: 2003892950
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
