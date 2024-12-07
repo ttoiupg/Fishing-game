@@ -6,14 +6,8 @@ public class PlayerID : ScriptableObject
 {
     [Header("Properties")]
     public string playerName;
-    public bool canFish = true;
-    public bool canRetract = false;
-    public bool isFishing = false;
-    public bool isBoostState = false;
-    public bool isPullState = false;
-    public bool FishOnBait = false;
+
     public int stanima = 100;
-    public BaseZone currentZone;
     public float pullProgressSpeed = 8f;
     public float pullProgressLooseSpeed = 5f;
     public float pullBarSize = 30f;

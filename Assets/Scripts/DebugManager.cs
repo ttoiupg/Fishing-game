@@ -27,9 +27,9 @@ public class DebugManager : PlayerSystem
     }
     private void Update()
     {
-        if (player.ID.currentZone != null)
+        if (player.currentZone != null)
         {
-            CurrentZoneText.text = $"Current zone:{player.ID.currentZone.name}";
+            CurrentZoneText.text = $"Current zone:{player.currentZone.name}";
         }
         else
         {
@@ -44,7 +44,7 @@ public class DebugManager : PlayerSystem
     }
     private void UpdateFishingState()
     {
-        if (player.ID.isFishing)
+        if (player.isFishing)
         {
             IsFishingText.text = "Current state:Is fishing";
         }

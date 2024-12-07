@@ -5,13 +5,16 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public PlayerID ID;
-    private void Start()
-    {
-        ID.canFish = true;
-        ID.canRetract = false;
-        ID.isFishing = false;
-        ID.isBoostState = false;
-        ID.FishOnBait = false;
-        ID.isPullState = false;
-    }
+
+    [Header("Fishing")]
+    public bool canFish = true;
+    public bool canRetract = false;
+    public bool isFishing = false;
+    public bool isBoostState = false;
+    public bool isPullState = false;
+    public bool FishOnBait = false;
+    public BaseZone currentZone;
+
+    [Header("Character")]
+    public int Facing = 1;
 }
