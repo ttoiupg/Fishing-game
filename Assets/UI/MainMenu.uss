@@ -1,20 +1,17 @@
 .Container {
-    background-color: rgb(69, 181, 255);
+    background-color: rgb(24, 57, 88);
+    align-self: center;
 }
 
 .StartButton {
-    top: 37%;
-    margin-right: 31%;
-    margin-left: 31%;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Electronic%20Highway%20Sign.TTF?fileID=12800000&guid=8a2b9e2a607dd2143b58c44bc32410b4&type=3#Electronic Highway Sign");
+    top: 10%;
+    margin-right: 0;
+    margin-left: 0;
+    -unity-font-definition: url("project://database/Assets/Material/FredokaOne-Regular.ttf?fileID=12800000&guid=7984b7314f437d54eac26f08789190f2&type=3#FredokaOne-Regular");
     -unity-font-style: bold;
-    color: rgb(255, 255, 255);
-    background-color: rgb(48, 48, 48);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    font-size: 49px;
+    color: rgb(24, 57, 88);
+    background-color: rgb(255, 255, 228);
+    font-size: 412%;
     transition-duration: 0.25s;
     transition-timing-function: ease-out-back;
     align-self: auto;
@@ -23,22 +20,28 @@
     right: auto;
     left: auto;
     margin-top: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 54px;
+    border-top-right-radius: 54px;
+    border-bottom-right-radius: 54px;
+    border-bottom-left-radius: 54px;
+    width: 21%;
+    -unity-text-align: middle-center;
 }
 
 .StartButton:hover {
-    top: 37%;
-    margin-right: 30%;
-    margin-left: 30%;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Electronic%20Highway%20Sign.TTF?fileID=12800000&guid=8a2b9e2a607dd2143b58c44bc32410b4&type=3#Electronic Highway Sign");
+    top: 10%;
+    margin-right: 35%;
+    margin-left: 35%;
+    -unity-font-definition: url("project://database/Assets/Material/FredokaOne-Regular.ttf?fileID=12800000&guid=7984b7314f437d54eac26f08789190f2&type=3#FredokaOne-Regular");
     -unity-font-style: bold;
-    color: rgb(255, 255, 255);
-    background-color: rgb(24, 24, 24);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    font-size: 49px;
-    transition-duration: 0.2s;
+    color: rgb(239, 164, 86);
+    background-color: rgb(18, 132, 158);
+    font-size: 62px;
+    transition-duration: 0.25s;
     transition-timing-function: ease-out-back;
     align-self: auto;
     position: relative;
@@ -46,22 +49,26 @@
     right: auto;
     left: auto;
     margin-top: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 54px;
+    border-top-right-radius: 54px;
+    border-bottom-right-radius: 54px;
+    border-bottom-left-radius: 54px;
 }
 
 .StartButton:active {
-    top: 37%;
-    margin-right: 33%;
-    margin-left: 33%;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Electronic%20Highway%20Sign.TTF?fileID=12800000&guid=8a2b9e2a607dd2143b58c44bc32410b4&type=3#Electronic Highway Sign");
+    top: 10%;
+    margin-right: 38%;
+    margin-left: 38%;
+    -unity-font-definition: url("project://database/Assets/Material/FredokaOne-Regular.ttf?fileID=12800000&guid=7984b7314f437d54eac26f08789190f2&type=3#FredokaOne-Regular");
     -unity-font-style: bold;
-    color: rgb(65, 65, 65);
-    background-color: rgb(178, 178, 178);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    font-size: 49px;
-    transition-duration: 0.2s;
+    color: rgb(255, 255, 228);
+    background-color: rgb(206, 89, 93);
+    font-size: 62px;
+    transition-duration: 0.25s;
     transition-timing-function: ease-out-back;
     align-self: auto;
     position: relative;
@@ -69,4 +76,12 @@
     right: auto;
     left: auto;
     margin-top: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 54px;
+    border-top-right-radius: 54px;
+    border-bottom-right-radius: 54px;
+    border-bottom-left-radius: 54px;
 }
