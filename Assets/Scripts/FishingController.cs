@@ -249,7 +249,7 @@ public class FishingController : PlayerSystem
     private IEnumerator FishCatched()
     {
         VisualFXManager.Instance.DestroyBobber();
-        animator.SetTrigger("RetractFishingRod");
+        animator.SetTrigger("FishCatched");
         SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.8f);
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
@@ -275,7 +275,7 @@ public class FishingController : PlayerSystem
     private void FishFailed()
     {
         VisualFXManager.Instance.DestroyBobber();
-        animator.SetTrigger("RetractFishingRod");
+        animator.SetTrigger("CatchingEnd");
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
         player.FishOnBait = false;
@@ -298,6 +298,7 @@ public class FishingController : PlayerSystem
             float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
             {
+                animator.SetFloat("PullingSpeed",1f + Value);
                 ReelSoundSource.pitch = 0.7f+Value*0.35f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
                 ControlBarGravity = 300f * Value;
@@ -305,6 +306,7 @@ public class FishingController : PlayerSystem
             }
             else
             {
+                animator.SetFloat("PullingSpeed", 0.6f);
                 ReelSoundSource.pitch = 0.7f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
                 ControlBarGravity = -300f;
@@ -397,6 +399,7 @@ public class FishingController : PlayerSystem
     }
     private void SetHook()
     {
+        animator.SetTrigger("FishBite");
         ReelSoundSource.Play();
         SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
         player.FishOnBait = true;
