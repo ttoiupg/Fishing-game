@@ -14,20 +14,20 @@
 .MainBar {
     width: 55%;
     height: 4%;
-    background-color: rgb(20, 14, 38);
+    background-color: rgb(7, 55, 89);
     margin-top: 0;
-    border-top-width: 3px;
+    border-top-width: 6px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
-    border-left-color: rgb(39, 67, 130);
-    border-right-color: rgb(39, 67, 130);
-    border-top-color: rgb(39, 67, 130);
-    border-bottom-color: rgb(39, 67, 130);
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
+    border-left-color: rgb(247, 247, 219);
+    border-right-color: rgb(247, 247, 219);
+    border-top-color: rgb(247, 247, 219);
+    border-bottom-color: rgb(247, 247, 219);
+    border-right-width: 6px;
+    border-bottom-width: 6px;
+    border-left-width: 6px;
     align-items: flex-start;
     overflow: visible;
     justify-content: center;
@@ -36,8 +36,8 @@
 }
 
 .ControlBar {
-    background-color: rgb(255, 255, 255);
-    height: 147%;
+    background-color: rgb(247, 247, 219);
+    height: 194%;
     width: 30%;
     margin-right: 0;
     margin-left: 0;
@@ -48,18 +48,18 @@
     border-bottom-left-radius: 4px;
     left: 35%;
     position: absolute;
-    border-left-color: rgba(255, 255, 255, 0.65);
-    border-right-color: rgba(255, 255, 255, 0.65);
-    border-top-color: rgba(255, 255, 255, 0.65);
-    border-bottom-color: rgba(255, 255, 255, 0.65);
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
+    border-left-color: rgb(217, 77, 88);
+    border-right-color: rgb(217, 77, 88);
+    border-top-color: rgb(217, 77, 88);
+    border-bottom-color: rgb(217, 77, 88);
+    border-top-width: 7px;
+    border-right-width: 7px;
+    border-bottom-width: 7px;
+    border-left-width: 7px;
 }
 
 .FishBar {
-    background-color: rgba(31, 122, 200, 0.6);
+    background-color: rgb(0, 135, 164);
     height: 331%;
     width: 2%;
     margin-right: 0;
@@ -73,32 +73,32 @@
     display: flex;
     position: absolute;
     margin-top: 0;
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
-    border-left-color: rgb(1, 66, 125);
-    border-right-color: rgb(1, 66, 125);
-    border-top-color: rgb(1, 66, 125);
-    border-bottom-color: rgb(1, 66, 125);
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+    border-left-color: rgb(7, 55, 89);
+    border-right-color: rgb(7, 55, 89);
+    border-top-color: rgb(7, 55, 89);
+    border-bottom-color: rgb(7, 55, 89);
     left: 49%;
 }
 
 .ProgressBar {
     width: 40%;
     height: 1%;
-    background-color: rgb(31, 31, 31);
+    background-color: rgb(7, 55, 89);
     margin-top: 46%;
     margin-bottom: 3%;
     margin-right: 0;
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
+    border-left-color: rgb(0, 135, 164);
+    border-right-color: rgb(0, 135, 164);
+    border-top-color: rgb(0, 135, 164);
+    border-bottom-color: rgb(0, 135, 164);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
     visibility: visible;
     border-top-left-radius: 13px;
     border-top-right-radius: 13px;
@@ -108,7 +108,7 @@
 }
 
 .bar {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(247, 247, 219);
     width: 0;
     height: 100%;
     overflow: visible;

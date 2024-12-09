@@ -118,7 +118,13 @@ public class FishingController : PlayerSystem
         {
             lowfreq = 0f;
         }
-        Gamepad.current?.SetMotorSpeeds(lowfreq, highfreq);
+        if (Gamepad.current != null)
+        {
+            if (Gamepad.current?.name != "DualShock4GamepadHID")
+            {
+                Gamepad.current?.SetMotorSpeeds(lowfreq, highfreq);
+            }
+        }
     }
     private void UpdateControlBarPosition()
     {
@@ -190,13 +196,21 @@ public class FishingController : PlayerSystem
             if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 2f))
             {
                 IsFishBarOverlaping = true;
-                ControlBarUI.style.backgroundColor = new StyleColor(new Color(1f,1f,1f,1f));
+                ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(0,228,199,255));
+                ControlBarUI.style.borderTopColor = new StyleColor(new Color32(0, 228, 199, 255));
+                ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(0, 228, 199, 255));
+                ControlBarUI.style.borderRightColor = new StyleColor(new Color32(0, 228, 199, 255));
+
+
                 PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
             }
             else
             {
                 IsFishBarOverlaping = false;
-                ControlBarUI.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f, 0.4f));
+                ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(217, 77, 88, 255));
+                ControlBarUI.style.borderTopColor = new StyleColor(new Color32(217, 77, 88, 255));
+                ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(217, 77, 88, 255));
+                ControlBarUI.style.borderRightColor = new StyleColor(new Color32(217, 77, 88, 255));
                 PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
                 if (PullProgress < 0) { 
                     PullProgress = 0;
