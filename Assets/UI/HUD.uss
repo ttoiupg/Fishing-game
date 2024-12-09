@@ -1,0 +1,55 @@
+.Container {
+    align-content: flex-end;
+    align-self: auto;
+    justify-content: flex-start;
+}
+
+.LevelContianer {
+    background-color: rgb(254, 254, 222);
+    width: 16%;
+    height: 0;
+    top: auto;
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    min-height: 13%;
+    max-height: 28%;
+    margin-top: 41%;
+    border-top-right-radius: 86%;
+    border-left-color: rgb(0, 137, 167);
+    border-right-color: rgb(0, 137, 167);
+    border-top-color: rgb(0, 137, 167);
+    border-bottom-color: rgb(0, 137, 167);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    align-content: center;
+    align-items: stretch;
+}
+
+.LevelCircle {
+    background-color: rgb(0, 0, 0);
+    border-top-left-radius: 114px;
+    border-top-right-radius: 114px;
+    border-bottom-right-radius: 114px;
+    border-bottom-left-radius: 114px;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    border-top-width: 6px;
+    border-right-width: 6px;
+    border-bottom-width: 6px;
+    border-left-width: 6px;
+}
+
+.InnerCircle {
+    position: absolute;
+    width: 80%;
+    height: 100%;
+}
