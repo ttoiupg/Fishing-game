@@ -272,6 +272,7 @@ public class FishingController : PlayerSystem
         player.isPullState = false;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
+        player.experience += CurrentFish.fishType.Experience;
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
         PullProgress = 0f;
         ControlBarPosition = 50f;

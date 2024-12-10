@@ -15,18 +15,19 @@
 }
 
 .radial-progress__label {
-    -unity-text-align: middle-right;
+    -unity-text-align: middle-center;
     color: rgb(254, 254, 222);
     -unity-font-definition: url("project://database/Assets/Material/FredokaOne-Regular.ttf?fileID=12800000&guid=7984b7314f437d54eac26f08789190f2&type=3#FredokaOne-Regular");
-    font-size: 276%;
+    font-size: 345%;
     background-color: rgba(56, 56, 56, 0);
     border-top-width: 0;
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    -unity-text-outline-width: 14px;
+    -unity-text-outline-width: 7px;
     -unity-text-outline-color: rgb(14, 147, 171);
-    letter-spacing: 0;
-    word-spacing: 0;
-    -unity-paragraph-spacing: 0;
+    letter-spacing: initial;
+    word-spacing: initial;
+    -unity-paragraph-spacing: initial;
+    -unity-font-style: bold;
 }

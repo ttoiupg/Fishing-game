@@ -32,6 +32,7 @@ namespace TideAndFinsUILibrary
 
         // This is the number that the Label displays as a percentage.
         float m_Progress;
+        int m_LevelCount;
         float m_Thickness;
 
         [UxmlAttribute]
@@ -72,22 +73,26 @@ namespace TideAndFinsUILibrary
             get => m_Progress;
             set
             {
-                // Set the Progress value and update the label text
                 m_Progress = value;
-                float num = Mathf.Clamp(Mathf.Round(value), 0, 100);
-                if (num < 10)
+                MarkDirtyRepaint();
+            }
+        }
+        [UxmlAttribute]
+        [CreateProperty]
+        public int level
+        {
+            get => m_LevelCount;
+            set
+            {
+                m_LevelCount = value;
+                if (m_LevelCount < 10)
                 {
-                    m_Label.text = "0"+num.ToString();
+                    m_Label.text = "0" + m_LevelCount.ToString();
                 }
                 else
                 {
-                    m_Label.text = num.ToString();
+                    m_Label.text = m_LevelCount.ToString();
                 }
-
-
-                // Triggers the generateVisualContent callback and repaints the element.
-                // This is used to refresh the UI when the Progress changes.
-                // Useful for custom controls, especially when visual content needs updating.
                 MarkDirtyRepaint();
             }
         }
@@ -104,9 +109,7 @@ namespace TideAndFinsUILibrary
                 MarkDirtyRepaint(); 
             }
         }
-        /// <summary>
-        /// This default constructor is RadialProgress's only constructor.
-        /// </summary>
+
         public RadialProgress()
         {
             // Create a Label, add a USS class name, and add it to this visual tree.
@@ -125,7 +128,7 @@ namespace TideAndFinsUILibrary
 
             // Register a callback to generate the visual content of the control.
             generateVisualContent += GenerateVisualContent;
-
+            level = 0;
             Progress = 0.0f;
         }
 

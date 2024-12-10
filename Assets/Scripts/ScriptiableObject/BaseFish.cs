@@ -12,4 +12,5 @@ public class BaseFish : ScriptableObject
     public float MinFishBarChangeTime;
     public float MaxFishBarChangeTime;
     public float MaxFishBarChangeDistance;
+    public float Experience;
 }
