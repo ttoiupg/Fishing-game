@@ -53,3 +53,47 @@
     width: 80%;
     height: 100%;
 }
+
+.LocationContainer {
+    flex-grow: 1;
+    position: absolute;
+    width: 15%;
+    align-self: flex-end;
+    top: 89%;
+    right: 2%;
+    height: 7%;
+    background-color: rgb(254, 254, 222);
+    border-left-color: rgb(0, 137, 167);
+    border-right-color: rgb(0, 137, 167);
+    border-top-color: rgb(0, 137, 167);
+    border-bottom-color: rgb(0, 137, 167);
+    border-top-left-radius: 43px;
+    border-top-right-radius: 43px;
+    border-bottom-right-radius: 43px;
+    border-bottom-left-radius: 43px;
+    border-top-width: 8px;
+    border-right-width: 8px;
+    border-bottom-width: 8px;
+    border-left-width: 8px;
+}
+
+.LocationPointer {
+    flex-grow: 1;
+    align-self: flex-start;
+    width: 11%;
+    background-image: url("project://database/Assets/Sprite/Position%20pointer.png?fileID=2800000&guid=d3ac412333f84f047b8f87a5dbdfe88e&type=3#Position pointer");
+    -unity-background-scale-mode: scale-to-fit;
+    left: 5%;
+}
+
+.LocationText {
+    position: absolute;
+    left: 21%;
+    height: 91%;
+    width: 67%;
+    -unity-font-definition: url("project://database/Assets/Material/FredokaOne-Regular.ttf?fileID=12800000&guid=7984b7314f437d54eac26f08789190f2&type=3#FredokaOne-Regular");
+    font-size: 194%;
+    -unity-font-style: normal;
+    color: rgb(54, 54, 47);
+    -unity-text-align: middle-left;
+}
