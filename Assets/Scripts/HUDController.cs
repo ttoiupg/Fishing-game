@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 public class HUDController : PlayerSystem
 {
@@ -15,6 +16,9 @@ public class HUDController : PlayerSystem
     public float LevelSpeed = 0.2f;
     public float ExpSpeed = 0.5f;
 
+    private VisualElement MenuContainer;
+    public bool isMenuOpen = false;
+
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -23,10 +27,7 @@ public class HUDController : PlayerSystem
         return 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
     }
 
-    private void Start()
-    {
-        radialProgress = UIDocument.rootVisualElement.Q("RadialProgress") as TideAndFinsUILibrary.RadialProgress;
-    }
+
     private void UpdateLevelProgress(Fish fish)
     {
         targetLevel = player.level;
@@ -70,13 +71,27 @@ public class HUDController : PlayerSystem
             }
         }
     }
+    private void SwitchMenu(InputAction.CallbackContext callbackContext)
+    {
+        isMenuOpen = !isMenuOpen;
+        Debug.Log("Switch menu");
+        MenuContainer.SetEnabled(isMenuOpen);
+    }
     private void OnEnable()
     {
+        playerInput.UI.Enable();
         player.ID.playerEvents.OnFishCatched += UpdateLevelProgress;
+        playerInput.UI.OpenMenu.performed += SwitchMenu;
     }
     private void OnDisable()
     {
         player.ID.playerEvents.OnFishCatched -= UpdateLevelProgress;
+        playerInput.UI.OpenMenu.performed -= SwitchMenu;
+    }
+    private void Start()
+    {
+        radialProgress = UIDocument.rootVisualElement.Q("RadialProgress") as TideAndFinsUILibrary.RadialProgress;
+        MenuContainer = UIDocument.rootVisualElement.Q("MenuContainer");
     }
     private void Update()
     {
