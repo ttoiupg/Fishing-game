@@ -114,15 +114,16 @@
 .MenuBox {
     flex-grow: 1;
     background-color: rgb(247, 247, 219);
-    align-self: center;
     width: 100%;
     height: 43%;
     position: absolute;
-    align-content: flex-start;
     border-top-left-radius: 77px;
     border-top-right-radius: 77px;
     border-bottom-right-radius: 77px;
     border-bottom-left-radius: 77px;
+    align-self: center;
+    justify-content: flex-end;
+    align-content: auto;
 }
 
 .MenuContainer:enabled {

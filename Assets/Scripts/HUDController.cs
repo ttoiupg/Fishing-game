@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using DG.Tweening;
+using UnityEditor.Rendering;
 public class HUDController : PlayerSystem
 {
     public UIDocument UIDocument;
@@ -16,9 +18,12 @@ public class HUDController : PlayerSystem
     public float LevelSpeed = 0.2f;
     public float ExpSpeed = 0.5f;
 
-    private VisualElement MenuContainer;
+    [Header("Menu UI")]
+    public RectTransform MenuCenterCircle;
+    public RectTransform MenuNeedle;
+    public string currentMouseLocation = "None";
+    public string lastMouseLocation = "None";
     public bool isMenuOpen = false;
-
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -75,7 +80,58 @@ public class HUDController : PlayerSystem
     {
         isMenuOpen = !isMenuOpen;
         Debug.Log("Switch menu");
-        MenuContainer.SetEnabled(isMenuOpen);
+        if (isMenuOpen)
+        {
+            MenuCenterCircle.DOScale(new Vector3(1, 1, 1), 0.35f).SetEase(Ease.OutBack);
+        }
+        else
+        {
+            MenuCenterCircle.DOScale(new Vector3(0, 0, 0), 0.35f).SetEase(Ease.InBack);
+        }
+    }
+    private void RotateNeedle()
+    {
+        if (currentMouseLocation != lastMouseLocation)
+        {
+            lastMouseLocation = currentMouseLocation;
+            if (lastMouseLocation == "Up")
+            {
+                MenuNeedle.DORotate(new Vector3(0,0,0),0.35f).SetEase(Ease.OutBack);
+            }else if (lastMouseLocation == "Right")
+            {
+                MenuNeedle.DORotate(new Vector3(0, 0, -90f), 0.35f).SetEase(Ease.OutBack);
+            }
+            else if (lastMouseLocation == "Down")
+            {
+                MenuNeedle.DORotate(new Vector3(0, 0, 180f), 0.35f).SetEase(Ease.OutBack);
+            }
+            else if (lastMouseLocation == "Left")
+            {
+                MenuNeedle.DORotate(new Vector3(0, 0, 90f), 0.35f).SetEase(Ease.OutBack);
+            }
+        }
+    }
+    private void TrackMousePosition()
+    {
+        if (isMenuOpen) {
+            Vector2 mousePosition =  Mouse.current.position.value;
+            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 deltaVector = mousePosition - screenCenter;
+            if (deltaVector.y > 0f && deltaVector.y > Mathf.Abs(deltaVector.x))
+            {
+                currentMouseLocation = "Up";
+            }else if (deltaVector.x > 0f && deltaVector.x > Mathf.Abs(deltaVector.y))
+            {
+                currentMouseLocation = "Right";
+            }else if (deltaVector.y < 0f && Mathf.Abs(deltaVector.x) < Mathf.Abs(deltaVector.y))
+            {
+                currentMouseLocation = "Down";
+            }else if (deltaVector.x < 0f && Mathf.Abs(deltaVector.y) < Mathf.Abs(deltaVector.x))
+            {
+                currentMouseLocation = "Left";
+            }
+            RotateNeedle();
+        }
     }
     private void OnEnable()
     {
@@ -91,10 +147,11 @@ public class HUDController : PlayerSystem
     private void Start()
     {
         radialProgress = UIDocument.rootVisualElement.Q("RadialProgress") as TideAndFinsUILibrary.RadialProgress;
-        MenuContainer = UIDocument.rootVisualElement.Q("MenuContainer");
+        //MenuContainer = UIDocument.rootVisualElement.Q("MenuContainer");
     }
     private void Update()
     {
         UpdateRadialProgress();
+        TrackMousePosition();
     }
 }

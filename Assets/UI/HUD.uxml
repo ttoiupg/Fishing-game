@@ -2,9 +2,6 @@
     <Style src="project://database/Assets/UI/HUD.uss?fileID=7433441132597879392&amp;guid=0b22b71665956b7429457af955ede857&amp;type=3#HUD" />
     <Style src="project://database/Assets/UI/RadialProgress.uss?fileID=7433441132597879392&amp;guid=3312178b634ff5c40a92b15a8a38715d&amp;type=3#RadialProgress" />
     <engine:VisualElement name="Container" class="Container" style="flex-grow: 1;">
-        <engine:VisualElement name="MenuContainer" enabled="false" class="MenuContainer" style="background-size: 99% 100%;">
-            <engine:VisualElement name="MenuBox" class="MenuBox" />
-        </engine:VisualElement>
         <engine:VisualElement name="LocationContainer" class="LocationContainer">
             <engine:VisualElement name="LocationPointer" class="LocationPointer" />
             <engine:Label text="Label" name="LocationText" class="LocationText" />
