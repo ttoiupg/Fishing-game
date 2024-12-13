@@ -133,6 +133,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""e064e650-b0be-434e-9c52-3c6532153313"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -144,6 +153,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0dd4d3a7-3186-40a8-b48f-df8a167945b1"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a35fe60c-90d1-4ff3-a7f9-0ae7dee31b48"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ff007cf-c250-4e97-a3ac-63fe2f4bc382"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e13ef64b-dcc0-4308-8506-868d32eec1ed"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""94989f0f-07a0-460a-b1e5-1dc1ccd28120"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f8cb2f8-22ba-4bc3-b0f0-8601db562c81"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -161,6 +236,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_OpenMenu = m_UI.FindAction("OpenMenu", throwIfNotFound: true);
+        m_UI_SelectMenu = m_UI.FindAction("SelectMenu", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -322,11 +398,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_OpenMenu;
+    private readonly InputAction m_UI_SelectMenu;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
         public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @OpenMenu => m_Wrapper.m_UI_OpenMenu;
+        public InputAction @SelectMenu => m_Wrapper.m_UI_SelectMenu;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +417,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @OpenMenu.started += instance.OnOpenMenu;
             @OpenMenu.performed += instance.OnOpenMenu;
             @OpenMenu.canceled += instance.OnOpenMenu;
+            @SelectMenu.started += instance.OnSelectMenu;
+            @SelectMenu.performed += instance.OnSelectMenu;
+            @SelectMenu.canceled += instance.OnSelectMenu;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -346,6 +427,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @OpenMenu.started -= instance.OnOpenMenu;
             @OpenMenu.performed -= instance.OnOpenMenu;
             @OpenMenu.canceled -= instance.OnOpenMenu;
+            @SelectMenu.started -= instance.OnSelectMenu;
+            @SelectMenu.performed -= instance.OnSelectMenu;
+            @SelectMenu.canceled -= instance.OnSelectMenu;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -374,5 +458,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnOpenMenu(InputAction.CallbackContext context);
+        void OnSelectMenu(InputAction.CallbackContext context);
     }
 }

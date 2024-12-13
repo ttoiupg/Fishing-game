@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using DG.Tweening;
 using UnityEditor.Rendering;
+using System.Runtime.CompilerServices;
+using TMPro;
 public class HUDController : PlayerSystem
 {
     public UIDocument UIDocument;
@@ -19,11 +21,24 @@ public class HUDController : PlayerSystem
     public float ExpSpeed = 0.5f;
 
     [Header("Menu UI")]
+    public AudioClip OpenSound;
+    public AudioClip CloseSound;
+    public AudioClip RotateSound;
+    public float openTime = 0.22f;
+    public float closeTime = 0.17f;
+    public float spinSpeed = 0.26f;
+    public float needleDegree = 0f;
     public RectTransform MenuCenterCircle;
     public RectTransform MenuNeedle;
-    public string currentMouseLocation = "None";
-    public string lastMouseLocation = "None";
+    public RectTransform UpMenu;
+    public RectTransform DownMenu;
+    public RectTransform LeftMenu;
+    public RectTransform RightMenu;
+    public string currentNeedleLocation = "None";
+    public string lastNeedleLocation = "None";
     public bool isMenuOpen = false;
+    public bool isDpadCurrentInputing = false;
+    public bool MenuDebounce = false;
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -31,12 +46,45 @@ public class HUDController : PlayerSystem
 
         return 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
     }
-
+    private void ResetMenuState()
+    {
+        MenuDebounce = false;
+    }
 
     private void UpdateLevelProgress(Fish fish)
     {
         targetLevel = player.level;
         targetProgress = player.experience / player.expRequire * 100f;
+    }
+    private void MenuOpenAnimation()
+    {
+        SoundFXManger.Instance.PlaySoundFXClip(OpenSound, player.transform, 0.5f);
+        MenuCenterCircle.DOScale(new Vector3(1, 1, 1), openTime).SetEase(Ease.OutBack);
+        UpMenu.localScale = Vector3.zero;
+        DownMenu.localScale = Vector3.zero;
+        LeftMenu.localScale = Vector3.zero;
+        RightMenu.localScale = Vector3.zero;
+        UpMenu.DOLocalMoveY(341f,0.25f).SetEase(Ease.OutBack).SetDelay(0.1f);
+        UpMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.1f);
+        LeftMenu.DOLocalMoveX(-418f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.2f);
+        LeftMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.2f);
+        DownMenu.DOLocalMoveY(-341f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
+        DownMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
+        RightMenu.DOLocalMoveX(418f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.4f);
+        RightMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.4f);
+    }
+    private void MenuCloseAnimation()
+    {
+        SoundFXManger.Instance.PlaySoundFXClip(CloseSound, player.transform, 0.5f);
+        UpMenu.DOLocalMoveY(0, 0.25f).SetEase(Ease.InBack);
+        UpMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack);
+        LeftMenu.DOLocalMoveX(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.1f);
+        LeftMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.1f);
+        DownMenu.DOLocalMoveY(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.2f);
+        DownMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.2f);
+        RightMenu.DOLocalMoveX(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.3f);
+        RightMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.3f);
+        MenuCenterCircle.DOScale(new Vector3(0, 0, 0), closeTime).SetEase(Ease.InBack).SetDelay(0.4f);
     }
     private void UpdateRadialProgress()
     {
@@ -78,71 +126,102 @@ public class HUDController : PlayerSystem
     }
     private void SwitchMenu(InputAction.CallbackContext callbackContext)
     {
+        if (MenuDebounce) return;
         isMenuOpen = !isMenuOpen;
-        Debug.Log("Switch menu");
         if (isMenuOpen)
         {
-            MenuCenterCircle.DOScale(new Vector3(1, 1, 1), 0.35f).SetEase(Ease.OutBack);
+            MenuOpenAnimation();
         }
         else
         {
-            MenuCenterCircle.DOScale(new Vector3(0, 0, 0), 0.35f).SetEase(Ease.InBack);
+            MenuCloseAnimation();
+            MenuDebounce = true;
+            Invoke("ResetMenuState", 0.5f);
         }
     }
     private void RotateNeedle()
     {
-        if (currentMouseLocation != lastMouseLocation)
+        if (currentNeedleLocation != lastNeedleLocation)
         {
-            lastMouseLocation = currentMouseLocation;
-            if (lastMouseLocation == "Up")
+            lastNeedleLocation = currentNeedleLocation;
+            if (lastNeedleLocation == "up")
             {
-                MenuNeedle.DORotate(new Vector3(0,0,0),0.35f).SetEase(Ease.OutBack);
-            }else if (lastMouseLocation == "Right")
-            {
-                MenuNeedle.DORotate(new Vector3(0, 0, -90f), 0.35f).SetEase(Ease.OutBack);
+                needleDegree = 0f;
             }
-            else if (lastMouseLocation == "Down")
+            else if (lastNeedleLocation == "right")
             {
-                MenuNeedle.DORotate(new Vector3(0, 0, 180f), 0.35f).SetEase(Ease.OutBack);
+                needleDegree = -90f;
             }
-            else if (lastMouseLocation == "Left")
+            else if (lastNeedleLocation == "down")
             {
-                MenuNeedle.DORotate(new Vector3(0, 0, 90f), 0.35f).SetEase(Ease.OutBack);
+                needleDegree = 180f;
             }
+            else if (lastNeedleLocation == "left")
+            {
+                needleDegree = 90f;
+            }
+            SoundFXManger.Instance.PlaySoundFXClip(RotateSound, player.transform, 1f);
+            MenuNeedle.DORotate(new Vector3(0, 0, needleDegree), spinSpeed).SetEase(Ease.OutBack);
         }
     }
-    private void TrackMousePosition()
+    private void TrackNeedlePosition()
     {
         if (isMenuOpen) {
-            Vector2 mousePosition =  Mouse.current.position.value;
-            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Vector2 deltaVector = mousePosition - screenCenter;
-            if (deltaVector.y > 0f && deltaVector.y > Mathf.Abs(deltaVector.x))
+            if (!isDpadCurrentInputing)
             {
-                currentMouseLocation = "Up";
-            }else if (deltaVector.x > 0f && deltaVector.x > Mathf.Abs(deltaVector.y))
-            {
-                currentMouseLocation = "Right";
-            }else if (deltaVector.y < 0f && Mathf.Abs(deltaVector.x) < Mathf.Abs(deltaVector.y))
-            {
-                currentMouseLocation = "Down";
-            }else if (deltaVector.x < 0f && Mathf.Abs(deltaVector.y) < Mathf.Abs(deltaVector.x))
-            {
-                currentMouseLocation = "Left";
+                Vector2 mousePosition = Mouse.current.position.value;
+                Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+                Vector2 deltaVector = mousePosition - screenCenter;
+                if (deltaVector.y > 0f && deltaVector.y > Mathf.Abs(deltaVector.x))
+                {
+                    currentNeedleLocation = "up";
+                }
+                else if (deltaVector.x > 0f && deltaVector.x > Mathf.Abs(deltaVector.y))
+                {
+                    currentNeedleLocation = "right";
+                }
+                else if (deltaVector.y < 0f && Mathf.Abs(deltaVector.x) < Mathf.Abs(deltaVector.y))
+                {
+                    currentNeedleLocation = "down";
+                }
+                else if (deltaVector.x < 0f && Mathf.Abs(deltaVector.y) < Mathf.Abs(deltaVector.x))
+                {
+                    currentNeedleLocation = "left";
+                }
             }
             RotateNeedle();
         }
+    }
+    private void SelectMenu(InputAction.CallbackContext callbackContext)
+    {
+        if (!isMenuOpen) return;
+        if (player.isControllerConnected)
+        {
+            isDpadCurrentInputing = false;
+            currentNeedleLocation = callbackContext.control.name;
+            RotateNeedle();
+            isMenuOpen = false;
+        }
+        else
+        {
+            isMenuOpen = false;
+        }
+        MenuCloseAnimation();
+        MenuDebounce = true;
+        Invoke("ResetMenuState",0.5f);
     }
     private void OnEnable()
     {
         playerInput.UI.Enable();
         player.ID.playerEvents.OnFishCatched += UpdateLevelProgress;
         playerInput.UI.OpenMenu.performed += SwitchMenu;
+        playerInput.UI.SelectMenu.performed += SelectMenu;
     }
     private void OnDisable()
     {
         player.ID.playerEvents.OnFishCatched -= UpdateLevelProgress;
         playerInput.UI.OpenMenu.performed -= SwitchMenu;
+        playerInput.UI.SelectMenu.performed -= SelectMenu;
     }
     private void Start()
     {
@@ -152,6 +231,6 @@ public class HUDController : PlayerSystem
     private void Update()
     {
         UpdateRadialProgress();
-        TrackMousePosition();
+        TrackNeedlePosition();
     }
 }

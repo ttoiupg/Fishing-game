@@ -268,7 +268,7 @@ public class FishingController : PlayerSystem
     {
         VisualFXManager.Instance.DestroyBobber();
         animator.SetTrigger("FishCatched");
-        SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.8f);
+        SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.7f);
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
         player.FishOnBait = false;
@@ -384,17 +384,17 @@ public class FishingController : PlayerSystem
             if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
             {
 
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.65f);
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.45f);
                 buff = player.ID.GreenZonebuff;
             }
             else if (IsOverlap(OrangeChunkPosition, OrangeChunkPosition + 44f, NeedlePosition, NeedlePosition + 4f))
             {
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.6f);
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.4f);
                 buff = player.ID.OrangeZonebuff;
             }
             else
             {
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1f);
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1.2f);
             }
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(EnterPullState(buff));
