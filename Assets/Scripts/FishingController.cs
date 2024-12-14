@@ -7,13 +7,13 @@ using System.Reflection;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
-using UnityEditor.Timeline.Actions;
+
+
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.InputSystem.iOS;
+
 using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
@@ -282,7 +282,7 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
-        camera.CameraDistance = 10f;
+        camera.CameraDistance = 7f;
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.2f);
         Gamepad.current?.SetMotorSpeeds(0, 0);
@@ -306,7 +306,7 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
-        camera.CameraDistance = 10f;
+        camera.CameraDistance = 7f;
         SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
         InputSystem.ResetHaptics();
     }
@@ -321,7 +321,7 @@ public class FishingController : PlayerSystem
                 ReelSoundSource.pitch = 0.7f+Value*0.35f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
                 ControlBarGravity = 300f * Value;
-                camera.CameraDistance = 10f - 4f * Value;
+                camera.CameraDistance = 7f - 2f * Value;
             }
             else
             {
@@ -329,7 +329,7 @@ public class FishingController : PlayerSystem
                 ReelSoundSource.pitch = 0.7f;
                 //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
                 ControlBarGravity = -300f;
-                camera.CameraDistance = 10f;
+                camera.CameraDistance = 7f;
             }
         }
     }
@@ -422,7 +422,7 @@ public class FishingController : PlayerSystem
         ReelSoundSource.Play();
         SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
         player.FishOnBait = true;
-        camera.CameraDistance = 8f;
+        camera.CameraDistance = 6f;
         Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
         EnterBoostState();
     }
@@ -459,7 +459,7 @@ public class FishingController : PlayerSystem
                             StopCoroutine(FishingCoroutine);
                         }
                         animator.SetTrigger("CastFishingRod");
-                        camera.CameraDistance = 14f;
+                        camera.CameraDistance = 12f;
                         Invoke("CastFishingRod", 0.65f);
                     }
                 }
@@ -488,7 +488,7 @@ public class FishingController : PlayerSystem
                 StopCoroutine(FishingCoroutine);
             }
             animator.SetTrigger("RetractFishingRod");
-            camera.CameraDistance = 10f;
+            camera.CameraDistance = 7f;
             player.ID.playerEvents.OnExitFishingState?.Invoke();
             VisualFXManager.Instance.DestroyBobber();
         }

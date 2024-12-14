@@ -12,8 +12,8 @@
 }
 
 .MainBar {
-    width: 55%;
-    height: 4%;
+    width: 38%;
+    height: 3%;
     background-color: rgb(7, 55, 89);
     margin-top: 0;
     border-top-width: 6px;
@@ -85,8 +85,8 @@
 }
 
 .ProgressBar {
-    width: 40%;
-    height: 1%;
+    width: 26%;
+    height: 10%;
     background-color: rgb(7, 55, 89);
     margin-top: 46%;
     margin-bottom: 3%;
@@ -105,6 +105,7 @@
     border-bottom-right-radius: 13px;
     border-bottom-left-radius: 13px;
     overflow: hidden;
+    max-height: 2%;
 }
 
 .bar {

@@ -2,9 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using DG.Tweening;
-using UnityEditor.Rendering;
+
 using System.Runtime.CompilerServices;
 using TMPro;
+using System.Collections.Generic;
 public class HUDController : PlayerSystem
 {
     public UIDocument UIDocument;
@@ -28,6 +29,7 @@ public class HUDController : PlayerSystem
     public float closeTime = 0.17f;
     public float spinSpeed = 0.26f;
     public float needleDegree = 0f;
+    public RectTransform CurrentPage;
     public RectTransform MenuCenterCircle;
     public RectTransform MenuNeedle;
     public RectTransform UpMenu;
@@ -36,9 +38,14 @@ public class HUDController : PlayerSystem
     public RectTransform RightMenu;
     public string currentNeedleLocation = "None";
     public string lastNeedleLocation = "None";
+    public bool isPageOpen = false;
     public bool isMenuOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
+    [Header("Fishipedia")]
+    public RectTransform FishipediaPage;
+
+    public Dictionary<string, RectTransform> Pages = new Dictionary<string, RectTransform>();
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -50,7 +57,6 @@ public class HUDController : PlayerSystem
     {
         MenuDebounce = false;
     }
-
     private void UpdateLevelProgress(Fish fish)
     {
         targetLevel = player.level;
@@ -60,31 +66,27 @@ public class HUDController : PlayerSystem
     {
         SoundFXManger.Instance.PlaySoundFXClip(OpenSound, player.transform, 0.5f);
         MenuCenterCircle.DOScale(new Vector3(1, 1, 1), openTime).SetEase(Ease.OutBack);
-        UpMenu.localScale = Vector3.zero;
-        DownMenu.localScale = Vector3.zero;
-        LeftMenu.localScale = Vector3.zero;
-        RightMenu.localScale = Vector3.zero;
         UpMenu.DOLocalMoveY(341f,0.25f).SetEase(Ease.OutBack).SetDelay(0.1f);
-        UpMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.1f);
+        UpMenu.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetDelay(0.1f);
         LeftMenu.DOLocalMoveX(-418f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.2f);
-        LeftMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.2f);
+        LeftMenu.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetDelay(0.2f);
         DownMenu.DOLocalMoveY(-341f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
-        DownMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
+        DownMenu.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
         RightMenu.DOLocalMoveX(418f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.4f);
-        RightMenu.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.25f).SetEase(Ease.OutBack).SetDelay(0.4f);
+        RightMenu.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetDelay(0.4f);
     }
     private void MenuCloseAnimation()
     {
         SoundFXManger.Instance.PlaySoundFXClip(CloseSound, player.transform, 0.5f);
         UpMenu.DOLocalMoveY(0, 0.25f).SetEase(Ease.InBack);
-        UpMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack);
+        UpMenu.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack);
         LeftMenu.DOLocalMoveX(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.1f);
-        LeftMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.1f);
+        LeftMenu.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).SetDelay(0.1f);
         DownMenu.DOLocalMoveY(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.2f);
-        DownMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.2f);
+        DownMenu.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).SetDelay(0.2f);
         RightMenu.DOLocalMoveX(0, 0.25f).SetEase(Ease.InBack).SetDelay(0.3f);
-        RightMenu.DOScale(new Vector3(0, 0, 0), 0.25f).SetEase(Ease.InBack).SetDelay(0.3f);
-        MenuCenterCircle.DOScale(new Vector3(0, 0, 0), closeTime).SetEase(Ease.InBack).SetDelay(0.4f);
+        RightMenu.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).SetDelay(0.3f);
+        MenuCenterCircle.DOScale(Vector3.zero, closeTime).SetEase(Ease.InBack).SetDelay(0.4f);
     }
     private void UpdateRadialProgress()
     {
@@ -127,16 +129,24 @@ public class HUDController : PlayerSystem
     private void SwitchMenu(InputAction.CallbackContext callbackContext)
     {
         if (MenuDebounce) return;
-        isMenuOpen = !isMenuOpen;
-        if (isMenuOpen)
+        if (isPageOpen)
         {
-            MenuOpenAnimation();
+            isPageOpen = false;
+            CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
         else
         {
-            MenuCloseAnimation();
-            MenuDebounce = true;
-            Invoke("ResetMenuState", 0.5f);
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen)
+            {
+                MenuOpenAnimation();
+            }
+            else
+            {
+                MenuCloseAnimation();
+                MenuDebounce = true;
+                Invoke("ResetMenuState", 0.5f);
+            }
         }
     }
     private void RotateNeedle()
@@ -206,6 +216,11 @@ public class HUDController : PlayerSystem
         {
             isMenuOpen = false;
         }
+        if (Pages.TryGetValue(currentNeedleLocation,out CurrentPage))
+        {
+            isPageOpen = true;
+            CurrentPage.DOScale(Vector3.one,0.3f).SetEase(Ease.OutBack);
+        }
         MenuCloseAnimation();
         MenuDebounce = true;
         Invoke("ResetMenuState",0.5f);
@@ -225,6 +240,7 @@ public class HUDController : PlayerSystem
     }
     private void Start()
     {
+        Pages.Add("left", FishipediaPage);
         radialProgress = UIDocument.rootVisualElement.Q("RadialProgress") as TideAndFinsUILibrary.RadialProgress;
         //MenuContainer = UIDocument.rootVisualElement.Q("MenuContainer");
     }

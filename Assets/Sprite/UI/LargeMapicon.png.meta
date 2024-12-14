@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: c98ca9ddc0529a745b2e3af74de2eb09
+guid: c0aa65ccc4379d944b3fd487b8aed3e8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -136,23 +136,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MenuNeedle_0
+      name: LargeMapicon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 411
-        height: 495
-      alignment: 9
-      pivot: {x: 0.5, y: 0.41}
+        width: 456
+        height: 605
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 26ce246459f4698439b226ed32f5aa57
-      internalID: -223037229
+      spriteID: c08fdfb8762959b4faa62406ba10b258
+      internalID: -1518392325
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b5a4d4cae5adc3f4e9cc247180575a8c
+    spriteID: 3e981d51ce9b56b41b8f44af4bd32804
     internalID: 0
     vertices: []
     indices: 
@@ -171,7 +171,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MenuNeedle_0: -223037229
+      LargeMapicon_0: -1518392325
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -18,13 +18,11 @@ public class Player : MonoBehaviour
         {
             _experience = value;
             expRequire = (float)GetExpRQ(level);
-            Debug.Log(expRequire);
             while (_experience >= expRequire)
             {
                 _experience -= expRequire;
                 level += 1;
                 expRequire = (float)GetExpRQ(level);
-                Debug.Log(expRequire);
             }
         }
     }

@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/PullStateUI.uss?fileID=7433441132597879392&amp;guid=17e78a9d10f3ae645ab8e6eb6c67166d&amp;type=3#PullStateUI" />
-    <ui:VisualElement name="Panel" class="panel">
+    <Style src="project://database/Assets/UI/PullStateUI.uss?fileID=7433441132597879392&amp;guid=17e78a9d10f3ae645ab8e6eb6c67166d&amp;type=3#PullStateUI" />
+    <ui:VisualElement name="Panel" picking-mode="Ignore" class="panel">
         <ui:VisualElement name="ProgressBar" class="ProgressBar" style="flex-grow: 1;">
             <ui:VisualElement name="Bar" class="bar" style="flex-grow: 1;" />
         </ui:VisualElement>
