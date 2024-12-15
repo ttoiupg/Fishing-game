@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
   m_Name: Bass
   m_EditorClassIdentifier: 
-  Art: {fileID: 0}
-  Weight: 2
-  Age: 3
+  Art: {fileID: -1257370397, guid: d019c846c74fe604b8acf4f3e94c2bf9, type: 3}
+  MinWeight: 1
+  MaxWeight: 10
+  FavoriteFood: 
   Rarity: {fileID: 11400000, guid: 497f172d5e8bc7d42af204e455cbffea, type: 2}
   MinFishBarChangeTime: 2
   MaxFishBarChangeTime: 4
   MaxFishBarChangeDistance: 20
   Experience: 5
+  Ring: {fileID: -1550052252, guid: f4f8bfd082e062c4cbe2e7d79e5677b0, type: 3}
+  Card: {fileID: 584208038, guid: fd46778b156bc4a4bb82596a5728b27f, type: 3}

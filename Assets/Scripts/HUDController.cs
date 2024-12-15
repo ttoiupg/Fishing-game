@@ -131,6 +131,7 @@ public class HUDController : PlayerSystem
         if (MenuDebounce) return;
         if (isPageOpen)
         {
+            player.canFish = true;
             isPageOpen = false;
             CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
@@ -139,10 +140,12 @@ public class HUDController : PlayerSystem
             isMenuOpen = !isMenuOpen;
             if (isMenuOpen)
             {
+                player.canFish = false;
                 MenuOpenAnimation();
             }
             else
             {
+                player.canFish = true;
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);

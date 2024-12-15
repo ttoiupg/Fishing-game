@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
   m_Name: Epic fish
   m_EditorClassIdentifier: 
-  Art: {fileID: 0}
-  Weight: 0
-  Age: 0
+  Art: {fileID: -1257370397, guid: d019c846c74fe604b8acf4f3e94c2bf9, type: 3}
+  MinWeight: 10
+  MaxWeight: 20
+  FavoriteFood: 
   Rarity: {fileID: 11400000, guid: 90d07ed032b34554e8edbb7b3896c66f, type: 2}
   MinFishBarChangeTime: 1
   MaxFishBarChangeTime: 3
   MaxFishBarChangeDistance: 45
   Experience: 50
+  Ring: {fileID: -157092711, guid: e9c25384dc0e0c84c9977c6094079b9d, type: 3}
+  Card: {fileID: -833074646, guid: acb1a2cbd1f20d74c9f5edcbf96fe3db, type: 3}

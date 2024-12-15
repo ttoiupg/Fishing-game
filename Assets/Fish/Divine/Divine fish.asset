@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
   m_Name: Divine fish
   m_EditorClassIdentifier: 
-  Art: {fileID: 0}
-  Weight: 0
-  Age: 0
+  Art: {fileID: -1257370397, guid: d019c846c74fe604b8acf4f3e94c2bf9, type: 3}
+  MinWeight: 100
+  MaxWeight: 1000
+  FavoriteFood: 
   Rarity: {fileID: 11400000, guid: 3eea06dffff413f4ca5181c0241e48f9, type: 2}
   MinFishBarChangeTime: 0.2
   MaxFishBarChangeTime: 1
   MaxFishBarChangeDistance: 100
   Experience: 800
+  Ring: {fileID: -1243408522, guid: 9f1e2e51ca42d4b47902f921cb575ce6, type: 3}
+  Card: {fileID: -383249680, guid: 41cc15a3f0ddc5a498d894879b591a4b, type: 3}

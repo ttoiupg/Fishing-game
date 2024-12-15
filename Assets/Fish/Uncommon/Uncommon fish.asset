@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
   m_Name: Uncommon fish
   m_EditorClassIdentifier: 
-  Art: {fileID: 0}
-  Weight: 0
-  Age: 0
+  Art: {fileID: -1257370397, guid: d019c846c74fe604b8acf4f3e94c2bf9, type: 3}
+  MinWeight: 3
+  MaxWeight: 10
+  FavoriteFood: 
   Rarity: {fileID: 11400000, guid: 238952fdb8a34c54291bf22977d009cb, type: 2}
   MinFishBarChangeTime: 1.8
   MaxFishBarChangeTime: 3.5
   MaxFishBarChangeDistance: 25
   Experience: 10
+  Ring: {fileID: 1120759592, guid: 6b22bf0690f02d84c9dc436902d58750, type: 3}
+  Card: {fileID: 2047376644, guid: 1e85fcec381440b4c86789207478199b, type: 3}

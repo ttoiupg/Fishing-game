@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
   m_Name: Mythical fish
   m_EditorClassIdentifier: 
-  Art: {fileID: 0}
-  Weight: 0
-  Age: 0
+  Art: {fileID: -1257370397, guid: d019c846c74fe604b8acf4f3e94c2bf9, type: 3}
+  MinWeight: 40
+  MaxWeight: 50
+  FavoriteFood: 
   Rarity: {fileID: 11400000, guid: 71560ec2eaf725246b929175529a4d86, type: 2}
   MinFishBarChangeTime: 0.2
   MaxFishBarChangeTime: 1.5
   MaxFishBarChangeDistance: 90
   Experience: 400
+  Ring: {fileID: 1770324248, guid: 155bbb51404311e4ba43e04f5f1e408c, type: 3}
+  Card: {fileID: 924430231, guid: 5fe5613970cc2ce44b40aa2619af4b01, type: 3}
