@@ -140,7 +140,7 @@ public class FishingController : PlayerSystem
         }
         else if((NextPosition + player.ID.pullBarSize / 2) >= 100) 
         {
-            ControlBarVelocity *= -0.4f;
+            ControlBarVelocity *= -0.2f;
             NextPosition = 100 - player.ID.pullBarSize / 2;
         }
         ControlBarPosition = NextPosition;
