@@ -7,6 +7,7 @@ public class FishipediaHandler : MonoBehaviour
 {
     public GameConfiguration gameConfiguration;
     public GameObject fishipediaDisplayIcon;
+    public FishipediaCardController cardController;
     public List<RectTransform> Labels = new List<RectTransform>();
     public int CurrentCategory;
     public List<RectTransform> Categories = new List<RectTransform>();
@@ -34,6 +35,7 @@ public class FishipediaHandler : MonoBehaviour
         {
             FishIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishIconDisplayer>();
             icon.fish = baseFish;
+            icon.cardController = cardController;
             icon.Init();
         }
     }

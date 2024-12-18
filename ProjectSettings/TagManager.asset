@@ -7,15 +7,6 @@ TagManager:
   - Zone
   - FishingLineStart
   - Bobber
-  - FishipediaCard
-  - FishipediaCardArt
-  - FishipediaCardDiscoverDate
-  - FishipediaCardWeight
-  - FishipediaCardFishName
-  - FishipediaCardRarity
-  - FishipediaCardFavoriteFood
-  - FishipediaCardDisplay
-  - FishipediaCardBack
   layers:
   - Default
   - TransparentFX
@@ -23,7 +14,7 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
+  - Card
   - 
   - 
   - 
@@ -58,3 +49,4 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
+  - Card
