@@ -57,7 +57,12 @@ public class HUDController : PlayerSystem
     {
         MenuDebounce = false;
     }
-    private void UpdateLevelProgress(Fish fish)
+    public void UpdateLevelProgress(Fish fish)
+    {
+        targetLevel = player.level;
+        targetProgress = player.experience / player.expRequire * 100f;
+    }
+    public void UpdateLevelProgress()
     {
         targetLevel = player.level;
         targetProgress = player.experience / player.expRequire * 100f;

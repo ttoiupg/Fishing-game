@@ -281,12 +281,12 @@ public class FishingController : PlayerSystem
     }
     private void ProcessFish()
     {
-        if (!player.discoveredFishes.Exists((x) => x.baseFish == CurrentFish.fishType))
+        if (!player.discoveredFish.Exists((x) => x.baseFish == CurrentFish.fishType))
         {
             DiscoveredFish discoveredFish = new DiscoveredFish();
             discoveredFish.baseFish = CurrentFish.fishType;
             discoveredFish.discoverDate = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-            player.discoveredFishes.Add(discoveredFish);
+            player.discoveredFish.Add(discoveredFish);
             player.ID.playerEvents.OnFishUnlocked.Invoke(CurrentFish.fishType);
         }
         player.experience += CurrentFish.fishType.Experience;

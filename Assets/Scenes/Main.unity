@@ -2183,6 +2183,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &443794983
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 443794985}
+  - component: {fileID: 443794984}
+  m_Layer: 0
+  m_Name: DataPersistenceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &443794984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443794983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed9ed3d46caadb429a06587a7d6bc33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: data.Tide
+--- !u!4 &443794985
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443794983}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -18.278738, y: -452.46558, z: 855.7252}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &517118029
 GameObject:
   m_ObjectHideFlags: 0
@@ -7116,11 +7161,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: {fileID: 11400000, guid: ca471eb440b5fd344b1aac63aee07278, type: 2}
+  HUDController: {fileID: 350805853}
   isControllerConnected: 0
   expRequire: 1
   _experience: 0
   level: 1
-  discoveredFishes: []
+  discoveredFish: []
   canFish: 1
   canRetract: 0
   isFishing: 0
@@ -9682,6 +9728,7 @@ SceneRoots:
   - {fileID: 1216859337}
   - {fileID: 1481102895}
   - {fileID: 1294194412}
+  - {fileID: 443794985}
   - {fileID: 1862933844}
   - {fileID: 705507995}
   - {fileID: 1746172382}

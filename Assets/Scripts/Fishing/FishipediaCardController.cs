@@ -49,7 +49,7 @@ public class FishipediaCardController : MonoBehaviour
         Invoke("SetOpen",0.5f);
         Front.sprite = fish.Card;
         Art.sprite = fish.Art;
-        DiscoveredFish discoveredFish = player.discoveredFishes.Find((x) => x.baseFish == fish);
+        DiscoveredFish discoveredFish = player.discoveredFish.Find((x) => x.baseFish == fish);
         if (discoveredFish == null)
         {
             Art.color = Color.black;

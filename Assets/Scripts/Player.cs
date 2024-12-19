@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
+    public HUDController HUDController;
     public bool isControllerConnected = false;
 
     [Header("Stats")]
@@ -26,7 +27,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public List<DiscoveredFish> discoveredFishes;
+    public List<DiscoveredFish> discoveredFish;
 
     [Header("Fishing")]
     public bool canFish = true;
@@ -65,9 +66,25 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
-
     void Awake()
     {
         StartCoroutine(CheckForControllers());
+    }
+    private void Start()
+    {
+        HUDController.UpdateLevelProgress();
+    }
+    public void LoadData(GameData gameData)
+    {
+        level = gameData.level;
+        experience = gameData.experience;
+        expRequire = (float)GetExpRQ(level);
+        discoveredFish = gameData.discoveredFish;
+    }
+    public void SaveData(ref GameData gameData)
+    {
+        gameData.level = level;
+        gameData.experience = experience;
+        gameData.discoveredFish = discoveredFish;
     }
 }
