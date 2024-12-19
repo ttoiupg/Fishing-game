@@ -18,7 +18,6 @@ using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
-    public FishingManager fishingManager;
     [Header("effect")]
     public CinemachinePositionComposer camera;
     [Header("Buff UI")]
@@ -225,7 +224,7 @@ public class FishingController : PlayerSystem
             ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
             if (PullProgress >= 100f)
             {
-                StartCoroutine(FishCatched());
+                FishCatched();
             }
         }
     }
@@ -265,24 +264,12 @@ public class FishingController : PlayerSystem
         }
         return catchedFish;
     }
-    private IEnumerator FishCatched()
+    private IEnumerator FishCatchedEffects()
     {
         VisualFXManager.Instance.DestroyBobber();
         animator.SetTrigger("FishCatched");
         SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.7f);
         ReelSoundSource.Stop();
-        StopCoroutine(PullCoroutine);
-        player.FishOnBait = false;
-        player.isFishing = false;
-        player.isPullState = false;
-        PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
-        fishingManager.CatchedFish(CurrentFish);
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
-        player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
-        PullProgress = 0f;
-        ControlBarPosition = 50f;
-        FishBarPosition = 49f;
-        FishBarTargetPosition = 49;
         camera.CameraDistance = 7f;
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.2f);
@@ -291,6 +278,34 @@ public class FishingController : PlayerSystem
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
         yield return new WaitForSeconds(0.1f);
         InputSystem.ResetHaptics();
+    }
+    private void ProcessFish()
+    {
+        if (!player.discoveredFishes.Exists((x) => x.baseFish == CurrentFish.fishType))
+        {
+            DiscoveredFish discoveredFish = new DiscoveredFish();
+            discoveredFish.baseFish = CurrentFish.fishType;
+            discoveredFish.discoverDate = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            player.discoveredFishes.Add(discoveredFish);
+            player.ID.playerEvents.OnFishUnlocked.Invoke(CurrentFish.fishType);
+        }
+        player.experience += CurrentFish.fishType.Experience;
+    }
+    private void FishCatched()
+    {
+        StartCoroutine(FishCatchedEffects());
+        ProcessFish();
+        StopCoroutine(PullCoroutine);
+        player.FishOnBait = false;
+        player.isFishing = false;
+        player.isPullState = false;
+        PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
+        player.ID.playerEvents.OnExitFishingState?.Invoke();
+        player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
+        PullProgress = 0f;
+        ControlBarPosition = 50f;
+        FishBarPosition = 49f;
+        FishBarTargetPosition = 49;
     }
     private void FishFailed()
     {

@@ -16,7 +16,7 @@ public class BaseFish : ScriptableObject, IComparable<BaseFish>
     public float MaxFishBarChangeDistance;
     public float Experience;
     public float FishipediaCardShader;
-
+    public String DiscoverDate;
     [Header("Display")]
     public Sprite Ring;
     public Sprite Card;

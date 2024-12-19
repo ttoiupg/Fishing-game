@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public List<BaseFish> UnlockedFishes;
+    public List<DiscoveredFish> discoveredFishes;
 
     [Header("Fishing")]
     public bool canFish = true;

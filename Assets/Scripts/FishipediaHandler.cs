@@ -2,9 +2,11 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class FishipediaHandler : MonoBehaviour
 {
+    public Player player;
     public GameConfiguration gameConfiguration;
     public GameObject fishipediaDisplayIcon;
     public FishipediaCardController cardController;
@@ -36,7 +38,15 @@ public class FishipediaHandler : MonoBehaviour
             FishIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishIconDisplayer>();
             icon.fish = baseFish;
             icon.cardController = cardController;
+            icon.player = player;
+            icon.enabled = true;
             icon.Init();
         }
     }
+}
+[System.Serializable]
+public class DiscoveredFish
+{
+    public string discoverDate;
+    public BaseFish baseFish;
 }

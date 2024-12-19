@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 
 public class FishipediaCardController : MonoBehaviour
 {
+    public Player player;
     public Transform cardTransform;
     public GameObject shadow;
     public SpriteRenderer Front;
@@ -48,19 +49,33 @@ public class FishipediaCardController : MonoBehaviour
         Invoke("SetOpen",0.5f);
         Front.sprite = fish.Card;
         Art.sprite = fish.Art;
-        Fishname.text = fish.name;
-        Rarity.text = fish.Rarity.name;
-        FavoriteFood.text = fish.FavoriteFood;
-        Weight.text = fish.MinWeight + "~" + fish.MaxWeight;
-        DiscoverDate.text = "Discover date : " + System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+        DiscoveredFish discoveredFish = player.discoveredFishes.Find((x) => x.baseFish == fish);
+        if (discoveredFish == null)
+        {
+            Art.color = Color.black;
+            Fishname.text = "???";
+            Rarity.text = fish.Rarity.name;
+            FavoriteFood.text = "???";
+            Weight.text = "??? ~ ???";
+            DiscoverDate.text = "Yet to be discovered!";
+        }
+        else
+        {
+            Art.color = Color.white;
+            Fishname.text = fish.name;
+            Rarity.text = fish.Rarity.name;
+            FavoriteFood.text = fish.FavoriteFood;
+            Weight.text = fish.MinWeight + "~" + fish.MaxWeight;
+            DiscoverDate.text = "Discover date : " + discoveredFish.discoverDate;
+        }
         material.SetFloat("_EDITION", fish.FishipediaCardShader);
         Front.material = new Material(material);
     }
     public void CloseCard()
     {
         isOpen = false;
-        cardTransform.DORotate(new Vector3(0, 180, 0), .5f).SetEase(Ease.OutBack);
-        cardTransform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuad);
+        cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
+        cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint);
     }
     void Update()
     {
