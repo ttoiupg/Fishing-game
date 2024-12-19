@@ -18,6 +18,7 @@ using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
+    public FishingManager fishingManager;
     [Header("effect")]
     public CinemachinePositionComposer camera;
     [Header("Buff UI")]
@@ -275,8 +276,8 @@ public class FishingController : PlayerSystem
         player.isFishing = false;
         player.isPullState = false;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
+        fishingManager.CatchedFish(CurrentFish);
         player.ID.playerEvents.OnExitFishingState?.Invoke();
-        player.experience += CurrentFish.fishType.Experience;
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
         PullProgress = 0f;
         ControlBarPosition = 50f;

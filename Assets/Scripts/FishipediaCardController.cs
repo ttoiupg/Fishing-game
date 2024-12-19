@@ -6,6 +6,7 @@ using Unity.Burst.Intrinsics;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 
 public class FishipediaCardController : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class FishipediaCardController : MonoBehaviour
     public SpriteRenderer Art;
     public TextMeshPro Fishname;
     public TextMeshPro Weight;
+    public TextMeshPro DiscoverDate;
     public TextMeshPro Rarity;
     public TextMeshPro FavoriteFood;
-    public TextMeshPro DiscoverDate;
     public Material material;
     public float x_RotateAmount;
     public float y_RotateAmount;
@@ -28,8 +29,7 @@ public class FishipediaCardController : MonoBehaviour
     void Start()
     {
         cardTransform = GetComponent<Transform>();
-        material = new Material(Front.material);
-        Front.material = material;
+        Debug.Log("started");
     }
     float Remap(float value, float from1,float to1, float from2, float to2)
     {
@@ -53,12 +53,14 @@ public class FishipediaCardController : MonoBehaviour
         FavoriteFood.text = fish.FavoriteFood;
         Weight.text = fish.MinWeight + "~" + fish.MaxWeight;
         DiscoverDate.text = "Discover date : " + System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+        material.SetFloat("_EDITION", fish.FishipediaCardShader);
+        Front.material = new Material(material);
     }
     public void CloseCard()
     {
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .5f).SetEase(Ease.OutBack);
-        cardTransform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutBack);
+        cardTransform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutQuad);
     }
     void Update()
     {
