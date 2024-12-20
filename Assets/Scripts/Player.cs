@@ -28,6 +28,7 @@ public class Player : MonoBehaviour,IDataPersistence
         }
     }
     public List<DiscoveredFish> discoveredFish;
+    private List<IDataDiscoverFish> dataDiscoverFish;
 
     [Header("Fishing")]
     public bool canFish = true;
@@ -79,12 +80,33 @@ public class Player : MonoBehaviour,IDataPersistence
         level = gameData.level;
         experience = gameData.experience;
         expRequire = (float)GetExpRQ(level);
-        discoveredFish = gameData.discoveredFish;
+        discoveredFish.Clear();
+        foreach(IDataDiscoverFish dataFish in gameData.discoveredFish)
+        {
+            BaseFish b_fish = DataPersistenceManager.Instance.gameFish.Find((x) => x.name == dataFish.name);
+            discoveredFish.Add(new DiscoveredFish(b_fish,dataFish.discoverDate));
+        }
     }
     public void SaveData(ref GameData gameData)
     {
         gameData.level = level;
         gameData.experience = experience;
-        gameData.discoveredFish = discoveredFish;
+        List<IDataDiscoverFish> tempDisFish = new List<IDataDiscoverFish>();
+        foreach (DiscoveredFish Fish in discoveredFish)
+        {
+            tempDisFish.Add(new IDataDiscoverFish(Fish));
+        }
+        gameData.discoveredFish = tempDisFish;
+    }
+}
+[System.Serializable]
+public class IDataDiscoverFish
+{
+    public string name;
+    public string discoverDate;
+    public IDataDiscoverFish(DiscoveredFish fish)
+    {
+        name = fish.baseFish.name;
+        discoverDate = fish.discoverDate;
     }
 }

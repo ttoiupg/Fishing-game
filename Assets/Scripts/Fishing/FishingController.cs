@@ -283,9 +283,7 @@ public class FishingController : PlayerSystem
     {
         if (!player.discoveredFish.Exists((x) => x.baseFish == CurrentFish.fishType))
         {
-            DiscoveredFish discoveredFish = new DiscoveredFish();
-            discoveredFish.baseFish = CurrentFish.fishType;
-            discoveredFish.discoverDate = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            DiscoveredFish discoveredFish = new DiscoveredFish(CurrentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             player.discoveredFish.Add(discoveredFish);
             player.ID.playerEvents.OnFishUnlocked.Invoke(CurrentFish.fishType);
         }

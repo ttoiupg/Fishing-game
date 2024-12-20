@@ -2213,6 +2213,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileName: data.Tide
+  gameFish:
+  - {fileID: 11400000, guid: 28d9b1a8abc864843abcd72b68490be3, type: 2}
+  - {fileID: 11400000, guid: a0ea2960c5a931a4188bf0d41c903f52, type: 2}
+  - {fileID: 11400000, guid: 92420d49c96a56248b16e3a38661aa01, type: 2}
+  - {fileID: 11400000, guid: 6b1be3a9077db5d409c43d6d0666c5c9, type: 2}
+  - {fileID: 11400000, guid: fae94c1009c622942b0d5a7b1afcf958, type: 2}
+  - {fileID: 11400000, guid: 87344f555b65ef14d8342c7a37bd4942, type: 2}
+  - {fileID: 11400000, guid: 662d106b30a9c0d4ea2b01ef602ac5cb, type: 2}
 --- !u!4 &443794985
 Transform:
   m_ObjectHideFlags: 0
@@ -2268,7 +2276,7 @@ MonoBehaviour:
   Rarity: {fileID: 1110542249}
   FavoriteFood: {fileID: 1682497592}
   material: {fileID: 2100000, guid: d4486aa92df9c25419207a1dc5fe1938, type: 2}
-  x_RotateAmount: 30
+  x_RotateAmount: 46
   y_RotateAmount: 30
   isOpen: 0
 --- !u!4 &517118031

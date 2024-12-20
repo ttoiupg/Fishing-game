@@ -49,4 +49,9 @@ public class DiscoveredFish
 {
     public string discoverDate;
     public BaseFish baseFish;
+    public DiscoveredFish(BaseFish fish, string _discoverDate)
+    {
+        discoverDate = _discoverDate;
+        baseFish = fish;
+    }
 }

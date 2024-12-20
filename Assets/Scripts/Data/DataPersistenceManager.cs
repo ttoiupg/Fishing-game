@@ -8,6 +8,7 @@ public class DataPersistenceManager : MonoBehaviour
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
     public static DataPersistenceManager Instance { get; private set; }
+    public List<BaseFish> gameFish;
 
     private void Awake()
     {
