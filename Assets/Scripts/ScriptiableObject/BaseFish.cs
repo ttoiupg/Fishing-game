@@ -29,9 +29,9 @@ public class BaseFish : ScriptableObject, IComparable<BaseFish>
         }
         else
         {
-            float rarityA = 1f / this.Rarity.OneIn;
+            float rarityA = 1f / Rarity.OneIn;
             float rarityB = 1f / compareFish.Rarity.OneIn;
-            return rarityA.CompareTo(rarityB);
+            return rarityB.CompareTo(rarityA);
         }
     }
 }

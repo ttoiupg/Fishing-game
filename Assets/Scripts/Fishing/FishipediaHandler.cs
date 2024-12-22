@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Linq;
 
 public class FishipediaHandler : MonoBehaviour
 {
@@ -31,8 +32,8 @@ public class FishipediaHandler : MonoBehaviour
     }
     private void Start()
     {
-        List<BaseFish> pondFish = gameConfiguration.PondFishes;
-        pondFish.Sort();
+        List<BaseFish> pondFish = gameConfiguration.PondFishes.OrderBy(x => 1f/x.Rarity.OneIn).ToList();
+        Debug.Log(pondFish);
         foreach(BaseFish baseFish in pondFish)
         {
             FishIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishIconDisplayer>();

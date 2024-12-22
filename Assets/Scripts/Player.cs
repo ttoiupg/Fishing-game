@@ -29,19 +29,13 @@ public class Player : MonoBehaviour,IDataPersistence
     }
     public List<DiscoveredFish> discoveredFish;
     private List<IDataDiscoverFish> dataDiscoverFish;
+    public PlayerState currentState;
 
     [Header("Fishing")]
-    public bool canFish = true;
-    public bool canRetract = false;
-    public bool isFishing = false;
-    public bool isBoostState = false;
-    public bool isPullState = false;
-    public bool FishOnBait = false;
     public BaseZone currentZone;
 
     [Header("Character")]
     public int Facing = 1;
-
     float GetExpRQ(int level)
     {
         return Mathf.Round((4 * (Mathf.Pow((float)level,3f))) / 5);
@@ -109,4 +103,17 @@ public class IDataDiscoverFish
         name = fish.baseFish.name;
         discoverDate = fish.discoverDate;
     }
+}
+[System.Serializable]
+public enum PlayerState
+{
+    None,
+    Freeze,
+    Fishing,
+    CastingRod,
+    FishingBoost,
+    FishingPull,
+    MenuOpened,
+    CardOpened,
+    InspectingFish,
 }

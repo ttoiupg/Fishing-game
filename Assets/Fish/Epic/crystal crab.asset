@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
+  m_Name: crystal crab
+  m_EditorClassIdentifier: 
+  Art: {fileID: 1631353042, guid: 1e62408b0b0255449a0a64500df818e2, type: 3}
+  MinWeight: 10
+  MaxWeight: 20
+  FavoriteFood: 
+  Rarity: {fileID: 11400000, guid: cd54333d9b76b4045a521dd269e828aa, type: 2}
+  MinFishBarChangeTime: 1
+  MaxFishBarChangeTime: 3
+  MaxFishBarChangeDistance: 45
+  Experience: 50
+  FishipediaCardShader: 3
+  DiscoverDate: 
+  Ring: {fileID: -157092711, guid: e9c25384dc0e0c84c9977c6094079b9d, type: 3}
+  Card: {fileID: -833074646, guid: acb1a2cbd1f20d74c9f5edcbf96fe3db, type: 3}

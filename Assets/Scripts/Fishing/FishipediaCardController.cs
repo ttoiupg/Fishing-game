@@ -36,17 +36,13 @@ public class FishipediaCardController : MonoBehaviour
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
-    void SetOpen()
+    public IEnumerator OpenCard(BaseFish fish)
     {
-        isOpen = true;
-    }
-    public void OpenCard(BaseFish fish)
-    {
+        player.currentState = PlayerState.CardOpened;
         shadow.SetActive(true);
         cardTransform.rotation = Quaternion.Euler(0,180,0);
         cardTransform.DORotate(new Vector3(0,0,0),.5f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
-        Invoke("SetOpen",0.5f);
         Front.sprite = fish.Card;
         Art.sprite = fish.Art;
         DiscoveredFish discoveredFish = player.discoveredFish.Find((x) => x.baseFish == fish);
@@ -70,9 +66,12 @@ public class FishipediaCardController : MonoBehaviour
         }
         material.SetFloat("_EDITION", fish.FishipediaCardShader);
         Front.material = new Material(material);
+        yield return new WaitForSeconds(0.5f);
+        isOpen = true;
     }
     public void CloseCard()
     {
+        player.currentState = PlayerState.MenuOpened;
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint);

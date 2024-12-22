@@ -35,6 +35,6 @@ public class FishIconDisplayer : MonoBehaviour
     }
     public void Clicked()
     {
-        cardController.OpenCard(fish);
+        StartCoroutine(cardController.OpenCard(fish));
     }
 }

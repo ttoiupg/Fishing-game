@@ -134,9 +134,10 @@ public class HUDController : PlayerSystem
     private void SwitchMenu(InputAction.CallbackContext callbackContext)
     {
         if (MenuDebounce) return;
+        if (player.currentState == PlayerState.CardOpened || player.currentState == PlayerState.InspectingFish) return;
         if (isPageOpen)
         {
-            player.canFish = true;
+            player.currentState = PlayerState.None;
             isPageOpen = false;
             CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
@@ -145,12 +146,12 @@ public class HUDController : PlayerSystem
             isMenuOpen = !isMenuOpen;
             if (isMenuOpen)
             {
-                player.canFish = false;
+                player.currentState = PlayerState.MenuOpened;
                 MenuOpenAnimation();
             }
             else
             {
-                player.canFish = true;
+                player.currentState = PlayerState.None;
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);

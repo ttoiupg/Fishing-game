@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
+  m_Name: carrot puff
+  m_EditorClassIdentifier: 
+  Art: {fileID: -423445430, guid: 213fcc01ddb9d0e4c82a78ec44bc04a5, type: 3}
+  MinWeight: 3
+  MaxWeight: 10
+  FavoriteFood: 
+  Rarity: {fileID: 11400000, guid: ddfe17cd4fe2ac148a741495cd4f3d80, type: 2}
+  MinFishBarChangeTime: 1.8
+  MaxFishBarChangeTime: 3.5
+  MaxFishBarChangeDistance: 25
+  Experience: 10
+  FishipediaCardShader: 0
+  DiscoverDate: 
+  Ring: {fileID: 1120759592, guid: 6b22bf0690f02d84c9dc436902d58750, type: 3}
+  Card: {fileID: 2047376644, guid: 1e85fcec381440b4c86789207478199b, type: 3}

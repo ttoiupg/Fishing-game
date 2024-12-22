@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
+  m_Name: electricus
+  m_EditorClassIdentifier: 
+  Art: {fileID: -1593176219, guid: 86d5f7029368dac4badf53709ebfedb9, type: 3}
+  MinWeight: 5
+  MaxWeight: 15
+  FavoriteFood: 
+  Rarity: {fileID: 11400000, guid: 6f76e872db012134f91e6f7b8a164e06, type: 2}
+  MinFishBarChangeTime: 1.8
+  MaxFishBarChangeTime: 3
+  MaxFishBarChangeDistance: 60
+  Experience: 100
+  FishipediaCardShader: 3
+  DiscoverDate: 
+  Ring: {fileID: 272162759, guid: 40b38ce77d40c964196db9681d84924f, type: 3}
+  Card: {fileID: -1740269756, guid: 12397dfbc3253c145a5aff92010f04a5, type: 3}

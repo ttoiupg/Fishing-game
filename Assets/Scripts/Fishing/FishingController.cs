@@ -6,19 +6,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using TMPro;
 using Unity.Cinemachine;
+using Unity.Collections;
 using Unity.VisualScripting;
-
-
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-
 using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
     [Header("effect")]
+    public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer camera;
     [Header("Buff UI")]
     public UIDocument BoostStateUI;
@@ -167,7 +166,7 @@ public class FishingController : PlayerSystem
     }
     private void BoostStateUpdateFunction()
     {
-        if (player.isBoostState == true)
+        if (player.currentState == PlayerState.FishingBoost)
         {
             float NextPosition = NeedlePosition + needleDirection * needleSpeed * Time.deltaTime;
             if (NextPosition >= 96f)
@@ -188,7 +187,7 @@ public class FishingController : PlayerSystem
     }
     private void PullStateUpdateFunction()
     {
-        if (player.isPullState == true)
+        if (player.currentState == PlayerState.FishingPull)
         {
             //Update control bar's position
             UpdateControlBarPosition();
@@ -281,6 +280,7 @@ public class FishingController : PlayerSystem
     }
     private void ProcessFish()
     {
+            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(CurrentFish));
         if (!player.discoveredFish.Exists((x) => x.baseFish == CurrentFish.fishType))
         {
             DiscoveredFish discoveredFish = new DiscoveredFish(CurrentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
@@ -294,9 +294,7 @@ public class FishingController : PlayerSystem
         StartCoroutine(FishCatchedEffects());
         ProcessFish();
         StopCoroutine(PullCoroutine);
-        player.FishOnBait = false;
-        player.isFishing = false;
-        player.isPullState = false;
+        player.currentState = PlayerState.None;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
@@ -311,9 +309,7 @@ public class FishingController : PlayerSystem
         animator.SetTrigger("CatchingEnd");
         ReelSoundSource.Stop();
         StopCoroutine(PullCoroutine);
-        player.FishOnBait = false;
-        player.isFishing = false;
-        player.isPullState = false;
+        player.currentState = PlayerState.None;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         PullProgress = 0f;
@@ -326,7 +322,7 @@ public class FishingController : PlayerSystem
     }
     public void ControlPullingBar()
     {
-        if (player.isPullState == true)
+        if (player.currentState == PlayerState.FishingPull)
         {
             float Value = ControlBarAction.ReadValue<float>();
             if (Value > 0)
@@ -349,7 +345,7 @@ public class FishingController : PlayerSystem
     }
     public IEnumerator RandomFishBarPosition()
     {
-        while (player.isPullState)
+        while (player.currentState == PlayerState.FishingPull)
         {
             float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
 
@@ -369,7 +365,6 @@ public class FishingController : PlayerSystem
         BaseMutation catchedBaseMutation = RollForMutation();
         CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
         player.ID.playerEvents.OnPullStage?.Invoke();
-        player.isBoostState = false;
         PullProgress = Buff;
         ControlBarPosition = 50f;
         ControlBarGravity = 0f;
@@ -380,7 +375,7 @@ public class FishingController : PlayerSystem
         ControlBarUI.style.left = ControlBarStylePosition;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(0.5f);
-        player.isPullState = true;
+        player.currentState = PlayerState.FishingPull;
         PullCoroutine = StartCoroutine(RandomFishBarPosition());
     }
     public void LandNeedle(InputAction.CallbackContext callbackContext)
@@ -389,12 +384,11 @@ public class FishingController : PlayerSystem
     }
     public IEnumerator LandNeedleCoroutine()
     {
-        //Debug.Log(player.ID.isBoostState);
-        if (player.isBoostState && player.FishOnBait)
+        if (player.currentState == PlayerState.FishingBoost)
         {
-            
-            player.isBoostState = false;
+
             float buff = 10f;
+            //player sound effects
             if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
             {
 
@@ -417,8 +411,8 @@ public class FishingController : PlayerSystem
     }
     private void EnterBoostState()
     {
+        player.currentState = PlayerState.FishingBoost;
         player.ID.playerEvents.OnBoostStage?.Invoke();
-        player.isBoostState = true;
         BoostStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         OrangeChunkPosition = UnityEngine.Random.Range(0, 66f);
         GreenChunkPosition = OrangeChunkPosition + 12f;
@@ -435,15 +429,12 @@ public class FishingController : PlayerSystem
         animator.SetTrigger("FishBite");
         ReelSoundSource.Play();
         SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
-        player.FishOnBait = true;
         camera.CameraDistance = 6f;
         Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
         EnterBoostState();
     }
     public IEnumerator WaitForbite()
     {
-        yield return new WaitForSeconds(3f);
-        player.canRetract = true;
         float randTime = UnityEngine.Random.Range(3.5f, 6f);
         yield return new WaitForSeconds(randTime);
         SetHook();
@@ -453,59 +444,48 @@ public class FishingController : PlayerSystem
     #region Casting fishing rod
     public void CastOrRetract(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed == true)
+        if (player.currentState == PlayerState.None)
         {
-            if (player.FishOnBait == false)
+            if (player.currentZone != null)
             {
-                if (player.isFishing == false && player.canFish)
-                {
-                    if (player.currentZone != null)
-                    {
-                        animator.SetBool("IsMoving", false);
-                        player.isFishing = true;
-                        player.ID.playerEvents.OnEnterFishingState.Invoke();
-                        player.canRetract = false;
-                        AvailableFishes = player.currentZone.GetSortedFeaturedFish();
-                        AvaliableMutations = player.currentZone.GetSortedFeaturedMutations();
-
-                        if (FishingCoroutine != null)
-                        {
-                            StopCoroutine(FishingCoroutine);
-                        }
-                        animator.SetTrigger("CastFishingRod");
-                        camera.CameraDistance = 12f;
-                        Invoke("CastFishingRod", 0.65f);
-                    }
-                }
-                else if (player.isFishing)
-                {
-                    RetractFishingRod();
-                }
-            };
+                StartCoroutine(CastFishingRod());
+            }
+        }
+        else if(player.currentState == PlayerState.Fishing)
+        {
+            RetractFishingRod();
         }
     }
-    public void CastFishingRod()
+    public IEnumerator CastFishingRod()
     {
-        if (player.currentZone != null)
+        player.currentState = PlayerState.CastingRod;
+        animator.SetBool("IsMoving", false);
+        player.ID.playerEvents.OnEnterFishingState?.Invoke();
+        AvailableFishes = player.currentZone.GetSortedFeaturedFish();
+        AvaliableMutations = player.currentZone.GetSortedFeaturedMutations();
+        if (FishingCoroutine != null)
         {
-            VisualFXManager.Instance.SpawnBobber(playerTransform.position + new Vector3(0,2f,0),player.Facing);
-            FishingCoroutine = StartCoroutine(WaitForbite());
+            StopCoroutine(FishingCoroutine);
         }
+        animator.SetTrigger("CastFishingRod");
+        camera.CameraDistance = 12f;
+        yield return new WaitForSeconds(0.65f);
+        VisualFXManager.Instance.SpawnBobber(playerTransform.position + new Vector3(0, 2f, 0), player.Facing);
+        FishingCoroutine = StartCoroutine(WaitForbite());
+        yield return new WaitForSeconds(3f);
+        player.currentState = PlayerState.Fishing;
     }
     public void RetractFishingRod()
     {
-        if (player.canRetract == true)
+        player.currentState = PlayerState.None;
+        if (FishingCoroutine != null)
         {
-            player.isFishing = false;
-            if (FishingCoroutine != null)
-            {
-                StopCoroutine(FishingCoroutine);
-            }
-            animator.SetTrigger("RetractFishingRod");
-            camera.CameraDistance = 7f;
-            player.ID.playerEvents.OnExitFishingState?.Invoke();
-            VisualFXManager.Instance.DestroyBobber();
+            StopCoroutine(FishingCoroutine);
         }
+        animator.SetTrigger("RetractFishingRod");
+        camera.CameraDistance = 7f;
+        player.ID.playerEvents.OnExitFishingState?.Invoke();
+        VisualFXManager.Instance.DestroyBobber();
     }
 
     #endregion

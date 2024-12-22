@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e8de075ae4d24464a80882b59e3c59a, type: 3}
+  m_Name: arronipos
+  m_EditorClassIdentifier: 
+  Art: {fileID: -1235879198, guid: 753497ce9f3fdc44ca59e0765bc7fe31, type: 3}
+  MinWeight: 1
+  MaxWeight: 10
+  FavoriteFood: 
+  Rarity: {fileID: 11400000, guid: 9b7b5c0f3bde0bf4c92a37fd15c1d557, type: 2}
+  MinFishBarChangeTime: 2
+  MaxFishBarChangeTime: 4
+  MaxFishBarChangeDistance: 20
+  Experience: 5
+  FishipediaCardShader: 0
+  DiscoverDate: 
+  Ring: {fileID: -1550052252, guid: f4f8bfd082e062c4cbe2e7d79e5677b0, type: 3}
+  Card: {fileID: 584208038, guid: fd46778b156bc4a4bb82596a5728b27f, type: 3}
