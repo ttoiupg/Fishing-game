@@ -111,6 +111,7 @@ public enum PlayerState
     Freeze,
     Fishing,
     CastingRod,
+    RetractingRod,
     FishingBoost,
     FishingPull,
     MenuOpened,

@@ -2,16 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using TMPro;
 using Unity.Cinemachine;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
@@ -51,8 +45,9 @@ public class FishingController : PlayerSystem
     public float OrangeChunkPosition;
     public float GreenChunkPosition;
     public float NeedlePosition;
-    public float needleSpeed = 3f;
+    public float needleSpeed;
     public int needleDirection = 1;
+    public bool needleLanded = false;
 
     [Header("Sound effects")]
     public AudioClip BiteNotify;
@@ -217,7 +212,7 @@ public class FishingController : PlayerSystem
                 PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
                 if (PullProgress < 0) { 
                     PullProgress = 0;
-                    FishFailed();
+                    StartCoroutine(FishFailed());
                 }
             }
             ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
@@ -278,23 +273,28 @@ public class FishingController : PlayerSystem
         yield return new WaitForSeconds(0.1f);
         InputSystem.ResetHaptics();
     }
-    private void ProcessFish()
+    private IEnumerator ProcessFish()
     {
-            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(CurrentFish));
         if (!player.discoveredFish.Exists((x) => x.baseFish == CurrentFish.fishType))
         {
+            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(CurrentFish));
             DiscoveredFish discoveredFish = new DiscoveredFish(CurrentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             player.discoveredFish.Add(discoveredFish);
             player.ID.playerEvents.OnFishUnlocked.Invoke(CurrentFish.fishType);
+        }
+        else
+        {
+            player.currentState = PlayerState.RetractingRod;
+            yield return new WaitForSeconds(0.6f);
+            player.currentState = PlayerState.None;
         }
         player.experience += CurrentFish.fishType.Experience;
     }
     private void FishCatched()
     {
         StartCoroutine(FishCatchedEffects());
-        ProcessFish();
+        StartCoroutine(ProcessFish());
         StopCoroutine(PullCoroutine);
-        player.currentState = PlayerState.None;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
@@ -302,8 +302,9 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
+        needleLanded = false;
     }
-    private void FishFailed()
+    private IEnumerator FishFailed()
     {
         VisualFXManager.Instance.DestroyBobber();
         animator.SetTrigger("CatchingEnd");
@@ -317,8 +318,12 @@ public class FishingController : PlayerSystem
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
         camera.CameraDistance = 7f;
+        needleLanded = false;
         SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
         InputSystem.ResetHaptics();
+        player.currentState = PlayerState.RetractingRod;
+        yield return new WaitForSeconds(0.6f);
+        player.currentState = PlayerState.None;
     }
     public void ControlPullingBar()
     {
@@ -380,14 +385,16 @@ public class FishingController : PlayerSystem
     }
     public void LandNeedle(InputAction.CallbackContext callbackContext)
     {
+        if (needleLanded == true) return;
         StartCoroutine(LandNeedleCoroutine());
     }
     public IEnumerator LandNeedleCoroutine()
     {
         if (player.currentState == PlayerState.FishingBoost)
         {
-
+            needleLanded = true;
             float buff = 10f;
+            needleSpeed = 0f;
             //player sound effects
             if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
             {
@@ -416,6 +423,7 @@ public class FishingController : PlayerSystem
         BoostStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         OrangeChunkPosition = UnityEngine.Random.Range(0, 66f);
         GreenChunkPosition = OrangeChunkPosition + 12f;
+        needleSpeed = 100f;
         NeedlePosition = 48f;
         OrangeChunkStylePosition = new StyleLength(Length.Percent(OrangeChunkPosition));
         GreenChunkStylePosition = new StyleLength(Length.Percent(GreenChunkPosition));
@@ -453,7 +461,7 @@ public class FishingController : PlayerSystem
         }
         else if(player.currentState == PlayerState.Fishing)
         {
-            RetractFishingRod();
+            StartCoroutine(RetractFishingRod());
         }
     }
     public IEnumerator CastFishingRod()
@@ -475,9 +483,9 @@ public class FishingController : PlayerSystem
         yield return new WaitForSeconds(3f);
         player.currentState = PlayerState.Fishing;
     }
-    public void RetractFishingRod()
+    public IEnumerator RetractFishingRod()
     {
-        player.currentState = PlayerState.None;
+        player.currentState = PlayerState.RetractingRod;
         if (FishingCoroutine != null)
         {
             StopCoroutine(FishingCoroutine);
@@ -486,6 +494,8 @@ public class FishingController : PlayerSystem
         camera.CameraDistance = 7f;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         VisualFXManager.Instance.DestroyBobber();
+        yield return new WaitForSeconds(0.6f);
+        player.currentState = PlayerState.None;
     }
 
     #endregion

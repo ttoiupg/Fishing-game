@@ -3259,8 +3259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4869e863e65ea0e41915acffc4baad95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  DebugUI: {fileID: 0}
 --- !u!1 &590468892
 GameObject:
   m_ObjectHideFlags: 0
@@ -26648,6 +26646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edd5628747f44c4682ca16d30e4c208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1643146911}
   fishCatchScreenCanvaGroup: {fileID: 1980204205}
   fishCatchScreenAnimator: {fileID: 1980204209}
   fishAnimator: {fileID: 1601527441}
@@ -44212,6 +44211,7 @@ MonoBehaviour:
   NeedlePosition: 0
   needleSpeed: 100
   needleDirection: 1
+  needleLanded: 0
   BiteNotify: {fileID: 8300000, guid: 86d4b942d2f1d18468d99f49c5b548cd, type: 3}
   LandOnGreenSoundFX: {fileID: 8300000, guid: 51db0b97a42e6594eacd993e9ece3238, type: 3}
   LandOnOrangeSoundFX: {fileID: 8300000, guid: 10b70431422df8544aefca12f260468a, type: 3}

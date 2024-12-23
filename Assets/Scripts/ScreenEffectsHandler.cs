@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class ScreenEffectsHandler : MonoBehaviour
 {
+    public Player player;
     [Header("FishCatch")]
     public CanvasGroup fishCatchScreenCanvaGroup;
     public Animator fishCatchScreenAnimator;
@@ -32,6 +33,7 @@ public class ScreenEffectsHandler : MonoBehaviour
     public TextMeshProUGUI mutationText;
     public IEnumerator PlayFishFirstCatchAnimation(Fish fish)
     {
+        player.currentState = PlayerState.InspectingFish;
         fishCatchScreenCanvaGroup.alpha = 1.0f;
         fishCatchScreenCanvaGroup.blocksRaycasts = true;
         fishCatchScreenCanvaGroup.interactable = true;
@@ -78,6 +80,7 @@ public class ScreenEffectsHandler : MonoBehaviour
     }
     public void CloseInspectView()
     {
+        player.currentState = PlayerState.None;
         fishInspectGroup.alpha = 0f;
         fishInspectGroup.blocksRaycasts = false;
         fishInspectGroup.interactable = false;
