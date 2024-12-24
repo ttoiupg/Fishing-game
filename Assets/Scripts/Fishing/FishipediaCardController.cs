@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class FishipediaCardController : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class FishipediaCardController : MonoBehaviour
     }
     public IEnumerator OpenCard(BaseFish fish)
     {
-        player.currentState = PlayerState.CardOpened;
+        player.CardOpened = true;
         shadow.SetActive(true);
         cardTransform.rotation = Quaternion.Euler(0,180,0);
         cardTransform.DORotate(new Vector3(0,0,0),.5f).SetEase(Ease.OutBack);
@@ -71,7 +72,7 @@ public class FishipediaCardController : MonoBehaviour
     }
     public void CloseCard()
     {
-        player.currentState = PlayerState.MenuOpened;
+        player.CardOpened = false;
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint);

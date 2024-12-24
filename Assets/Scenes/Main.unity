@@ -3138,7 +3138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraDistance: 7
+  CameraDistance: 8
   DeadZoneDepth: 0
   Composition:
     ScreenPosition: {x: 0, y: 0}
@@ -3181,7 +3181,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 46
+    FieldOfView: 60
     OrthographicSize: 6.18
     NearClipPlane: 0.01
     FarClipPlane: 1000
@@ -3208,13 +3208,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522665064}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.21055703, y: 0, z: 0, w: 0.9775816}
-  m_LocalPosition: {x: -1.7811263, y: 5.9707136, z: -10.632227}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: -1.7811263, y: 8.745854, z: -9.909761}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 24.31, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!1 &537486278
 GameObject:
   m_ObjectHideFlags: 0
@@ -19606,7 +19606,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 46
+  field of view: 60
   orthographic: 0
   orthographic size: 6.18
   m_Depth: -1
@@ -19631,8 +19631,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.21055703, y: 0, z: 0, w: 0.9775816}
-  m_LocalPosition: {x: 0, y: 0, z: -10.632227}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0, z: -9.909761}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19640,7 +19640,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0.06, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.7811263, y: 5.9707136}
+  m_AnchoredPosition: {x: -1.7811263, y: 8.745854}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &963194230
@@ -26394,9 +26394,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254698697}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.44218397, w: 0.89692444}
-  m_LocalPosition: {x: -0.478, y: -0.516, z: 0}
-  m_LocalScale: {x: 1.7187, y: 1.7187, z: 1.7187}
+  m_LocalRotation: {x: 0, y: 0, z: 0.44218686, w: 0.89692295}
+  m_LocalPosition: {x: -0.47799993, y: -0.3648672, z: -0.3648672}
+  m_LocalScale: {x: 1.7186999, y: 1.7187002, z: 1.7187002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 644902216}
@@ -32999,7 +32999,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643146903}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: -1.7811263, y: 3.089, z: -4.252907}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33011,7 +33011,7 @@ Transform:
   - {fileID: 350805852}
   - {fileID: 1871768070}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &1643146911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33031,8 +33031,17 @@ MonoBehaviour:
   _experience: 0
   level: 1
   discoveredFish: []
+  PlayerEffects: []
   currentState: 0
   currentZone: {fileID: 0}
+  castRodDebounce: 0
+  retrackDebounce: 0
+  booststate: 0
+  pullstate: 0
+  menuOpen: 0
+  inspecting: 0
+  CardOpened: 0
+  fishing: 0
   Facing: 1
 --- !u!114 &1643146912
 MonoBehaviour:

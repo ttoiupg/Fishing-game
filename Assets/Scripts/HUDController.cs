@@ -6,6 +6,7 @@ using DG.Tweening;
 using System.Runtime.CompilerServices;
 using TMPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 public class HUDController : PlayerSystem
 {
     public UIDocument UIDocument;
@@ -134,10 +135,10 @@ public class HUDController : PlayerSystem
     private void SwitchMenu(InputAction.CallbackContext callbackContext)
     {
         if (MenuDebounce) return;
-        if (player.currentState == PlayerState.CardOpened || player.currentState == PlayerState.InspectingFish) return;
+        if (player.inspecting == true || player.CardOpened == true) return;
         if (isPageOpen)
         {
-            player.currentState = PlayerState.None;
+            player.menuOpen = false;
             isPageOpen = false;
             CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
@@ -146,12 +147,12 @@ public class HUDController : PlayerSystem
             isMenuOpen = !isMenuOpen;
             if (isMenuOpen)
             {
-                player.currentState = PlayerState.MenuOpened;
+                player.menuOpen = true;
                 MenuOpenAnimation();
             }
             else
             {
-                player.currentState = PlayerState.None;
+                player.menuOpen = false;
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);

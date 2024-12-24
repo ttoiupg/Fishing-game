@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour,IDataPersistence
@@ -28,11 +29,20 @@ public class Player : MonoBehaviour,IDataPersistence
         }
     }
     public List<DiscoveredFish> discoveredFish;
+    public List<StatusEffect> PlayerEffects;
     private List<IDataDiscoverFish> dataDiscoverFish;
     public PlayerState currentState;
 
     [Header("Fishing")]
     public BaseZone currentZone;
+    public bool castRodDebounce;
+    public bool retrackDebounce;
+    public bool booststate;
+    public bool pullstate;
+    public bool menuOpen;
+    public bool inspecting;
+    public bool CardOpened;
+    public bool fishing;
 
     [Header("Character")]
     public int Facing = 1;
@@ -69,6 +79,21 @@ public class Player : MonoBehaviour,IDataPersistence
     {
         HUDController.UpdateLevelProgress();
     }
+    private void Update()
+    {
+        for(int i=0;i<PlayerEffects.Count;i++)
+        {
+            StatusEffect effect = PlayerEffects[i];
+            if (effect.TimeLimited == true)
+            {
+                if (effect.length <= Time.deltaTime)
+                {
+                    PlayerEffects.RemoveAt(i);
+                }
+                effect.length -= Time.deltaTime;
+            }
+        }
+    }
     public void LoadData(GameData gameData)
     {
         level = gameData.level;
@@ -92,6 +117,30 @@ public class Player : MonoBehaviour,IDataPersistence
         }
         gameData.discoveredFish = tempDisFish;
     }
+    public void AddStatusEffect(StatusEffect effect)
+    {
+        StatusEffect PreEffect = PlayerEffects.Find((x) => x.name == effect.name);
+        if (PreEffect == null)
+        {
+            PlayerEffects.Add(effect);
+        }
+        else
+        {
+            PreEffect.length = effect.length;
+        }
+    }
+    public void RemoveStatusEffect(StatusEffect effect)
+    {
+        StatusEffect PrevEffect = PlayerEffects.Find((x) => x.name == effect.name);
+        if (PrevEffect != null)
+        {
+            PlayerEffects.Remove(PrevEffect);
+        }
+    }
+    public bool HaveStatusEffect(string effectName)
+    {
+        return PlayerEffects.Exists((x) => x.name == effectName);
+    }
 }
 [System.Serializable]
 public class IDataDiscoverFish
@@ -102,6 +151,25 @@ public class IDataDiscoverFish
     {
         name = fish.baseFish.name;
         discoverDate = fish.discoverDate;
+    }
+}
+[System.Serializable]
+public class StatusEffect
+{
+    public string name;
+    public bool TimeLimited;
+    public float length;
+
+    public StatusEffect(string _name, float _length)
+    {
+        name = _name;
+        TimeLimited = true;
+        length = _length;
+    }
+    public StatusEffect(string _name)
+    {
+        name = _name;
+        TimeLimited = false;
     }
 }
 [System.Serializable]

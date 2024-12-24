@@ -33,7 +33,7 @@ public class ScreenEffectsHandler : MonoBehaviour
     public TextMeshProUGUI mutationText;
     public IEnumerator PlayFishFirstCatchAnimation(Fish fish)
     {
-        player.currentState = PlayerState.InspectingFish;
+        player.inspecting = true;
         fishCatchScreenCanvaGroup.alpha = 1.0f;
         fishCatchScreenCanvaGroup.blocksRaycasts = true;
         fishCatchScreenCanvaGroup.interactable = true;
@@ -80,7 +80,7 @@ public class ScreenEffectsHandler : MonoBehaviour
     }
     public void CloseInspectView()
     {
-        player.currentState = PlayerState.None;
+        player.inspecting = false;
         fishInspectGroup.alpha = 0f;
         fishInspectGroup.blocksRaycasts = false;
         fishInspectGroup.interactable = false;

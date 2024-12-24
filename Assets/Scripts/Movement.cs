@@ -49,8 +49,16 @@ public class Movement : PlayerSystem
         {
             if (move.x != 0)
             {
-                if (move.x > 0) { player.Facing = 1; } else {  player.Facing = -1; };
-                CharacterTransform.rotation = Quaternion.LookRotation(new Vector3(0, 0, moveHorizontal));
+                if (move.x > 0) 
+                { 
+                    player.Facing = 1;
+                    CharacterTransform.rotation = Quaternion.Euler(new Vector3(45, 0, 0));
+                } 
+                else 
+                {  
+                    player.Facing = -1;
+                    CharacterTransform.rotation = Quaternion.Euler(new Vector3(-45, 180, 0));
+                };
             }
             if (move != Vector3.zero)
             {
