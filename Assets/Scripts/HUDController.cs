@@ -7,11 +7,10 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.UI;
+using Unity.Collections;
 public class HUDController : PlayerSystem
 {
-    public UIDocument UIDocument;
-    TideAndFinsUILibrary.RadialProgress radialProgress;
-
     int prevLevel = 0;
     float prevProgress = 0.0f;
     int targetLevel = 0;
@@ -19,6 +18,14 @@ public class HUDController : PlayerSystem
     float _levelTween = 0.0f;
     float _ExpTween = 0.0f;
     [Header("level progress ui")]
+    public RectTransform needle;
+    public RectTransform paper;
+    public RectTransform closeButton;
+    public RectTransform levelContainer;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI expRqText;
+    public TextMeshProUGUI expCurrentText; 
+    public UnityEngine.UI.Image fill;
     public float LevelSpeed = 0.2f;
     public float ExpSpeed = 0.5f;
 
@@ -58,16 +65,6 @@ public class HUDController : PlayerSystem
     {
         MenuDebounce = false;
     }
-    public void UpdateLevelProgress(Fish fish)
-    {
-        targetLevel = player.level;
-        targetProgress = player.experience / player.expRequire * 100f;
-    }
-    public void UpdateLevelProgress()
-    {
-        targetLevel = player.level;
-        targetProgress = player.experience / player.expRequire * 100f;
-    }
     private void MenuOpenAnimation()
     {
         SoundFXManger.Instance.PlaySoundFXClip(OpenSound, player.transform, 0.5f);
@@ -96,6 +93,9 @@ public class HUDController : PlayerSystem
     }
     private void UpdateRadialProgress()
     {
+        targetLevel = player.level;
+        targetProgress = player.experience / player.expRequire;
+        expRqText.text = player.expRequire.ToString();
         if (targetLevel > prevLevel)
         {
             float fixedDt = Time.deltaTime / LevelSpeed;
@@ -104,15 +104,20 @@ public class HUDController : PlayerSystem
             if (_levelTween > 1f)
             {
                 prevLevel += 1;
-                radialProgress.level += 1;
+                levelText.text = prevLevel.ToString();
                 prevProgress = 0.0f;
                 _levelTween = 0.0f;
-                radialProgress.Progress = 0.0f;
+                fill.fillAmount = 0f;
+                needle.rotation = Quaternion.Euler(0, 0, 0);
+                expCurrentText.text = "0";
             }
             else
             {
-                float deltaP = (100 - prevProgress);
-                radialProgress.Progress = prevProgress + deltaP * _levelTween;
+                float deltaP = (1 - prevProgress);
+                float Amount = prevProgress + deltaP * _levelTween;
+                fill.fillAmount = Amount;
+                needle.rotation = Quaternion.Euler(0, 0, Amount * -360);
+                expCurrentText.text = (Amount * player.expRequire).ToSafeString();
             }
         }
         else if (targetProgress > prevProgress)
@@ -123,12 +128,18 @@ public class HUDController : PlayerSystem
             {
                 prevProgress = targetProgress;
                 _ExpTween = 0f;
-                radialProgress.Progress = targetProgress;
+                fill.fillAmount = targetProgress;
+                needle.rotation = Quaternion.Euler(0, 0, targetProgress * -360);
+                expCurrentText.text = (targetProgress * player.expRequire).ToString();
             }
             else
             {
+                float factor = BackLerp(_ExpTween);
                 float deltaP = (targetProgress - prevProgress);
-                radialProgress.Progress = prevProgress + deltaP * BackLerp(_ExpTween);
+                float Amount = prevProgress + deltaP * factor;
+                fill.fillAmount = Amount;
+                needle.rotation = Quaternion.Euler(0,0, Amount * -360);
+                expCurrentText.text = (Amount * player.expRequire).ToSafeString();
             }
         }
     }
@@ -238,21 +249,17 @@ public class HUDController : PlayerSystem
     private void OnEnable()
     {
         playerInput.UI.Enable();
-        player.ID.playerEvents.OnFishCatched += UpdateLevelProgress;
         playerInput.UI.OpenMenu.performed += SwitchMenu;
         playerInput.UI.SelectMenu.performed += SelectMenu;
     }
     private void OnDisable()
     {
-        player.ID.playerEvents.OnFishCatched -= UpdateLevelProgress;
         playerInput.UI.OpenMenu.performed -= SwitchMenu;
         playerInput.UI.SelectMenu.performed -= SelectMenu;
     }
     private void Start()
     {
         Pages.Add("left", FishipediaPage);
-        radialProgress = UIDocument.rootVisualElement.Q("RadialProgress") as TideAndFinsUILibrary.RadialProgress;
-        //MenuContainer = UIDocument.rootVisualElement.Q("MenuContainer");
     }
     private void Update()
     {

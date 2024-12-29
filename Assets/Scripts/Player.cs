@@ -6,12 +6,12 @@ using UnityEngine;
 public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
-    public HUDController HUDController;
     public bool isControllerConnected = false;
 
     [Header("Stats")]
     public float expRequire = 1f;
-    public float _experience = 0.0f;
+    [SerializeField]
+    private float _experience = 0.0f;
     public int level = 1;
     public float experience
     {
@@ -74,10 +74,6 @@ public class Player : MonoBehaviour,IDataPersistence
     void Awake()
     {
         StartCoroutine(CheckForControllers());
-    }
-    private void Start()
-    {
-        HUDController.UpdateLevelProgress();
     }
     private void Update()
     {

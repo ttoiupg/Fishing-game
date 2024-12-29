@@ -21,8 +21,6 @@ public class FishingController : PlayerSystem
     public VisualElement Needle;
     [Header("Pull UI")]
     public UIDocument PullStateUI;
-    public UIDocument HUD;
-    public Label LocationText;
     public VisualElement ControlBarUI;
     public VisualElement FishBarUI;
     public VisualElement ProgressBarUI;
@@ -150,12 +148,10 @@ public class FishingController : PlayerSystem
             if (IsInside(Zones[i].zone.position, Zones[i].zone.size, new Vector2(playerTransform.position.x, playerTransform.position.z)))
             {
                 player.currentZone = Zones[i].zone;
-                LocationText.text = Zones[i].zone.name;
                 break;
             }
             else
             {
-                LocationText.text = "";
                 player.currentZone = null;
             };
         };
@@ -539,7 +535,6 @@ public class FishingController : PlayerSystem
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
         BoostStateUI.rootVisualElement.style.display = DisplayStyle.None;
         ControlBarAction = playerInput.Fishing.ControlFishingRod;
-        LocationText = HUD.rootVisualElement.Q<Label>("LocationText");
     }
     // Update is called once per frame
     private void Update()
