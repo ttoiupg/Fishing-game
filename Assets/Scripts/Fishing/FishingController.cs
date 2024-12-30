@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 
 public class FishingController : PlayerSystem
 {
+    public HUDController hudController;
     [Header("effect")]
     public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer camera;
@@ -289,6 +290,7 @@ public class FishingController : PlayerSystem
     }
     private void FishCatched()
     {
+        hudController.StartLootTag(CurrentFish.fishType.Art,CurrentFish.fishType.name,"Mutation:"+CurrentFish.mutation.name,CurrentFish.weight.ToString()+"Kg");
         StartCoroutine(FishCatchedEffects());
         StartCoroutine(ProcessFish());
         StopCoroutine(PullCoroutine);
