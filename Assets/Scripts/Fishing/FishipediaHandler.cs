@@ -17,23 +17,22 @@ public class FishipediaHandler : MonoBehaviour
     public void CategorySelected(int number)
     {
         CurrentCategory = number;
-        for (int i = 0; i < 4; i++) { 
+        for (int i = 0; i < Labels.Count; i++) { 
             if (number == i)
             {
                 Categories[number].gameObject.SetActive(true);
-                Labels[number].DOAnchorPosX(-130f, 0.2f).SetEase(Ease.OutBack);
+                Labels[number].DOAnchorPosX(-114.6f, 0.2f).SetEase(Ease.OutBack);
             }
             else
             {
                 Categories[i].gameObject.SetActive(false);
-                Labels[i].DOAnchorPosX(-51f, 0.2f);
+                Labels[i].DOAnchorPosX(27f, 0.2f);
             }
         }
     }
     private void Start()
     {
         List<BaseFish> pondFish = gameConfiguration.PondFishes.OrderBy(x => 1f/x.Rarity.OneIn).ToList();
-        Debug.Log(pondFish);
         foreach(BaseFish baseFish in pondFish)
         {
             FishIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishIconDisplayer>();

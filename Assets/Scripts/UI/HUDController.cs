@@ -38,7 +38,7 @@ public class HUDController : PlayerSystem
     [Header("Menu UI")]
     public AudioClip OpenSound;
     public AudioClip CloseSound;
-    public RectTransform CurrentPage;
+    public RectTransform currentPage;
     public RectTransform resumeButton;
     public RectTransform fishipediaButton;
     public RectTransform settingButton;
@@ -48,9 +48,8 @@ public class HUDController : PlayerSystem
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
     [Header("Fishipedia")]
-    public RectTransform FishipediaPage;
+    public RectTransform fishipediaPage;
 
-    public Dictionary<string, RectTransform> Pages = new Dictionary<string, RectTransform>();
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -64,7 +63,8 @@ public class HUDController : PlayerSystem
         lootNameText.text = name;
         lootDesciptionText.text = desc;
         lootValueText.text = value;
-        lootTag.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+        lootTag.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack);
+        lootTag.DOShakeAnchorPos(0.5f,50,100,90).SetDelay(0.15f);
         lootTag.DOScale(Vector3.zero, 0.1f).SetEase(Ease.OutQuint).SetDelay(3f);
     }
     private void ResetMenuState()
@@ -153,9 +153,9 @@ public class HUDController : PlayerSystem
         if (player.inspecting == true || player.CardOpened == true) return;
         if (isPageOpen)
         {
-            player.menuOpen = false;
+            player.menuOpen = true;
             isPageOpen = false;
-            CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
+            currentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
         else
         {
@@ -180,9 +180,9 @@ public class HUDController : PlayerSystem
         if (player.inspecting == true || player.CardOpened == true) return;
         if (isPageOpen)
         {
-            player.menuOpen = false;
+            player.menuOpen = true;
             isPageOpen = false;
-            CurrentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
+            currentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
         }
         else
         {
@@ -200,6 +200,17 @@ public class HUDController : PlayerSystem
                 Invoke("ResetMenuState", 0.5f);
             }
         }
+    }
+    public void OpenUI(RectTransform ui)
+    {
+        currentPage = ui;
+        isPageOpen = true;
+        ui.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+    }
+    public void CloseUI()
+    {
+        isPageOpen = false;
+        currentPage.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
     }
     //private void RotateNeedle()
     //{
@@ -285,10 +296,6 @@ public class HUDController : PlayerSystem
     private void OnDisable()
     {
         playerInput.UI.OpenMenu.performed -= SwitchMenu;
-    }
-    private void Start()
-    {
-        Pages.Add("left", FishipediaPage);
     }
     private void Update()
     {

@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using UnityEngine.UIElements;
 public class FishingController : PlayerSystem
 {
     public HUDController hudController;
+    public BoostCanvaManager boostCanvaManager;
     [Header("effect")]
     public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer camera;
@@ -38,16 +40,7 @@ public class FishingController : PlayerSystem
     public float PullProgress = 0f;
     public float FishBarSpeed = 6f;
     public bool IsFishBarOverlaping = false;
-    [Header("Boost state")]
-    public StyleLength OrangeChunkStylePosition;
-    public StyleLength GreenChunkStylePosition;
-    public StyleLength NeedleStylePosition;
-    public float OrangeChunkPosition;
-    public float GreenChunkPosition;
-    public float NeedlePosition;
-    public float needleSpeed;
-    public int needleDirection = 1;
-    public bool needleLanded = false;
+    public bool pointerLanded = false;
 
     [Header("Sound effects")]
     public AudioClip BiteNotify;
@@ -156,27 +149,6 @@ public class FishingController : PlayerSystem
                 player.currentZone = null;
             };
         };
-    }
-    private void BoostStateUpdateFunction()
-    {
-        if (player.booststate == true)
-        {
-            float NextPosition = NeedlePosition + needleDirection * needleSpeed * Time.deltaTime;
-            if (NextPosition >= 96f)
-            {
-                needleDirection *= -1;
-                NextPosition = 96f;
-            }
-            else if (NextPosition <= 0)
-            {
-                needleDirection *= -1;
-                NextPosition = 0;
-            }
-            NeedlePosition = NextPosition;
-            NeedleStylePosition = new StyleLength(Length.Percent(NeedlePosition));
-            Needle.style.left = NeedleStylePosition;
-
-        }
     }
     private void PullStateUpdateFunction()
     {
@@ -301,7 +273,6 @@ public class FishingController : PlayerSystem
         ControlBarPosition = 50f;
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
-        needleLanded = false;
         player.pullstate = false;
         player.booststate = false;
         player.fishing = false;
@@ -319,7 +290,6 @@ public class FishingController : PlayerSystem
         FishBarPosition = 49f;
         FishBarTargetPosition = 49;
         camera.CameraDistance = 8f;
-        needleLanded = false;
         SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
         InputSystem.ResetHaptics();
         player.retrackDebounce = true;
@@ -350,6 +320,32 @@ public class FishingController : PlayerSystem
                 ControlBarGravity = -300f;
                 camera.CameraDistance = 8f;
             }
+        }
+    }
+    public void LandPointer(InputAction.CallbackContext callbackContext)
+    {
+        if (player.booststate && !pointerLanded)
+        {
+            pointerLanded = true;
+            float buff = 0;
+            string result = boostCanvaManager.LandPointer();
+            if (result == "green")
+            {
+                buff = player.ID.GreenZonebuff;
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.45f);
+            }
+            else if (result == "orange")
+            {
+                buff = player.ID.OrangeZonebuff;
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.4f);
+            }
+            else
+            {
+                buff = 10f;
+                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1.2f);
+            }
+            Debug.Log(result);
+            StartCoroutine(EnterPullState(buff));
         }
     }
     public IEnumerator RandomFishBarPosition()
@@ -384,57 +380,17 @@ public class FishingController : PlayerSystem
         ControlBarUI.style.left = ControlBarStylePosition;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(0.5f);
+        player.booststate = false;
+        boostCanvaManager.HideBoostUI();
         player.pullstate = true;
         PullCoroutine = StartCoroutine(RandomFishBarPosition());
     }
-    public void LandNeedle(InputAction.CallbackContext callbackContext)
-    {
-        if (needleLanded == true) return;
-        StartCoroutine(LandNeedleCoroutine());
-    }
-    public IEnumerator LandNeedleCoroutine()
-    {
-        if (player.booststate == true)
-        {
-            needleLanded = true;
-            float buff = 10f;
-            needleSpeed = 0f;
-            //player sound effects
-            if (IsOverlap(GreenChunkPosition, GreenChunkPosition + 20f, NeedlePosition, NeedlePosition + 4f))
-            {
-
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.45f);
-                buff = player.ID.GreenZonebuff;
-            }
-            else if (IsOverlap(OrangeChunkPosition, OrangeChunkPosition + 44f, NeedlePosition, NeedlePosition + 4f))
-            {
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.4f);
-                buff = player.ID.OrangeZonebuff;
-            }
-            else
-            {
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1.2f);
-            }
-            yield return new WaitForSeconds(0.5f);
-            StartCoroutine(EnterPullState(buff));
-            BoostStateUI.rootVisualElement.style.display = DisplayStyle.None;
-        };
-    }
     private void EnterBoostState()
     {
+        boostCanvaManager.ShowBoostUI();
         player.booststate = true;
+        pointerLanded = false;
         player.ID.playerEvents.OnBoostStage?.Invoke();
-        BoostStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
-        OrangeChunkPosition = UnityEngine.Random.Range(0, 66f);
-        GreenChunkPosition = OrangeChunkPosition + 12f;
-        needleSpeed = 100f;
-        NeedlePosition = 48f;
-        OrangeChunkStylePosition = new StyleLength(Length.Percent(OrangeChunkPosition));
-        GreenChunkStylePosition = new StyleLength(Length.Percent(GreenChunkPosition));
-        NeedleStylePosition = new StyleLength(Length.Percent(NeedlePosition));
-        OrangeChunk.style.left = OrangeChunkStylePosition;
-        GreenChunk.style.left = GreenChunkStylePosition;
-        Needle.style.left = NeedleStylePosition;
     }
     private void SetHook()
     {
@@ -513,12 +469,12 @@ public class FishingController : PlayerSystem
     {
         playerInput.Fishing.Enable();
         playerInput.Fishing.CastFishingRod.performed += CastOrRetract;
-        playerInput.Fishing.CastFishingRod.performed += LandNeedle;
+        playerInput.Fishing.CastFishingRod.performed += LandPointer;
     }
     private void OnDisable()
     {
         playerInput.Fishing.CastFishingRod.performed -= CastOrRetract;
-        playerInput.Fishing.CastFishingRod.performed -= LandNeedle;
+        playerInput.Fishing.CastFishingRod.performed -= LandPointer;
         playerInput.Fishing.Disable();
     }
     private void Start()
@@ -531,18 +487,13 @@ public class FishingController : PlayerSystem
         ControlBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("ControlBar");
         FishBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("FishBar");
         ProgressBarUI = PullStateUI.rootVisualElement.Q<VisualElement>("Bar");
-        OrangeChunk = BoostStateUI.rootVisualElement.Q<VisualElement>("OrangeChunk");
-        GreenChunk = BoostStateUI.rootVisualElement.Q<VisualElement>("GreenChunk");
-        Needle = BoostStateUI.rootVisualElement.Q<VisualElement>("Needle");
         PullStateUI.rootVisualElement.style.display = DisplayStyle.None;
-        BoostStateUI.rootVisualElement.style.display = DisplayStyle.None;
         ControlBarAction = playerInput.Fishing.ControlFishingRod;
     }
     // Update is called once per frame
     private void Update()
     {
         ZoneCheck();
-        BoostStateUpdateFunction();
         PullStateUpdateFunction();
         ControlPullingBar();
     }
