@@ -18,6 +18,8 @@ public class Movement : PlayerSystem
 
     [SerializeField]
     private float gravityValue = -9.81f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,49 +31,9 @@ public class Movement : PlayerSystem
     // Update is called once per frame
     void Update()
     {
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
-        float moveVertical = Input.GetAxisRaw("Vertical");
-        // DOING CHARACTER MOVEMENT
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
-        Vector3 move = new Vector3(moveHorizontal, 0, moveVertical);
-        if (move.magnitude > 1f)
-        {
-            move = move / move.magnitude;
-        };
-        controller.Move(move * Time.deltaTime * playerSpeed);
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-        if (playerSpeed != 0)
-        {
-            if (move.x != 0)
-            {
-                if (move.x > 0) 
-                { 
-                    player.Facing = 1;
-                    CharacterTransform.rotation = Quaternion.Euler(new Vector3(27.5f, 0, 0));
-                } 
-                else 
-                {  
-                    player.Facing = -1;
-                    CharacterTransform.rotation = Quaternion.Euler(new Vector3(-27.5f, 180, 0));
-                };
-            }
-            if (move != Vector3.zero)
-            {
-                animator.SetBool("IsMoving", true);
-                animator.SetFloat("Speed", move.magnitude * playerSpeed / 3f);
-            }
-            else
-            {
-                animator.SetFloat("Speed", 1f);
-                animator.SetBool("IsMoving", false);
-            }
-        }
+        
     }
+
     private void freezePlayer()
     {
         lastSpeed = playerSpeed;

@@ -1,10 +1,11 @@
+using Halfmoon.Utilities;
 using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
@@ -14,6 +15,9 @@ public class FishingController : PlayerSystem
 {
     public HUDController hudController;
     public BoostCanvaManager boostCanvaManager;
+    public float castRodCooldownlength = 3;
+    public float retractDebounceLength = 0.6f;
+    public ZoneDisplayer[] Zones;
     [Header("effect")]
     public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer camera;
@@ -56,12 +60,14 @@ public class FishingController : PlayerSystem
     private AudioSource ReelSoundSource;
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
-    private ZoneDisplayer[] Zones;
     private Transform playerTransform;
     private Fish CurrentFish;
     private InputAction ControlBarAction;
     private Animator animator;
     private Camera Camera;
+    private Countdowntimer castRodCooldownTimer;
+    private Countdowntimer retractDebounceTimer;
+    private List<Timer> timers;
 
     Coroutine FishingCoroutine;
     Coroutine PullCoroutine;
@@ -135,7 +141,7 @@ public class FishingController : PlayerSystem
         ControlBarUI.style.left = ControlBarStylePosition;
         //Debug.Log(ControlBarPosition);
     }
-    private void ZoneCheck()
+    public void ZoneCheck()
     {
         for (int i = 0; i < Zones.Length; i++)
         {
@@ -150,46 +156,44 @@ public class FishingController : PlayerSystem
             };
         };
     }
-    private void PullStateUpdateFunction()
+    public void PullStateUpdateFunction()
     {
-        if (player.pullstate == true)
+        //Update control bar's position
+        UpdateControlBarPosition();
+        GamepadVibration();
+        //lerping fish bar's position
+        FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, FishBarSpeed * Time.deltaTime);
+        FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
+        //check for overlap
+        if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 2f))
         {
-            //Update control bar's position
-            UpdateControlBarPosition();
-            GamepadVibration();
-            //lerping fish bar's position
-            FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, FishBarSpeed * Time.deltaTime);
-            FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
-            //check for overlap
-            if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 2f))
-            {
-                IsFishBarOverlaping = true;
-                ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(0,228,199,255));
-                ControlBarUI.style.borderTopColor = new StyleColor(new Color32(0, 228, 199, 255));
-                ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(0, 228, 199, 255));
-                ControlBarUI.style.borderRightColor = new StyleColor(new Color32(0, 228, 199, 255));
+            IsFishBarOverlaping = true;
+            ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(0, 228, 199, 255));
+            ControlBarUI.style.borderTopColor = new StyleColor(new Color32(0, 228, 199, 255));
+            ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(0, 228, 199, 255));
+            ControlBarUI.style.borderRightColor = new StyleColor(new Color32(0, 228, 199, 255));
 
 
-                PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
-            }
-            else
+            PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
+        }
+        else
+        {
+            IsFishBarOverlaping = false;
+            ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(217, 77, 88, 255));
+            ControlBarUI.style.borderTopColor = new StyleColor(new Color32(217, 77, 88, 255));
+            ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(217, 77, 88, 255));
+            ControlBarUI.style.borderRightColor = new StyleColor(new Color32(217, 77, 88, 255));
+            PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
+            if (PullProgress < 0)
             {
-                IsFishBarOverlaping = false;
-                ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(217, 77, 88, 255));
-                ControlBarUI.style.borderTopColor = new StyleColor(new Color32(217, 77, 88, 255));
-                ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(217, 77, 88, 255));
-                ControlBarUI.style.borderRightColor = new StyleColor(new Color32(217, 77, 88, 255));
-                PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
-                if (PullProgress < 0) { 
-                    PullProgress = 0;
-                    StartCoroutine(FishFailed());
-                }
+                PullProgress = 0;
+                StartCoroutine(FishFailed());
             }
-            ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
-            if (PullProgress >= 100f)
-            {
-                FishCatched();
-            }
+        }
+        ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
+        if (PullProgress >= 100f)
+        {
+            FishCatched();
         }
     }
     #endregion
@@ -301,51 +305,47 @@ public class FishingController : PlayerSystem
     }
     public void ControlPullingBar()
     {
-        if (player.pullstate == true)
+        float Value = ControlBarAction.ReadValue<float>();
+        if (Value > 0)
         {
-            float Value = ControlBarAction.ReadValue<float>();
-            if (Value > 0)
-            {
-                animator.SetFloat("PullingSpeed",1f + Value);
-                ReelSoundSource.pitch = 0.7f+Value*0.35f;
-                //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-                ControlBarGravity = 300f * Value;
-                camera.CameraDistance = 8f - 2f * Value;
-            }
-            else
-            {
-                animator.SetFloat("PullingSpeed", 0.6f);
-                ReelSoundSource.pitch = 0.7f;
-                //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-                ControlBarGravity = -300f;
-                camera.CameraDistance = 8f;
-            }
+            animator.SetFloat("PullingSpeed", 1f + Value);
+            ReelSoundSource.pitch = 0.7f + Value * 0.35f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+            ControlBarGravity = 300f * Value;
+            camera.CameraDistance = 8f - 2f * Value;
+        }
+        else
+        {
+            animator.SetFloat("PullingSpeed", 0.6f);
+            ReelSoundSource.pitch = 0.7f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
+            ControlBarGravity = -300f;
+            camera.CameraDistance = 8f;
         }
     }
     public void LandPointer(InputAction.CallbackContext callbackContext)
     {
-        if (player.booststate && !pointerLanded)
+        if (!pointerLanded)
         {
             pointerLanded = true;
-            float buff = 0;
             string result = boostCanvaManager.LandPointer();
             if (result == "green")
             {
-                buff = player.ID.GreenZonebuff;
+                player.pullProgressBuff = player.ID.GreenZonebuff;
                 SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.45f);
             }
             else if (result == "orange")
             {
-                buff = player.ID.OrangeZonebuff;
+                player.pullProgressBuff = player.ID.OrangeZonebuff;
                 SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.4f);
             }
             else
             {
-                buff = 10f;
+                player.pullProgressBuff = 10f;
                 SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1.2f);
             }
-            Debug.Log(result);
-            StartCoroutine(EnterPullState(buff));
+            player.booststate = false;
+            StartCoroutine(EnterPullState());
         }
     }
     public IEnumerator RandomFishBarPosition()
@@ -364,13 +364,13 @@ public class FishingController : PlayerSystem
             yield return new WaitForSeconds(RandSecond);
         }
     }
-    private IEnumerator EnterPullState(float Buff)
+    private IEnumerator EnterPullState()
     {
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
         CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
         player.ID.playerEvents.OnPullStage?.Invoke();
-        PullProgress = Buff;
+        PullProgress = player.pullProgressBuff;
         ControlBarPosition = 50f;
         ControlBarGravity = 0f;
         ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
@@ -380,15 +380,13 @@ public class FishingController : PlayerSystem
         ControlBarUI.style.left = ControlBarStylePosition;
         PullStateUI.rootVisualElement.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(0.5f);
-        player.booststate = false;
         boostCanvaManager.HideBoostUI();
         player.pullstate = true;
         PullCoroutine = StartCoroutine(RandomFishBarPosition());
     }
-    private void EnterBoostState()
+    public void EnterBoostState()
     {
         boostCanvaManager.ShowBoostUI();
-        player.booststate = true;
         pointerLanded = false;
         player.ID.playerEvents.OnBoostStage?.Invoke();
     }
@@ -399,7 +397,7 @@ public class FishingController : PlayerSystem
         SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
         camera.CameraDistance = 7f;
         Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-        EnterBoostState();
+        player.booststate = true;
     }
     public IEnumerator WaitForbite()
     {
@@ -412,25 +410,33 @@ public class FishingController : PlayerSystem
     #region Casting fishing rod
     public void CastOrRetract(InputAction.CallbackContext callbackContext)
     {
-        if (!player.inspecting && !player.menuOpen && !player.CardOpened && !player.booststate && !player.pullstate)
+        if (player.currentZone != null)
         {
-            if (player.fishing && !player.retrackDebounce && !player.castRodDebounce)
+            if (!player.fishing)
             {
-                StartCoroutine(RetractFishingRod());
-            }
-            else if (!player.fishing && !player.castRodDebounce && !player.retrackDebounce)
-            {
-                if (player.currentZone != null)
+                if (!player.castRodDebounce)
                 {
-                    StartCoroutine(CastFishingRod());
+                    player.castRodDebounce = true;
+                    player.fishing = true;
+                    CastFishingRod();
+                    castRodCooldownTimer.Start();
+                }
+            }
+            else
+            {
+                if (!player.castRodDebounce)
+                {
+                    player.retrackDebounce = true;
+                    player.fishing = false;
+                    RetractFishingRod();
+                    retractDebounceTimer.Start();
                 }
             }
         }
     }
-    public IEnumerator CastFishingRod()
+
+    public void CastFishingRod()
     {
-        player.castRodDebounce = true;
-        player.fishing = true;
         animator.SetBool("IsMoving", false);
         player.ID.playerEvents.OnEnterFishingState?.Invoke();
         AvailableFishes = player.currentZone.GetSortedFeaturedFish();
@@ -441,16 +447,12 @@ public class FishingController : PlayerSystem
         }
         animator.SetTrigger("CastFishingRod");
         camera.CameraDistance = 12f;
-        yield return new WaitForSeconds(0.65f);
         VisualFXManager.Instance.SpawnBobber(playerTransform.position + new Vector3(0, 2f, 0), player.Facing);
         FishingCoroutine = StartCoroutine(WaitForbite());
-        yield return new WaitForSeconds(3f);
-        player.castRodDebounce = false;
     }
-    public IEnumerator RetractFishingRod()
+    public void RetractFishingRod()
     {
-        player.retrackDebounce = true;
-        player.fishing = false;
+        Debug.Log("retract");
         if (FishingCoroutine != null)
         {
             StopCoroutine(FishingCoroutine);
@@ -459,22 +461,33 @@ public class FishingController : PlayerSystem
         camera.CameraDistance = 8f;
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         VisualFXManager.Instance.DestroyBobber();
-        yield return new WaitForSeconds(0.6f);
-        player.retrackDebounce = false;
     }
 
     #endregion
     #region Unity functions
+    public override void Awake()
+    {
+        player = transform.root.GetComponent<Player>();
+        playerInput = new PlayerInputActions();
+        castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
+        retractDebounceTimer = new Countdowntimer(retractDebounceLength);
+        timers = new List<Timer>(2) { castRodCooldownTimer, retractDebounceTimer };
+        castRodCooldownTimer.OnTimerStop += () => player.castRodDebounce = false;
+        retractDebounceTimer.OnTimerStop += () => player.retrackDebounce = false;
+    }
+    void HandleTimer()
+    {
+        foreach (var timer in timers)
+        {
+            timer.Tick(Time.deltaTime);
+        }
+    }
     private void OnEnable()
     {
         playerInput.Fishing.Enable();
-        playerInput.Fishing.CastFishingRod.performed += CastOrRetract;
-        playerInput.Fishing.CastFishingRod.performed += LandPointer;
     }
     private void OnDisable()
     {
-        playerInput.Fishing.CastFishingRod.performed -= CastOrRetract;
-        playerInput.Fishing.CastFishingRod.performed -= LandPointer;
         playerInput.Fishing.Disable();
     }
     private void Start()
@@ -493,9 +506,7 @@ public class FishingController : PlayerSystem
     // Update is called once per frame
     private void Update()
     {
-        ZoneCheck();
-        PullStateUpdateFunction();
-        ControlPullingBar();
+        HandleTimer();
     }
     private void OnApplicationQuit()
     {

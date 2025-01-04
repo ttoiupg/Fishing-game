@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class VisualFXManager : MonoBehaviour
@@ -15,13 +16,18 @@ public class VisualFXManager : MonoBehaviour
             Instance = this;
         }
     }
-    public void SpawnBobber(Vector3 position,int Direction)
+    private IEnumerator BobberNumerator(Vector3 position, int direction)
     {
-        GameObject bobber = Instantiate(BobberObject,position,new Quaternion(0,0,0,0)) as GameObject;
+        yield return new WaitForSeconds(0.65f);
+        GameObject bobber = Instantiate(BobberObject, position, new Quaternion(0, 0, 0, 0)) as GameObject;
         Rigidbody rigidbody = bobber.GetComponent<Rigidbody>();
-        Vector3 force = new Vector3(15 * Direction * ThrowStrength, 30, 0);
-        rigidbody.AddRelativeForce(force,ForceMode.Impulse);
+        Vector3 force = new Vector3(15 * direction * ThrowStrength, 30, 0);
+        rigidbody.AddRelativeForce(force, ForceMode.Impulse);
         FishLineManager.LineEnd = bobber.transform;
+    }
+    public void SpawnBobber(Vector3 position,int direction)
+    {
+        StartCoroutine(BobberNumerator(position, direction));
     }
     public void DestroyBobber()
     {

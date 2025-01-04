@@ -44,7 +44,6 @@ public class HUDController : PlayerSystem
     public RectTransform settingButton;
     public RectTransform quitButton;
     public bool isPageOpen = false;
-    public bool isMenuOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
     [Header("Fishipedia")]
@@ -159,8 +158,8 @@ public class HUDController : PlayerSystem
         }
         else
         {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen)
+            player.menuOpen = !player.menuOpen;
+            if (player.menuOpen)
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
@@ -186,8 +185,8 @@ public class HUDController : PlayerSystem
         }
         else
         {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen)
+            player.menuOpen = !player.menuOpen;
+            if (player.menuOpen)
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
