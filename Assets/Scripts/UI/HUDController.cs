@@ -158,8 +158,7 @@ public class HUDController : PlayerSystem
         }
         else
         {
-            player.menuOpen = !player.menuOpen;
-            if (player.menuOpen)
+            if (!player.menuOpen)
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
@@ -185,8 +184,7 @@ public class HUDController : PlayerSystem
         }
         else
         {
-            player.menuOpen = !player.menuOpen;
-            if (player.menuOpen)
+            if (!player.menuOpen)
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
@@ -287,15 +285,6 @@ public class HUDController : PlayerSystem
     //    MenuDebounce = true;
     //    Invoke("ResetMenuState",0.5f);
     //}
-    private void OnEnable()
-    {
-        playerInput.UI.Enable();
-        playerInput.UI.OpenMenu.performed += SwitchMenu;
-    }
-    private void OnDisable()
-    {
-        playerInput.UI.OpenMenu.performed -= SwitchMenu;
-    }
     private void Update()
     {
         UpdateRadialProgress();
