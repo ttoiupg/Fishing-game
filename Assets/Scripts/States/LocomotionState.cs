@@ -18,7 +18,7 @@ public class LocomotionState : BaseState
         player.playerInputs.Fishing.CastFishingRod.performed -= player.fishingController.CastOrRetract;
         player.playerInputs.UI.OpenMenu.performed -= player.hudController.SwitchMenu;
     }
-    public override void FixedUpdate()
+    public override void Update()
     {
         player.HandleMovement();
         player.fishingController.ZoneCheck();
