@@ -4,17 +4,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class FishingController : PlayerSystem
 {
-    public HUDController hudController;
-    public BoostCanvaManager boostCanvaManager;
     public float castRodCooldownlength = 3;
     public float retractDebounceLength = 0.6f;
     public ZoneDisplayer[] Zones;
@@ -41,11 +40,13 @@ public class FishingController : PlayerSystem
     private List<BaseMutation> AvaliableMutations;
     private List<BaseFish> AvailableFishes;
     private Transform playerTransform;
-    private Fish CurrentFish;
     private InputAction ControlBarAction;
     private Animator animator;
     private Countdowntimer castRodCooldownTimer;
     private Countdowntimer retractDebounceTimer;
+    private Countdowntimer overlapFirstTimer;
+    private Countdowntimer overlapSecondTimer;
+    private Countdowntimer overlapThirdTimer;
     private List<Timer> timers;
 
     Coroutine FishingCoroutine;
@@ -53,11 +54,6 @@ public class FishingController : PlayerSystem
 
     [Header("Gamepad")]
     public float RumbleLowFreq = 0.25f;
-
-    private float Lerpfloat(float a, float b,float t)
-    {
-        return a + (b - a) * t;
-    }
     private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
     {
         bool result = false;
@@ -99,46 +95,62 @@ public class FishingController : PlayerSystem
             };
         };
     }
-    //public void PullStateUpdateFunction()
-    //{
-    //    //Update control bar's position
-    //    UpdateControlBarPosition();
-    //    GamepadVibration();
-    //    //lerping fish bar's position
-    //    FishBarPosition = Lerpfloat(FishBarPosition, FishBarTargetPosition, FishBarSpeed * Time.deltaTime);
-    //    FishBarUI.style.left = new StyleLength(Length.Percent(FishBarPosition));
-    //    //check for overlap
-    //    if (IsOverlap(ControlBarPosition - player.ID.pullBarSize / 2, ControlBarPosition + player.ID.pullBarSize / 2, FishBarPosition, FishBarPosition + 2f))
-    //    {
-    //        IsFishBarOverlaping = true;
-    //        ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(0, 228, 199, 255));
-    //        ControlBarUI.style.borderTopColor = new StyleColor(new Color32(0, 228, 199, 255));
-    //        ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(0, 228, 199, 255));
-    //        ControlBarUI.style.borderRightColor = new StyleColor(new Color32(0, 228, 199, 255));
-
-
-    //        PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
-    //    }
-    //    else
-    //    {
-    //        IsFishBarOverlaping = false;
-    //        ControlBarUI.style.borderBottomColor = new StyleColor(new Color32(217, 77, 88, 255));
-    //        ControlBarUI.style.borderTopColor = new StyleColor(new Color32(217, 77, 88, 255));
-    //        ControlBarUI.style.borderLeftColor = new StyleColor(new Color32(217, 77, 88, 255));
-    //        ControlBarUI.style.borderRightColor = new StyleColor(new Color32(217, 77, 88, 255));
-    //        PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
-    //        if (PullProgress < 0)
-    //        {
-    //            PullProgress = 0;
-    //            StartCoroutine(FishFailed());
-    //        }
-    //    }
-    //    ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
-    //    if (PullProgress >= 100f)
-    //    {
-    //        FishCatched();
-    //    }
-    //}
+    public void PullStateUpdateFunction()
+    {
+        //check for overlap
+        if (IsOverlap(player.pullCanvaManager.controlBarPosition - player.ID.pullBarSize / 2, 
+                      player.pullCanvaManager.controlBarPosition + player.ID.pullBarSize / 2, 
+                      player.pullCanvaManager.fishNeedlePosition-14, player.pullCanvaManager.fishNeedlePosition + 14f))
+        {
+            if (!overlapFirstTimer.IsRunning)
+            {
+                overlapFirstTimer.Reset();
+                overlapFirstTimer.Start();
+            }
+            if (!overlapSecondTimer.IsRunning)
+            {
+                overlapSecondTimer.Reset();
+                overlapSecondTimer.Start();
+            }
+            if (!overlapThirdTimer.IsRunning)
+            {
+                overlapThirdTimer.Reset();
+                overlapThirdTimer.Start();
+            }
+            if (player.pullCanvaManager.isFishBarOverlaping == false)
+            {
+                player.pullCanvaManager.FlipFirst();
+            }
+            player.pullCanvaManager.isFishBarOverlaping = true;
+            player.pullCanvaManager.controlBar.GetComponent<Image>().color = new Color32(217, 77, 88, 255);
+            player.pullCanvaManager.controlBar.GetComponent<Outline>().effectColor = new Color32(0, 135, 164, 255);
+            //PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
+        }
+        else
+        {
+            if (player.pullCanvaManager.isFishBarOverlaping)
+            {
+                player.pullCanvaManager.FlipDownAll();
+            }
+            overlapFirstTimer.Pause();
+            overlapSecondTimer.Pause();
+            overlapThirdTimer.Pause();
+            player.pullCanvaManager.isFishBarOverlaping = false;
+            player.pullCanvaManager.controlBar.GetComponent<Image>().color = new Color32(0, 135, 164, 255);
+            player.pullCanvaManager.controlBar.GetComponent<Outline>().effectColor = new Color32(217, 77, 88, 255);
+            //PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
+            //if (PullProgress < 0)
+            //{
+            //    PullProgress = 0;
+            //    StartCoroutine(FishFailed());
+            //}
+        }
+        //ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
+        //if (PullProgress >= 100f)
+        //{
+        //    FishCatched();
+        //}
+    }
     #endregion
     #region Fishing
     private BaseMutation RollForMutation()
@@ -192,12 +204,12 @@ public class FishingController : PlayerSystem
     }
     private IEnumerator ProcessFish()
     {
-        if (!player.discoveredFish.Exists((x) => x.baseFish == CurrentFish.fishType))
+        if (!player.discoveredFish.Exists((x) => x.baseFish == player.currentFish.fishType))
         {
-            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(CurrentFish));
-            DiscoveredFish discoveredFish = new DiscoveredFish(CurrentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
+            DiscoveredFish discoveredFish = new DiscoveredFish(player.currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             player.discoveredFish.Add(discoveredFish);
-            player.ID.playerEvents.OnFishUnlocked.Invoke(CurrentFish.fishType);
+            player.ID.playerEvents.OnFishUnlocked.Invoke(player.currentFish.fishType);
         }
         else
         {
@@ -205,16 +217,16 @@ public class FishingController : PlayerSystem
             yield return new WaitForSeconds(0.6f);
             player.retrackDebounce = false;
         }
-        player.experience += CurrentFish.fishType.Experience;
+        player.experience += player.currentFish.fishType.Experience;
     }
     private void FishCatched()
     {
-        hudController.StartLootTag(CurrentFish.fishType.Art,CurrentFish.fishType.name,"Mutation:"+CurrentFish.mutation.name,CurrentFish.weight.ToString()+"Kg");
+        player.hudController.StartLootTag(player.currentFish.fishType.Art,player.currentFish.fishType.name,"Mutation:"+player.currentFish.mutation.name,player.currentFish.weight.ToString()+"Kg");
         StartCoroutine(FishCatchedEffects());
         StartCoroutine(ProcessFish());
         StopCoroutine(PullCoroutine);
         player.ID.playerEvents.OnExitFishingState?.Invoke();
-        player.ID.playerEvents.OnFishCatched?.Invoke(CurrentFish);
+        player.ID.playerEvents.OnFishCatched?.Invoke(player.currentFish);
         player.pullstate = false;
         player.booststate = false;
         player.fishing = false;
@@ -236,32 +248,32 @@ public class FishingController : PlayerSystem
         yield return new WaitForSeconds(0.6f);
         player.retrackDebounce = false;
     }
-    //public void ControlPullingBar()
-    //{
-    //    float Value = ControlBarAction.ReadValue<float>();
-    //    if (Value > 0)
-    //    {
-    //        animator.SetFloat("PullingSpeed", 1f + Value);
-    //        ReelSoundSource.pitch = 0.7f + Value * 0.35f;
-    //        //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-    //        ControlBarGravity = 300f * Value;
-    //        cinemachineCamera.CameraDistance = 8f - 2f * Value;
-    //    }
-    //    else
-    //    {
-    //        animator.SetFloat("PullingSpeed", 0.6f);
-    //        ReelSoundSource.pitch = 0.7f;
-    //        //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-    //        ControlBarGravity = -300f;
-    //        cinemachineCamera.CameraDistance = 8f;
-    //    }
-    //}
+    public void ControlPullingBar()
+    {
+        float Value = ControlBarAction.ReadValue<float>();
+        if (Value > 0)
+        {
+            animator.SetFloat("PullingSpeed", 1f + Value);
+            ReelSoundSource.pitch = 0.7f + Value * 0.35f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+            player.pullCanvaManager.controlBarGravity = 1500f * Value;
+            cinemachineCamera.CameraDistance = 8f - 2f * Value;
+        }
+        else
+        {
+            animator.SetFloat("PullingSpeed", 0.6f);
+            ReelSoundSource.pitch = 0.7f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
+            player.pullCanvaManager.controlBarGravity = -1500;
+            cinemachineCamera.CameraDistance = 8f;
+        }
+    }
     public void LandPointer(InputAction.CallbackContext callbackContext)
     {
         if (!pointerLanded)
         {
             pointerLanded = true;
-            string result = boostCanvaManager.LandPointer();
+            string result = player.boostCanvaManager.LandPointer();
             if (result == "green")
             {
                 player.pullProgressBuff = player.ID.GreenZonebuff;
@@ -284,18 +296,25 @@ public class FishingController : PlayerSystem
 
     private IEnumerator EnterPullState()
     {
+        overlapFirstTimer.Reset(1.5f);
+        overlapSecondTimer.Reset(3f);
+        overlapThirdTimer.Reset(3.8f);
+        player.attackBuff = 0.4f;
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
-        CurrentFish = new Fish(catchedBaseFish, catchedBaseMutation);
+        player.currentFish = new Fish(catchedBaseFish, catchedBaseMutation);
         player.ID.playerEvents.OnPullStage?.Invoke();
         yield return new WaitForSeconds(0.5f);
-        boostCanvaManager.HideBoostUI();
+        player.boostCanvaManager.HideBoostUI();
+        player.pullCanvaManager.Init();
+        player.pullCanvaManager.ShowUI();
+        yield return new WaitForSeconds(0.6f);
         player.pullstate = true;
         //PullCoroutine = StartCoroutine(RandomFishBarPosition());
     }
     public void EnterBoostState()
     {
-        boostCanvaManager.ShowBoostUI();
+        player.boostCanvaManager.ShowBoostUI();
         pointerLanded = false;
         player.ID.playerEvents.OnBoostStage?.Invoke();
     }
@@ -380,9 +399,15 @@ public class FishingController : PlayerSystem
         playerInput = new PlayerInputActions();
         castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
         retractDebounceTimer = new Countdowntimer(retractDebounceLength);
-        timers = new List<Timer>(2) { castRodCooldownTimer, retractDebounceTimer };
+        overlapFirstTimer = new Countdowntimer(1.5f);
+        overlapSecondTimer = new Countdowntimer(3f);
+        overlapThirdTimer = new Countdowntimer(3.8f);
+        timers = new List<Timer>(5) { castRodCooldownTimer, retractDebounceTimer, overlapFirstTimer, overlapSecondTimer, overlapThirdTimer};
         castRodCooldownTimer.OnTimerStop += () => player.castRodDebounce = false;
         retractDebounceTimer.OnTimerStop += () => player.retrackDebounce = false;
+        overlapFirstTimer.OnTimerStop += player.pullCanvaManager.FlipSecond;
+        overlapSecondTimer.OnTimerStop += player.pullCanvaManager.FlipThird;
+        overlapThirdTimer.OnTimerStop += player.pullCanvaManager.FlipDownAll;
     }
     void HandleTimer()
     {

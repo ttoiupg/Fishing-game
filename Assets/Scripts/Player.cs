@@ -45,8 +45,11 @@ public class Player : MonoBehaviour,IDataPersistence
     private StateMachine stateMachine;
 
     [Header("Fishing")]
+    public float attackBuff = 1;
     public float pullProgressBuff = 10f;
     public BoostCanvaManager boostCanvaManager;
+    public PullCanvaManager pullCanvaManager;
+    public Fish currentFish;
     public BaseZone currentZone;
     public bool fishOnBait;
     public bool castRodDebounce;

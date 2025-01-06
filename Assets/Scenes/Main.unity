@@ -2606,7 +2606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pullCanva: {fileID: 813230138}
   controlBar: {fileID: 730982611}
-  fishNeedle: {fileID: 0}
+  fishNeedle: {fileID: 549363219}
   fishPedal: {fileID: 1235546522}
   fishPedalL1: {fileID: 1474311006}
   fishPedalL2: {fileID: 172956217}
@@ -2620,6 +2620,8 @@ MonoBehaviour:
   PullProgress: 0
   fishNeedleSpeed: 6
   isFishBarOverlaping: 0
+  secondFliped: 0
+  thirdFliped: 0
   rawLeftBound: -286
   rawRightBound: 286
 --- !u!1 &353109961
@@ -3076,7 +3078,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414051947}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
@@ -14899,7 +14901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.85098046, g: 0.3019608, b: 0.34509805, a: 1}
+  m_EffectColor: {r: 0.9686275, g: 0.9686275, b: 0.8588236, a: 1}
   m_EffectDistance: {x: 6.9, y: -1}
   m_UseGraphicAlpha: 1
 --- !u!114 &730982613
@@ -14915,7 +14917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9686275, g: 0.9686275, b: 0.8588236, a: 1}
+  m_Color: {r: 0, g: 0.5294118, b: 0.6431373, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -36511,8 +36513,14 @@ MonoBehaviour:
   _experience: 0
   level: 1
   discoveredFish: []
+  attackBuff: 1
   pullProgressBuff: 10
   boostCanvaManager: {fileID: 350805854}
+  pullCanvaManager: {fileID: 350805855}
+  currentFish:
+    fishType: {fileID: 0}
+    mutation: {fileID: 0}
+    weight: 0
   currentZone: {fileID: 0}
   fishOnBait: 0
   castRodDebounce: 0
@@ -47699,24 +47707,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37263bcc5992a4333916df74ba02a48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hudController: {fileID: 350805853}
-  boostCanvaManager: {fileID: 350805854}
   castRodCooldownlength: 3
   retractDebounceLength: 0.6
   Zones: []
   screenEffectsHandler: {fileID: 1297607931}
-  cinemachineCamera: {fileID: 0}
-  BoostStateUI: {fileID: 0}
-  PullStateUI: {fileID: 414051948}
+  cinemachineCamera: {fileID: 522665065}
   ZoneContainer: {fileID: 211540311}
-  ControlBarPosition: 0.5
-  ControlBarGravity: 0
-  ControlBarVelocity: 0
-  FishBarTargetPosition: 0
-  FishBarPosition: 0
-  PullProgress: 0
-  FishBarSpeed: 6
-  IsFishBarOverlaping: 0
   pointerLanded: 0
   BiteNotify: {fileID: 8300000, guid: 86d4b942d2f1d18468d99f49c5b548cd, type: 3}
   LandOnGreenSoundFX: {fileID: 8300000, guid: 51db0b97a42e6594eacd993e9ece3238, type: 3}

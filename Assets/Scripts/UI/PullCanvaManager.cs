@@ -3,8 +3,9 @@ using UnityEngine.UIElements;
 using DG.Tweening;
 using UnityEngine.InputSystem;
 using System.Collections;
+using Unity.VisualScripting;
 
-public class PullCanvaManager : MonoBehaviour
+public class PullCanvaManager : PlayerSystem
 {
     public RectTransform pullCanva;
     public RectTransform controlBar;
@@ -16,7 +17,7 @@ public class PullCanvaManager : MonoBehaviour
     public RectTransform fishPedalR2;
 
 
-    public float controlBarPosition = 50f;
+    public float controlBarPosition = 0f;
     public float controlBarGravity = 0f;
     public float controlBarVelocity = 0f;
     public float fishNeedleTargetPosition = 0f;
@@ -24,30 +25,27 @@ public class PullCanvaManager : MonoBehaviour
     public float PullProgress = 0f;
     public float fishNeedleSpeed = 6f;
     public bool isFishBarOverlaping = false;
+    public bool secondFliped = false;
+    public bool thirdFliped = false;
 
     public float rawLeftBound = -286;
     public float rawRightBound = 286f;
 
-    private InputAction controlBarAction;
-    private bool IsOverlap(float a1, float a2, float b1, float b2)
+    private Animator animator;
+    private float Lerpfloat(float a, float b, float t)
     {
-        float a_width = a2 - a1;
-        float b_width = b2 - b1;
-        if (b2 > a2) return a2 >= b1;
-        if (b2 < a1) return a1 <= b2;
-        if (b2 < a2 && a1 > b2) return true;
-        return true;
-        /*if (InBetween(b1, b2, a1) || InBetween(b1, b2, a2) || InBetween(a1, a2, b1) || InBetween(a1, a2, b2))
-        {
-            return true;
-        }
-
-        return false;*/
+        return a + (b - a) * t;
     }
     public void Init()
     {
+        controlBar.sizeDelta = new Vector2(player.ID.pullBarSize, 94.7651f);
         controlBar.anchoredPosition = new Vector2(0, -74.718f);
         fishNeedle.anchoredPosition = new Vector2(0, -139.5762f);
+        fishPedal.localScale = new Vector3(1,0,1);
+        fishPedalL1.localScale = new Vector3(1, 0, 1);
+        fishPedalR1.localScale = new Vector3(1, 0, 1);
+        fishPedalL2.localScale = new Vector3(1, 0, 1);
+        fishPedalR2.localScale = new Vector3(1, 0, 1);
         controlBarGravity = -9.8f;
         controlBarPosition = 0f;
         fishNeedlePosition = 0f;
@@ -55,8 +53,9 @@ public class PullCanvaManager : MonoBehaviour
         fishNeedleSpeed = 6f;
         PullProgress = 0f;
         isFishBarOverlaping = false;
+        StartCoroutine(RandomFishBarPosition());
     }
-    public void UpdateControlBarPosition()
+    public void UpdatePosition()
     {
         float leftBound = rawLeftBound + controlBar.sizeDelta.x / 2;
         float rightBound = rawRightBound - controlBar.sizeDelta.x / 2;
@@ -72,32 +71,60 @@ public class PullCanvaManager : MonoBehaviour
             controlBarVelocity *= -0.4f;
             nextPosition = rightBound;
         }
-        controlBar.anchoredPosition = new Vector2(nextPosition, -74.718f);
+        controlBarPosition = nextPosition;
+        controlBar.anchoredPosition = new Vector2(controlBarPosition, -74.718f);
+
+        fishNeedlePosition = Lerpfloat(fishNeedlePosition, fishNeedleTargetPosition, fishNeedleSpeed * Time.deltaTime);
+        fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, -139.5762f);
     }
-    //public bool checkControlOverlap()
-    //{
-
-    //}
-    //public IEnumerator RandomFishBarPosition()
-    //{
-    //    while (player.pullstate == true)
-    //    {
-    //        float RandSecond = UnityEngine.Random.Range(CurrentFish.fishType.MinFishBarChangeTime, CurrentFish.fishType.MaxFishBarChangeTime);
-
-    //        float RandPosition = UnityEngine.Random.Range(0, 98f);
-    //        while (Mathf.Abs(RandPosition - fishNeedleTargetPosition) > CurrentFish.fishType.MaxFishBarChangeDistance)
-    //        {
-    //            RandPosition = UnityEngine.Random.Range(0, 98f);
-    //        }
-    //        fishNeedleTargetPosition = UnityEngine.Random.Range(0, 98f);
-    //        fishNeedleSpeed = UnityEngine.Random.Range(0.05f, 6f);
-    //        yield return new WaitForSeconds(RandSecond);
-    //    }
-    //}
+    public void FlipFirst()
+    {
+        fishPedal.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+    }
+    public void FlipSecond()
+    {
+        player.attackBuff = 1f;
+        secondFliped = true;
+        fishPedalL1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalR1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+    }
+    public void FlipThird()
+    {
+        player.attackBuff = 1.5f;
+        thirdFliped = true;
+        fishPedalL2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalR2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+    }
+    public void FlipDownAll()
+    {
+        isFishBarOverlaping = false;
+        secondFliped = false;
+        thirdFliped = false;
+        fishPedal.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalL1.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalR1.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalL2.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+        fishPedalR2.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+    }
+    public IEnumerator RandomFishBarPosition()
+    {
+        while (player.pullstate == true)
+        {
+            float RandSecond = UnityEngine.Random.Range(player.currentFish.fishType.MinFishBarChangeTime, player.currentFish.fishType.MaxFishBarChangeTime);
+            float RandPosition = UnityEngine.Random.Range(-283.5f, 283.5f);
+            while (Mathf.Abs(RandPosition - fishNeedleTargetPosition) > player.currentFish.fishType.MaxFishBarChangeDistance)
+            {
+                RandPosition = UnityEngine.Random.Range(-283.5f, 283.5f);
+            }
+            fishNeedleTargetPosition = RandPosition;
+            fishNeedleSpeed = UnityEngine.Random.Range(0.05f, 6f);
+            yield return new WaitForSeconds(RandSecond);
+        }
+    }
     public void GamepadVibration()
     {
         float lowfreq = 0.5f;
-        float highfreq = controlBarAction.ReadValue<float>() * 0.6f;
+        float highfreq = player.playerInputs.Fishing.ControlFishingRod.ReadValue<float>() * 0.6f;
         if (isFishBarOverlaping)
         {
             lowfreq = 0f;
@@ -117,5 +144,9 @@ public class PullCanvaManager : MonoBehaviour
     public void CloseUI()
     {
         pullCanva.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+    }
+    private void Start()
+    {
+        animator = player.GetComponent<Animator>();
     }
 }

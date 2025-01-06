@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class BoostCanvaManager : MonoBehaviour
+public class BoostCanvaManager : PlayerSystem
 {
     public RectTransform boostState;
     public Image foreGround;

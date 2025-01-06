@@ -8,6 +8,7 @@ public class FishingPullState : BaseState
 
     public override void OnEnter()
     {
+        player.pullCanvaManager.Init();
         Debug.Log("enter pull state");
     }
     public override void OnExit()
@@ -16,7 +17,9 @@ public class FishingPullState : BaseState
     }
     public override void Update()
     {
-        player.fishingController.PullStateUpdateFunction();
+        player.pullCanvaManager.UpdatePosition();
         player.fishingController.ControlPullingBar();
+        player.fishingController.PullStateUpdateFunction();
+        player.pullCanvaManager.GamepadVibration();
     }
 }
