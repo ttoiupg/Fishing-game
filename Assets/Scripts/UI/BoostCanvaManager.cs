@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class BoostCanvaManager : PlayerSystem
 {
+    public AudioClip openSound;
     public RectTransform boostState;
     public Image foreGround;
     public RectTransform redZone;
@@ -26,12 +27,17 @@ public class BoostCanvaManager : PlayerSystem
 
     public void StartBoost()
     {
+        if (pointerTween != null)
+        {
+            pointerTween.Kill();
+        }
+        pointer.rotation = Quaternion.Euler(0, 0, 62.45f);
         pointerTween = pointer.DORotate(new Vector3(0, 0 , -62.45f),0.45f);
         pointerTween.SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
     public string LandPointer()
     {
-        pointerTween.Pause();
+        pointerTween.Kill();
         float rotation = pointer.rotation.eulerAngles.z;
         if (rotation >= 180)
         {
@@ -60,14 +66,15 @@ public class BoostCanvaManager : PlayerSystem
     }
     public void ShowBoostUI()
     {
+        SoundFXManger.Instance.PlaySoundFXClip(openSound, player.CharacterTransform, 1f);
         currentRotation = Random.Range(-moveRange, moveRange);
         greenZone.rotation = Quaternion.Euler(0, 0, currentRotation);
         orangeZone.rotation = Quaternion.Euler(0, 0, currentRotation);
         //do animation
         pointer.DORotate(new Vector3(0,0, 62.45f),0.5f).SetEase(Ease.OutBack);
         boostState.DOScale(Vector3.one, 0.1f).SetEase(Ease.OutBack);
-        rightGear.DORotate(new Vector3(0, 0, -41.727f), 0.7f).SetEase(Ease.OutQuint).SetDelay(0.2f);
-        foreGround.DOFillAmount(0.81f, 0.7f).SetEase(Ease.OutQuint).SetDelay(0.2f);
+        rightGear.DORotate(new Vector3(0, 0, -41.727f), 0.5f).SetEase(Ease.OutCubic).SetDelay(0.2f);
+        foreGround.DOFillAmount(0.81f, 0.5f).SetEase(Ease.OutCubic).SetDelay(0.2f);
         redImage.DOFillAmount(1, 0.7f).SetEase(Ease.OutQuint).SetDelay(0.2f);
         orangeImage.DOFillAmount(1, 0.7f).SetEase(Ease.OutQuint).SetDelay(0.2f);
         greenImage.DOFillAmount(1, 0.7f).SetEase(Ease.OutQuint).SetDelay(0.2f);

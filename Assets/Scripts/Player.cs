@@ -45,6 +45,7 @@ public class Player : MonoBehaviour,IDataPersistence
     private StateMachine stateMachine;
 
     [Header("Fishing")]
+    public float damage = 10f;
     public float attackBuff = 1;
     public float pullProgressBuff = 10f;
     public BoostCanvaManager boostCanvaManager;
@@ -60,6 +61,7 @@ public class Player : MonoBehaviour,IDataPersistence
     public bool inspecting;
     public bool CardOpened;
     public bool fishing;
+    public bool canDamage = true;
 
     [Header("Character")]
     public int Facing = 1;

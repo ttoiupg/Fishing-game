@@ -18,6 +18,8 @@ public class FishingController : PlayerSystem
     public float retractDebounceLength = 0.6f;
     public ZoneDisplayer[] Zones;
     [Header("effect")]
+    public Slider slider;
+    public RectTransform sliderCanva;
     public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer cinemachineCamera;
     public GameObject ZoneContainer;
@@ -42,11 +44,14 @@ public class FishingController : PlayerSystem
     private Transform playerTransform;
     private InputAction ControlBarAction;
     private Animator animator;
+
     private Countdowntimer castRodCooldownTimer;
     private Countdowntimer retractDebounceTimer;
     private Countdowntimer overlapFirstTimer;
     private Countdowntimer overlapSecondTimer;
     private Countdowntimer overlapThirdTimer;
+    private Countdowntimer damageCooldownTimer;
+
     private List<Timer> timers;
 
     Coroutine FishingCoroutine;
@@ -95,6 +100,22 @@ public class FishingController : PlayerSystem
             };
         };
     }
+    public void AttackFish()
+    {
+        Debug.Log("Attack with " + player.attackBuff.ToString() + "buff");
+        float damage = player.damage * player.attackBuff;
+        slider.value -= damage;
+        Debug.Log(slider.value.ToString() + " " + damage.ToString());
+        player.pullCanvaManager.FlipDownAll();
+        player.canDamage = false;
+        damageCooldownTimer.Reset();
+        damageCooldownTimer.Start();
+        if (slider.value <= 0)
+        {
+            FishCatched();
+        }
+        player.attackBuff = 0.4f;
+    }
     public void PullStateUpdateFunction()
     {
         //check for overlap
@@ -102,24 +123,27 @@ public class FishingController : PlayerSystem
                       player.pullCanvaManager.controlBarPosition + player.ID.pullBarSize / 2, 
                       player.pullCanvaManager.fishNeedlePosition-14, player.pullCanvaManager.fishNeedlePosition + 14f))
         {
-            if (!overlapFirstTimer.IsRunning)
+            if (player.canDamage)
             {
-                overlapFirstTimer.Reset();
-                overlapFirstTimer.Start();
-            }
-            if (!overlapSecondTimer.IsRunning)
-            {
-                overlapSecondTimer.Reset();
-                overlapSecondTimer.Start();
-            }
-            if (!overlapThirdTimer.IsRunning)
-            {
-                overlapThirdTimer.Reset();
-                overlapThirdTimer.Start();
-            }
-            if (player.pullCanvaManager.isFishBarOverlaping == false)
-            {
-                player.pullCanvaManager.FlipFirst();
+                if (!player.pullCanvaManager.secondFliped && !overlapFirstTimer.IsRunning)
+                {
+                    overlapFirstTimer.Reset(0.6f);
+                    overlapFirstTimer.Start();
+                }
+                if (!player.pullCanvaManager.thirdFliped && !overlapSecondTimer.IsRunning)
+                {
+                    overlapSecondTimer.Reset(1.2f);
+                    overlapSecondTimer.Start();
+                }
+                if (!overlapThirdTimer.IsRunning)
+                {
+                    overlapThirdTimer.Reset(1.5f);
+                    overlapThirdTimer.Start();
+                }
+                if (player.pullCanvaManager.firstFliped == false)
+                {
+                    player.pullCanvaManager.FlipFirst();
+                }
             }
             player.pullCanvaManager.isFishBarOverlaping = true;
             player.pullCanvaManager.controlBar.GetComponent<Image>().color = new Color32(217, 77, 88, 255);
@@ -128,9 +152,9 @@ public class FishingController : PlayerSystem
         }
         else
         {
-            if (player.pullCanvaManager.isFishBarOverlaping)
+            if (player.pullCanvaManager.isFishBarOverlaping && player.canDamage)
             {
-                player.pullCanvaManager.FlipDownAll();
+                AttackFish();
             }
             overlapFirstTimer.Pause();
             overlapSecondTimer.Pause();
@@ -221,10 +245,11 @@ public class FishingController : PlayerSystem
     }
     private void FishCatched()
     {
+        sliderCanva.localScale = Vector3.zero;
         player.hudController.StartLootTag(player.currentFish.fishType.Art,player.currentFish.fishType.name,"Mutation:"+player.currentFish.mutation.name,player.currentFish.weight.ToString()+"Kg");
         StartCoroutine(FishCatchedEffects());
         StartCoroutine(ProcessFish());
-        StopCoroutine(PullCoroutine);
+        //StopCoroutine(PullCoroutine);
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         player.ID.playerEvents.OnFishCatched?.Invoke(player.currentFish);
         player.pullstate = false;
@@ -236,7 +261,7 @@ public class FishingController : PlayerSystem
         VisualFXManager.Instance.DestroyBobber();
         animator.SetTrigger("CatchingEnd");
         ReelSoundSource.Stop();
-        StopCoroutine(PullCoroutine);
+        //StopCoroutine(PullCoroutine);
         player.ID.playerEvents.OnExitFishingState?.Invoke();
         cinemachineCamera.CameraDistance = 8f;
         SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
@@ -296,13 +321,12 @@ public class FishingController : PlayerSystem
 
     private IEnumerator EnterPullState()
     {
-        overlapFirstTimer.Reset(1.5f);
-        overlapSecondTimer.Reset(3f);
-        overlapThirdTimer.Reset(3.8f);
+        sliderCanva.localScale = Vector3.one;
         player.attackBuff = 0.4f;
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
         player.currentFish = new Fish(catchedBaseFish, catchedBaseMutation);
+        slider.value = 100 - player.pullProgressBuff;
         player.ID.playerEvents.OnPullStage?.Invoke();
         yield return new WaitForSeconds(0.5f);
         player.boostCanvaManager.HideBoostUI();
@@ -399,15 +423,19 @@ public class FishingController : PlayerSystem
         playerInput = new PlayerInputActions();
         castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
         retractDebounceTimer = new Countdowntimer(retractDebounceLength);
-        overlapFirstTimer = new Countdowntimer(1.5f);
-        overlapSecondTimer = new Countdowntimer(3f);
-        overlapThirdTimer = new Countdowntimer(3.8f);
-        timers = new List<Timer>(5) { castRodCooldownTimer, retractDebounceTimer, overlapFirstTimer, overlapSecondTimer, overlapThirdTimer};
+        overlapFirstTimer = new Countdowntimer(0.6f);
+        overlapSecondTimer = new Countdowntimer(1.2f);
+        overlapThirdTimer = new Countdowntimer(1.5f);
+        damageCooldownTimer = new Countdowntimer(0.5f);
+        timers = new List<Timer>(6) { castRodCooldownTimer, retractDebounceTimer, 
+            overlapFirstTimer, overlapSecondTimer, 
+            overlapThirdTimer, damageCooldownTimer};
         castRodCooldownTimer.OnTimerStop += () => player.castRodDebounce = false;
         retractDebounceTimer.OnTimerStop += () => player.retrackDebounce = false;
         overlapFirstTimer.OnTimerStop += player.pullCanvaManager.FlipSecond;
         overlapSecondTimer.OnTimerStop += player.pullCanvaManager.FlipThird;
-        overlapThirdTimer.OnTimerStop += player.pullCanvaManager.FlipDownAll;
+        overlapThirdTimer.OnTimerStop += AttackFish;
+        damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
     }
     void HandleTimer()
     {

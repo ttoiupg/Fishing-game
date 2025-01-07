@@ -25,6 +25,7 @@ public class PullCanvaManager : PlayerSystem
     public float PullProgress = 0f;
     public float fishNeedleSpeed = 6f;
     public bool isFishBarOverlaping = false;
+    public bool firstFliped = false;
     public bool secondFliped = false;
     public bool thirdFliped = false;
 
@@ -79,6 +80,7 @@ public class PullCanvaManager : PlayerSystem
     }
     public void FlipFirst()
     {
+        firstFliped = true;
         fishPedal.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
     }
     public void FlipSecond()
@@ -97,7 +99,7 @@ public class PullCanvaManager : PlayerSystem
     }
     public void FlipDownAll()
     {
-        isFishBarOverlaping = false;
+        firstFliped = false;
         secondFliped = false;
         thirdFliped = false;
         fishPedal.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);

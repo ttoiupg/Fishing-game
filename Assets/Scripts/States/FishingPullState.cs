@@ -13,6 +13,7 @@ public class FishingPullState : BaseState
     }
     public override void OnExit()
     {
+        player.pullCanvaManager.CloseUI();
         Debug.Log("exit pull state");
     }
     public override void Update()
