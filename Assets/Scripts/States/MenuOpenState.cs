@@ -17,8 +17,7 @@ public class MenuOpenState : BaseState
         player.playerInputs.UI.OpenMenu.performed -= player.hudController.SwitchMenu;
         Debug.Log("exit menu open state");
     }
-
-    public override void FixedUpdate()
+    public override void Update()
     {
         player.HandleMovement();
         player.fishingController.ZoneCheck();

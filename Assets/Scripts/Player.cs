@@ -179,7 +179,7 @@ public class Player : MonoBehaviour,IDataPersistence
             if (move != Vector3.zero)
             {
                 animator.SetBool("IsMoving", true);
-                animator.SetFloat("Speed", move.magnitude * playerSpeed / 3f);
+                animator.SetFloat("Speed", move.magnitude * playerSpeed / 3.5f);
             }
             else
             {
