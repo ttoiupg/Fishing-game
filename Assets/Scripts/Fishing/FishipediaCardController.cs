@@ -12,6 +12,8 @@ using Unity.VisualScripting;
 public class FishipediaCardController : MonoBehaviour
 {
     public Player player;
+    public AudioClip CardOpen;
+    public AudioClip CardClose;
     public Transform cardTransform;
     public GameObject shadow;
     public SpriteRenderer Front;
@@ -39,6 +41,7 @@ public class FishipediaCardController : MonoBehaviour
     }
     public IEnumerator OpenCard(BaseFish fish)
     {
+        SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.CharacterTransform, 0.8f);
         player.CardOpened = true;
         shadow.SetActive(true);
         cardTransform.rotation = Quaternion.Euler(0,180,0);
@@ -72,10 +75,11 @@ public class FishipediaCardController : MonoBehaviour
     }
     public void CloseCard()
     {
+        SoundFXManger.Instance.PlaySoundFXClip(CardClose, player.CharacterTransform, 0.8f);
         player.CardOpened = false;
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
-        cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint).SetDelay(0.1f);
     }
     void Update()
     {

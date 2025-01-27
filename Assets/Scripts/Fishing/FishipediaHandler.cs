@@ -8,6 +8,7 @@ using System.Linq;
 public class FishipediaHandler : MonoBehaviour
 {
     public Player player;
+    public AudioClip pageTurn;
     public GameConfiguration gameConfiguration;
     public GameObject fishipediaDisplayIcon;
     public FishipediaCardController cardController;
@@ -17,6 +18,7 @@ public class FishipediaHandler : MonoBehaviour
     public void CategorySelected(int number)
     {
         CurrentCategory = number;
+        SoundFXManger.Instance.PlaySoundFXClip(pageTurn, player.CharacterTransform, 0.6f);
         for (int i = 0; i < Labels.Count; i++) { 
             if (number == i)
             {

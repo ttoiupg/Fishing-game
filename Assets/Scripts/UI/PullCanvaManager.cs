@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 public class PullCanvaManager : PlayerSystem
 {
     public RectTransform pullCanva;
+    public RectTransform controlCanva;
     public RectTransform controlBar;
     public RectTransform fishNeedle;
     public RectTransform fishPedal;
@@ -16,7 +17,7 @@ public class PullCanvaManager : PlayerSystem
     public RectTransform fishPedalR1;
     public RectTransform fishPedalR2;
 
-
+    public float pullCanvaRotation = 0f;
     public float controlBarPosition = 0f;
     public float controlBarGravity = 0f;
     public float controlBarVelocity = 0f;
@@ -40,14 +41,14 @@ public class PullCanvaManager : PlayerSystem
     public void Init()
     {
         controlBar.sizeDelta = new Vector2(player.ID.pullBarSize, 94.7651f);
-        controlBar.anchoredPosition = new Vector2(0, -74.718f);
-        fishNeedle.anchoredPosition = new Vector2(0, -139.5762f);
+        controlBar.anchoredPosition = new Vector2(0, -338.718f);
+        fishNeedle.anchoredPosition = new Vector2(0, -403.5762f);
         fishPedal.localScale = new Vector3(1,0,1);
         fishPedalL1.localScale = new Vector3(1, 0, 1);
         fishPedalR1.localScale = new Vector3(1, 0, 1);
         fishPedalL2.localScale = new Vector3(1, 0, 1);
         fishPedalR2.localScale = new Vector3(1, 0, 1);
-        controlBarGravity = -9.8f;
+        controlBarGravity = -1500f;
         controlBarPosition = 0f;
         fishNeedlePosition = 0f;
         fishNeedlePosition = 0f;
@@ -73,10 +74,12 @@ public class PullCanvaManager : PlayerSystem
             nextPosition = rightBound;
         }
         controlBarPosition = nextPosition;
-        controlBar.anchoredPosition = new Vector2(controlBarPosition, -74.718f);
+        controlBar.anchoredPosition = new Vector2(controlBarPosition, -338.718f);
 
         fishNeedlePosition = Lerpfloat(fishNeedlePosition, fishNeedleTargetPosition, fishNeedleSpeed * Time.deltaTime);
-        fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, -139.5762f);
+        pullCanvaRotation = Lerpfloat(pullCanvaRotation, controlBarGravity/-250f, 5.5f * Time.deltaTime);
+        controlCanva.rotation = Quaternion.Euler(0,0,pullCanvaRotation);
+        fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, -403.5762f);
     }
     public void FlipFirst()
     {

@@ -38,6 +38,8 @@ public class HUDController : PlayerSystem
     [Header("Menu UI")]
     public AudioClip OpenSound;
     public AudioClip CloseSound;
+    public AudioClip FrameOpenSound;
+    public AudioClip FrameCloseSound;
     public RectTransform currentPage;
     public RectTransform resumeButton;
     public RectTransform fishipediaButton;
@@ -154,7 +156,7 @@ public class HUDController : PlayerSystem
         {
             player.menuOpen = true;
             isPageOpen = false;
-            currentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
+            CloseUI();
         }
         else
         {
@@ -180,7 +182,7 @@ public class HUDController : PlayerSystem
         {
             player.menuOpen = true;
             isPageOpen = false;
-            currentPage.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
+            CloseUI();
         }
         else
         {
@@ -198,14 +200,24 @@ public class HUDController : PlayerSystem
             }
         }
     }
+    public void SetOpenSound(AudioClip sound)
+    {
+        FrameOpenSound = sound;
+    }
+    public void SetCloseSound(AudioClip sound)
+    {
+        FrameCloseSound = sound;
+    }
     public void OpenUI(RectTransform ui)
     {
+        SoundFXManger.Instance.PlaySoundFXClip(FrameOpenSound, player.CharacterTransform, 1f);
         currentPage = ui;
         isPageOpen = true;
         ui.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
     }
     public void CloseUI()
     {
+        SoundFXManger.Instance.PlaySoundFXClip(FrameCloseSound, player.CharacterTransform, 1f);
         isPageOpen = false;
         currentPage.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
     }

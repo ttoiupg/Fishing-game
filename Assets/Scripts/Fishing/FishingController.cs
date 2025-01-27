@@ -10,7 +10,9 @@ using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class FishingController : PlayerSystem
 {
@@ -18,16 +20,24 @@ public class FishingController : PlayerSystem
     public float retractDebounceLength = 0.6f;
     public ZoneDisplayer[] Zones;
     [Header("effect")]
-    public Slider slider;
-    public RectTransform sliderCanva;
+    public Image fishHealthBar;
+    public Sprite normalHealthBar;
+    public Sprite whiteHealthBar;
+    public Slider fishCatchTimer;
     public ScreenEffectsHandler screenEffectsHandler;
     public CinemachinePositionComposer cinemachineCamera;
     public GameObject ZoneContainer;
+    public float fishMaxHealth = 100;
+    public float fishHealth = 100;
 
     [Header("Pull state")]
     public bool pointerLanded = false;
 
     [Header("Sound effects")]
+    public AudioClip attakFish;
+    public AudioClip pedalFlip;
+    public AudioClip pedalFlip2;
+    public AudioClip pedalFlip3;
     public AudioClip BiteNotify;
     public AudioClip LandOnGreenSoundFX;
     public AudioClip LandOnOrangeSoundFX;
@@ -100,17 +110,21 @@ public class FishingController : PlayerSystem
             };
         };
     }
-    public void AttackFish()
+    public async Task AttackFish()
     {
         Debug.Log("Attack with " + player.attackBuff.ToString() + "buff");
         float damage = player.damage * player.attackBuff;
-        slider.value -= damage;
-        Debug.Log(slider.value.ToString() + " " + damage.ToString());
+        fishHealth -= damage;
         player.pullCanvaManager.FlipDownAll();
         player.canDamage = false;
         damageCooldownTimer.Reset();
         damageCooldownTimer.Start();
-        if (slider.value <= 0)
+        fishHealthBar.sprite = whiteHealthBar;
+        SoundFXManger.Instance.PlaySoundFXClip(attakFish, playerTransform, player.attackBuff);
+        fishHealthBar.DOFillAmount(fishHealth / fishMaxHealth, 0.2f).SetEase(Ease.OutBack);
+        await Task.Delay(100);
+        fishHealthBar.sprite = normalHealthBar;
+        if (fishHealth <= 0)
         {
             FishCatched();
         }
@@ -143,6 +157,7 @@ public class FishingController : PlayerSystem
                 if (player.pullCanvaManager.firstFliped == false)
                 {
                     player.pullCanvaManager.FlipFirst();
+                    SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
                 }
             }
             player.pullCanvaManager.isFishBarOverlaping = true;
@@ -150,11 +165,11 @@ public class FishingController : PlayerSystem
             player.pullCanvaManager.controlBar.GetComponent<Outline>().effectColor = new Color32(0, 135, 164, 255);
             //PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
         }
-        else
+        else 
         {
             if (player.pullCanvaManager.isFishBarOverlaping && player.canDamage)
             {
-                AttackFish();
+                Task j = AttackFish();
             }
             overlapFirstTimer.Pause();
             overlapSecondTimer.Pause();
@@ -245,7 +260,6 @@ public class FishingController : PlayerSystem
     }
     private void FishCatched()
     {
-        sliderCanva.localScale = Vector3.zero;
         player.hudController.StartLootTag(player.currentFish.fishType.Art,player.currentFish.fishType.name,"Mutation:"+player.currentFish.mutation.name,player.currentFish.weight.ToString()+"Kg");
         StartCoroutine(FishCatchedEffects());
         StartCoroutine(ProcessFish());
@@ -255,8 +269,10 @@ public class FishingController : PlayerSystem
         player.pullstate = false;
         player.booststate = false;
         player.fishing = false;
+        player.retrackDebounce = true;
+        retractDebounceTimer.Start();
     }
-    private IEnumerator FishFailed()
+    private void FishFailed()
     {
         VisualFXManager.Instance.DestroyBobber();
         animator.SetTrigger("CatchingEnd");
@@ -270,8 +286,8 @@ public class FishingController : PlayerSystem
         player.pullstate = false;
         player.booststate = false;
         player.fishing = false;
-        yield return new WaitForSeconds(0.6f);
-        player.retrackDebounce = false;
+        player.retrackDebounce = true;
+        retractDebounceTimer.Start();
     }
     public void ControlPullingBar()
     {
@@ -321,12 +337,12 @@ public class FishingController : PlayerSystem
 
     private IEnumerator EnterPullState()
     {
-        sliderCanva.localScale = Vector3.one;
         player.attackBuff = 0.4f;
         BaseFish catchedBaseFish = RollForFish();
         BaseMutation catchedBaseMutation = RollForMutation();
         player.currentFish = new Fish(catchedBaseFish, catchedBaseMutation);
-        slider.value = 100 - player.pullProgressBuff;
+        fishHealth = fishMaxHealth - player.pullProgressBuff;
+        fishHealthBar.fillAmount = fishHealth / fishMaxHealth;
         player.ID.playerEvents.OnPullStage?.Invoke();
         yield return new WaitForSeconds(0.5f);
         player.boostCanvaManager.HideBoostUI();
@@ -432,9 +448,18 @@ public class FishingController : PlayerSystem
             overlapThirdTimer, damageCooldownTimer};
         castRodCooldownTimer.OnTimerStop += () => player.castRodDebounce = false;
         retractDebounceTimer.OnTimerStop += () => player.retrackDebounce = false;
-        overlapFirstTimer.OnTimerStop += player.pullCanvaManager.FlipSecond;
-        overlapSecondTimer.OnTimerStop += player.pullCanvaManager.FlipThird;
-        overlapThirdTimer.OnTimerStop += AttackFish;
+        overlapFirstTimer.OnTimerStop += () => {
+            player.pullCanvaManager.FlipSecond();
+            SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
+        };
+        overlapSecondTimer.OnTimerStop += () => {
+            player.pullCanvaManager.FlipThird();
+            SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
+        };
+        overlapThirdTimer.OnTimerStop += async () =>
+        {
+            await AttackFish();
+        };
         damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
     }
     void HandleTimer()
