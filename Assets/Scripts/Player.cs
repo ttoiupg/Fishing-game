@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Halfmoon.Utilities;
+using System.Threading;
 public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
@@ -65,8 +67,21 @@ public class Player : MonoBehaviour,IDataPersistence
 
     [Header("Character")]
     public int Facing = 1;
+
+    [Header("Interaction")]
+    [SerializeField] private Transform _interactionPoint;
+    [SerializeField] private float _interactionRange;
+    [SerializeField] private LayerMask _interactionLayerMask;
+    private readonly Collider[] _colliders = new Collider[3];
+    [SerializeField] private int _numFound;
+    [SerializeField] private bool isEnter = true;
+    private bool interactionDebounce = false;
+    private Countdowntimer interactionDebounceTimer;
+
     private void Awake()
     {
+        interactionDebounceTimer = new Countdowntimer(0.5f);
+        interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
         playerInputs = new PlayerInputActions();
         stateMachine = new StateMachine();
         var locomotionState = new LocomotionState(this, animator);
@@ -185,6 +200,30 @@ public class Player : MonoBehaviour,IDataPersistence
             {
                 animator.SetFloat("Speed", 1f);
                 animator.SetBool("IsMoving", false);
+            }
+        }
+    }
+    public void HandleInteraction()
+    {
+        interactionDebounceTimer.Tick(Time.deltaTime);
+        if (_numFound == 0) isEnter = true;
+        _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionRange, _colliders, _interactionLayerMask);
+        if (interactionDebounce) return;
+        if (_numFound > 0)
+        {
+            if (isEnter)
+            {
+                isEnter = false;
+                hudController.ShowInteractionPrompt();
+            }
+        }
+        else
+        {
+            if (!isEnter)
+            {
+                interactionDebounce = true;
+                hudController.HideInteractionPrompt();
+                interactionDebounceTimer.Start();
             }
         }
     }

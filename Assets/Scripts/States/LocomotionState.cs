@@ -4,6 +4,7 @@ using UnityEngine;
 public class LocomotionState : BaseState
 {
     public LocomotionState(Player player, Animator animator) : base(player, animator) { }
+
     public override void OnEnter()
     {
         Debug.Log("enter locomotion state");
@@ -20,7 +21,9 @@ public class LocomotionState : BaseState
     }
     public override void Update()
     {
+        player.HandleInteraction();
         player.HandleMovement();
         player.fishingController.ZoneCheck();
+
     }
 }

@@ -148,7 +148,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""395c8567-1eae-49df-9210-e4aaa8736348"",
-                    ""path"": ""<Keyboard>/#(M)"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -159,7 +159,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0dd4d3a7-3186-40a8-b48f-df8a167945b1"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Joystick>/{Menu}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -50,6 +50,10 @@ public class HUDController : PlayerSystem
     public bool MenuDebounce = false;
     [Header("Fishipedia")]
     public RectTransform fishipediaPage;
+    [Header("Interaction prompt")]
+    public RectTransform interactionPrompt;
+    public Image promptImage;
+    public TextMeshProUGUI promptText;
 
     float BackLerp(float x)
     {
@@ -57,6 +61,14 @@ public class HUDController : PlayerSystem
         float c3 = c1 + 1;
 
         return 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
+    }
+    public void ShowInteractionPrompt()
+    {
+        interactionPrompt.DOScale(Vector3.one,0.2f).SetEase(Ease.OutBack);
+    }
+    public void HideInteractionPrompt()
+    {
+        interactionPrompt.DOScale(Vector3.zero, 0.15f);
     }
     public void StartLootTag(Sprite image, string name, string desc, string value)
     {

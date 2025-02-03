@@ -144,7 +144,7 @@ public class PullCanvaManager : PlayerSystem
     }
     public void ShowUI()
     {
-        pullCanva.DOScale(Vector3.one,0.35f).SetEase(Ease.OutBack);
+        pullCanva.DOScale(new Vector3(0.79f,0.79f,0.79f),0.35f).SetEase(Ease.OutBack);
     }
     public void CloseUI()
     {
