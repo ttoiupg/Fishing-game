@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 using Halfmoon.Utilities;
 using System.Threading;
+using UnityEngine.InputSystem;
+using DG.Tweening;
 public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
@@ -76,8 +78,14 @@ public class Player : MonoBehaviour,IDataPersistence
     [SerializeField] private int _numFound;
     [SerializeField] private bool isEnter = true;
     private bool interactionDebounce = false;
+    public bool interacted;
     private Countdowntimer interactionDebounceTimer;
-
+    public IInteractable currentInteract;
+    private IInteractable lastInteract;
+    [SerializeField] private string currentPrompt;
+    [SerializeField] private float currentLength;
+    [Header("Testing")]
+    public bool CanInteract = true;
     private void Awake()
     {
         interactionDebounceTimer = new Countdowntimer(0.5f);
@@ -99,7 +107,14 @@ public class Player : MonoBehaviour,IDataPersistence
 
         stateMachine.SetState(locomotionState);
     }
-
+    private void OnEnable()
+    {
+        playerInputs.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        playerInputs.Player.Disable();
+    }
     void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
     void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
     private void Update()
@@ -109,6 +124,23 @@ public class Player : MonoBehaviour,IDataPersistence
     private void FixedUpdate()
     {
         stateMachine.FixedUpdate();
+    }
+    private Collider GetClosestCollider(Collider[] colliders)
+    {
+        float distance = 10000f;
+        Collider result = null;
+        foreach (Collider collider in colliders)
+        {
+            if (collider == null) continue;
+            Debug.Log(collider);
+            float d = (collider.gameObject.transform.position - CharacterTransform.position).magnitude;
+            if (d <= distance)
+            {
+                distance = d;
+                result = collider;
+            }
+        }
+        return result;
     }
     float GetExpRQ(int level)
     {
@@ -211,10 +243,24 @@ public class Player : MonoBehaviour,IDataPersistence
         if (interactionDebounce) return;
         if (_numFound > 0)
         {
-            if (isEnter)
+            Collider closest = GetClosestCollider(_colliders);
+            currentInteract = closest.GetComponent<IInteractable>();
+            Debug.Log(closest.name);
+            if (isEnter || currentInteract != lastInteract)
             {
+                if (lastInteract != null)
+                {
+                    lastInteract.PromptHide(this);
+                }
+                hudController.interactionPrompt.localScale = Vector3.zero;
+                interacted = false;
+                lastInteract = currentInteract;
+                currentPrompt = currentInteract.InteractionPrompt;
+                currentLength = currentInteract.length;
+                hudController.requiredInteractTime = currentInteract.length;
                 isEnter = false;
-                hudController.ShowInteractionPrompt();
+                hudController.ShowInteractionPrompt(currentPrompt, closest.name);
+                currentInteract.PromptShow(this);
             }
         }
         else
@@ -223,7 +269,34 @@ public class Player : MonoBehaviour,IDataPersistence
             {
                 interactionDebounce = true;
                 hudController.HideInteractionPrompt();
+                currentInteract.PromptHide(this);
                 interactionDebounceTimer.Start();
+                currentInteract = null;
+            }
+        }
+    }
+    public void InteractInput(InputAction.CallbackContext callbackContext)
+    {
+        if (currentInteract != null)
+        {
+            if (callbackContext.phase == InputActionPhase.Started)
+            {
+                hudController.interactionPrompt.DOScale(new Vector3(0.8f,0.8f,0.8f), 0.15f).SetEase(Ease.OutBack);
+                currentInteract.InteractionStart(this);
+                hudController.promptImage.DOKill();
+                hudController.promptImage.DOFillAmount(1,currentLength).onComplete += ()=> {
+                    currentInteract.Interact(this);
+                    hudController.HideInteractionPrompt();
+                    hudController.promptImage.fillAmount = 0;
+                };
+                hudController.interacting = true;
+            }else if (callbackContext.phase == InputActionPhase.Canceled && interacted == false)
+            {
+                hudController.interactionPrompt.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack);
+                currentInteract.InteractionStop(this);
+                hudController.promptImage.DOKill();
+                hudController.promptImage.DOFillAmount(0, 0.26f);
+                hudController.interacting = false;
             }
         }
     }

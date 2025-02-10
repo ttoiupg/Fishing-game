@@ -4,8 +4,41 @@
         {
             "name": "Player",
             "id": "80a5c849-3f38-44fc-a731-f8a66fdcb6ad",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "3a5d955c-0b2d-4c25-bde5-4665e4e03bbd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "88521925-44b0-4622-a783-0cfe0c2e799a",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b8117b2-44a3-4957-b486-9da55388e69a",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         },
         {
             "name": "Fishing",

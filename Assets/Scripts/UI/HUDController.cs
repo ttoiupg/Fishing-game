@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using Unity.Collections;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Halfmoon.Utilities;
+using Unity.Mathematics;
 public class HUDController : PlayerSystem
 {
     int prevLevel = 0;
@@ -54,7 +56,12 @@ public class HUDController : PlayerSystem
     public RectTransform interactionPrompt;
     public Image promptImage;
     public TextMeshProUGUI promptText;
-
+    public TextMeshProUGUI promptName;
+    public bool interacting = false;
+    public float interactTime = 0;
+    public float requiredInteractTime = 1;
+    [SerializeField] private AudioClip popUpSound;
+    [SerializeField] private AudioClip hideSound;
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -62,12 +69,20 @@ public class HUDController : PlayerSystem
 
         return 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
     }
-    public void ShowInteractionPrompt()
+    float ExpoLerp(float x)
     {
+        return x < 0.5 ? 2 * x * x : 1 - math.pow(-2 * x + 2, 2) / 2;
+    }
+    public void ShowInteractionPrompt(string prompt, string name)
+    {
+        promptText.text = prompt;
+        promptName.text = name;
+        SoundFXManger.Instance.PlaySoundFXClip(popUpSound, player.CharacterTransform, 0.3f);
         interactionPrompt.DOScale(Vector3.one,0.2f).SetEase(Ease.OutBack);
     }
     public void HideInteractionPrompt()
     {
+        SoundFXManger.Instance.PlaySoundFXClip(hideSound, player.CharacterTransform, 0.3f);
         interactionPrompt.DOScale(Vector3.zero, 0.15f);
     }
     public void StartLootTag(Sprite image, string name, string desc, string value)
