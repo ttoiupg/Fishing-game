@@ -36993,6 +36993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: {fileID: 11400000, guid: ca471eb440b5fd344b1aac63aee07278, type: 2}
+  currentFishingRod: {fileID: 0}
   fishingController: {fileID: 1871768071}
   hudController: {fileID: 350805853}
   animator: {fileID: 1643146914}
@@ -37000,7 +37001,10 @@ MonoBehaviour:
   controller: {fileID: 1643146904}
   playerVelocity: {x: 0, y: 0, z: 0}
   groundedPlayer: 0
+  movementResponsiveness: 14
   playerSpeed: 5
+  currentSpeed: 0
+  currentDirection: {x: 0, y: 0, z: 0}
   lastSpeed: 0
   isControllerConnected: 0
   gravityValue: -9.81
@@ -37039,7 +37043,6 @@ MonoBehaviour:
   interacted: 0
   currentPrompt: 
   currentLength: 0
-  currentPercentage: 0
   CanInteract: 1
 --- !u!114 &1643146912
 MonoBehaviour:
@@ -43402,7 +43405,7 @@ Transform:
   m_GameObject: {fileID: 1825330578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1807, y: 0.72, z: 0.205}
+  m_LocalPosition: {x: -0.1807, y: 0.7504, z: 0.205}
   m_LocalScale: {x: 0.27733338, y: 1, z: 0.27733338}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -49556,8 +49559,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 174.0652}
+  m_SizeDelta: {x: 0, y: 348.1296}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2014430650
 GameObject:
@@ -50525,6 +50528,10 @@ PrefabInstance:
       propertyPath: m_MaskInteraction
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1643143477890063596, guid: 803cbaf1834958f4d9f2536a76f76fc3, type: 3}
+      propertyPath: m_AutoRebind
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1843445153213508793, guid: 803cbaf1834958f4d9f2536a76f76fc3, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.63700575
@@ -50753,6 +50760,10 @@ PrefabInstance:
       propertyPath: m_MaskInteraction
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7704736137296563746, guid: 803cbaf1834958f4d9f2536a76f76fc3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 7793157141557619584, guid: 803cbaf1834958f4d9f2536a76f76fc3, type: 3}
       propertyPath: m_MaskInteraction
       value: 2

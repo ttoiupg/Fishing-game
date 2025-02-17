@@ -11,6 +11,7 @@ public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
 
+    public FishingRod currentFishingRod;
     public PlayerInputActions playerInputs;
     public FishingController fishingController;
     public HUDController hudController;
@@ -19,7 +20,10 @@ public class Player : MonoBehaviour,IDataPersistence
     public CharacterController controller;
     public Vector3 playerVelocity;
     public bool groundedPlayer;
+    public float movementResponsiveness = 25f;
     public float playerSpeed;
+    public float currentSpeed;
+    public Vector3 currentDirection;
     public float lastSpeed;
     public bool isControllerConnected = false;
     [SerializeField]
@@ -200,12 +204,13 @@ public class Player : MonoBehaviour,IDataPersistence
         {
             playerVelocity.y = 0f;
         }
-        Vector3 move = new Vector3(moveHorizontal, 0, moveVertical);
-        if (move.magnitude > 1f)
+        Vector3 move = Vector3.ClampMagnitude(new Vector3(moveHorizontal, 0, moveVertical),1f);
+        currentSpeed = Mathf.Lerp(currentSpeed, playerSpeed * move.magnitude, 1-Mathf.Exp(-movementResponsiveness * Time.deltaTime));
+        if (move.magnitude > 0)
         {
-            move = move / move.magnitude;
-        };
-        controller.Move(move * Time.deltaTime * playerSpeed);
+            currentDirection = Vector3.Normalize(move);
+        }
+        controller.Move(currentDirection * Time.deltaTime * currentSpeed);
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
         if (playerSpeed != 0)
@@ -223,10 +228,10 @@ public class Player : MonoBehaviour,IDataPersistence
                     CharacterTransform.rotation = Quaternion.Euler(new Vector3(-27.5f, 180, 0));
                 };
             }
-            if (move != Vector3.zero)
+            if (move.magnitude != 0)
             {
                 animator.SetBool("IsMoving", true);
-                animator.SetFloat("Speed", move.magnitude * playerSpeed / 3.5f);
+                animator.SetFloat("Speed", currentSpeed / 3.5f);
             }
             else
             {
