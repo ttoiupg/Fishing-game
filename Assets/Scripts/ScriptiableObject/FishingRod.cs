@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Fishing rod", menuName = "Fishing rod")]
+[CreateAssetMenu(fileName = "Fishing rod", menuName = "Game/Fishing rod")]
 public class FishingRod : ScriptableObject
 {
     public string description;

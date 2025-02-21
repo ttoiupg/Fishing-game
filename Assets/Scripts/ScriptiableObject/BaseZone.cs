@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Zone", menuName = "Zone")]
+[CreateAssetMenu(fileName = "New Zone", menuName = "Game/Zone")]
 public class BaseZone : ScriptableObject
 {
     public string Description = "This is the default zone.";

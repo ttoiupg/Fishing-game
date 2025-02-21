@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New fish", menuName = "Fish")]
+[CreateAssetMenu(fileName = "New fish", menuName = "Game/Fish/Fish")]
 public class BaseFish : ScriptableObject, IComparable<BaseFish>
 {
     public Sprite Art;
