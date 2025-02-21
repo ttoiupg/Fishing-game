@@ -24,7 +24,7 @@ public class FishIconDisplayer : MonoBehaviour
     {
         GetComponent<Image>().sprite = fish.Ring;
         Icon.sprite = fish.Art;
-        if (!player.discoveredFish.Exists((x)=>x.baseFish == fish))
+        if (!player.discoveredFish.ContainsKey(fish.id))
             Icon.color = Color.black;
         else
             Icon.color = Color.white;

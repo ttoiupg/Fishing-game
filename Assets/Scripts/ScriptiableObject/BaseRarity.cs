@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Rarity", menuName = "Game/Rarity")]
 public class BaseRarity : ScriptableObject
 {
+    public string id;
     public float OneIn;
 }

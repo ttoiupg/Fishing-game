@@ -243,11 +243,11 @@ public class FishingController : PlayerSystem
     }
     private IEnumerator ProcessFish()
     {
-        if (!player.discoveredFish.Exists((x) => x.baseFish == player.currentFish.fishType))
+        if (!player.discoveredFish.ContainsKey(player.currentFish.fishType.id))
         {
-            StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
+            //StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
             DiscoveredFish discoveredFish = new DiscoveredFish(player.currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-            player.discoveredFish.Add(discoveredFish);
+            player.discoveredFish.Add(discoveredFish.baseFish.id,discoveredFish);
             player.ID.playerEvents.OnFishUnlocked.Invoke(player.currentFish.fishType);
         }
         else

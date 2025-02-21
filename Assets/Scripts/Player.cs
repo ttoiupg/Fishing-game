@@ -48,8 +48,7 @@ public class Player : MonoBehaviour,IDataPersistence
             }
         }
     }
-    public List<DiscoveredFish> discoveredFish;
-    private List<IDataDiscoverFish> dataDiscoverFish;
+    public Dictionary<string,DiscoveredFish> discoveredFish = new Dictionary<string, DiscoveredFish>();
     private StateMachine stateMachine;
 
     [Header("Fishing")]
@@ -136,7 +135,6 @@ public class Player : MonoBehaviour,IDataPersistence
         foreach (Collider collider in colliders)
         {
             if (collider == null) continue;
-            Debug.Log(collider);
             float d = (collider.gameObject.transform.position - CharacterTransform.position).magnitude;
             if (d <= distance)
             {
@@ -177,22 +175,13 @@ public class Player : MonoBehaviour,IDataPersistence
         experience = gameData.experience;
         expRequire = (float)GetExpRQ(level);
         discoveredFish.Clear();
-        foreach(IDataDiscoverFish dataFish in gameData.discoveredFish)
-        {
-            BaseFish b_fish = DataPersistenceManager.Instance.gameFish.Find((x) => x.name == dataFish.name);
-            discoveredFish.Add(new DiscoveredFish(b_fish,dataFish.discoverDate));
-        }
+        discoveredFish = gameData.discoveredFish;
     }
     public void SaveData(ref GameData gameData)
     {
         gameData.level = level;
         gameData.experience = experience;
-        List<IDataDiscoverFish> tempDisFish = new List<IDataDiscoverFish>();
-        foreach (DiscoveredFish Fish in discoveredFish)
-        {
-            tempDisFish.Add(new IDataDiscoverFish(Fish));
-        }
-        gameData.discoveredFish = tempDisFish;
+        gameData.discoveredFish = discoveredFish;
     }
     public void HandleMovement()
     {
@@ -250,7 +239,6 @@ public class Player : MonoBehaviour,IDataPersistence
         {
             Collider closest = GetClosestCollider(_colliders);
             currentInteract = closest.GetComponent<IInteractable>();
-            Debug.Log(closest.name);
             if (isEnter || currentInteract != lastInteract)
             {
                 if (lastInteract != null)
@@ -310,11 +298,11 @@ public class Player : MonoBehaviour,IDataPersistence
 [System.Serializable]
 public class IDataDiscoverFish
 {
-    public string name;
+    public string id;
     public string discoverDate;
     public IDataDiscoverFish(DiscoveredFish fish)
     {
-        name = fish.baseFish.name;
+        id = fish.baseFish.id;
         discoverDate = fish.discoverDate;
     }
 }

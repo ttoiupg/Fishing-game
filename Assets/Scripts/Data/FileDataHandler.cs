@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.SceneTemplate;
+using System.Linq;
 
 public class FileDataHandler
 {
@@ -32,7 +33,6 @@ public class FileDataHandler
                         dataToLoad = reader.ReadToEnd();
                     }
                 }
-
                 loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
             }
             catch(Exception e)
@@ -40,12 +40,14 @@ public class FileDataHandler
                 Debug.LogError("Error occured when trying to load data from file: " + fullPath + "\n" + e);
             }
         }
+        loadedData.Init();
         return loadedData;
     }
 
-    public void Save(GameData data)
+    public string Save(GameData data)
     {
         string fullPath = Path.Combine(dataDirPath, dataFileName);
+        data.Prepare();
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -59,10 +61,12 @@ public class FileDataHandler
                     writer.Write(dataToStore);
                 }
             }
+            return dataToStore;
         }
         catch (Exception e)
         {
             Debug.LogError("Error occured when trying to save data to file: "+ fullPath + "\n" + e);
         }
+        return "false";
     }
 }

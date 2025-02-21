@@ -3153,19 +3153,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileName: data.Tide
-  gameFish:
-  - {fileID: 11400000, guid: 28d9b1a8abc864843abcd72b68490be3, type: 2}
-  - {fileID: 11400000, guid: a0ea2960c5a931a4188bf0d41c903f52, type: 2}
-  - {fileID: 11400000, guid: 92420d49c96a56248b16e3a38661aa01, type: 2}
-  - {fileID: 11400000, guid: 6b1be3a9077db5d409c43d6d0666c5c9, type: 2}
-  - {fileID: 11400000, guid: fae94c1009c622942b0d5a7b1afcf958, type: 2}
-  - {fileID: 11400000, guid: 87344f555b65ef14d8342c7a37bd4942, type: 2}
-  - {fileID: 11400000, guid: 662d106b30a9c0d4ea2b01ef602ac5cb, type: 2}
-  - {fileID: 11400000, guid: 79a4059542e5c31409e422ebe34e0379, type: 2}
+  gameFishList:
   - {fileID: 11400000, guid: 0f54f15b7bc8dd94381c87252a357440, type: 2}
+  - {fileID: 11400000, guid: 28d9b1a8abc864843abcd72b68490be3, type: 2}
   - {fileID: 11400000, guid: 6d4633aa79e15d44f88b10c9ca3b3877, type: 2}
-  - {fileID: 11400000, guid: d4b75a11e649b5241963900c416d0b00, type: 2}
+  - {fileID: 11400000, guid: 6b1be3a9077db5d409c43d6d0666c5c9, type: 2}
+  - {fileID: 11400000, guid: 92420d49c96a56248b16e3a38661aa01, type: 2}
   - {fileID: 11400000, guid: ca42abb21e643ea4c9474e42154a35eb, type: 2}
+  - {fileID: 11400000, guid: 79a4059542e5c31409e422ebe34e0379, type: 2}
+  - {fileID: 11400000, guid: 87344f555b65ef14d8342c7a37bd4942, type: 2}
+  - {fileID: 11400000, guid: fae94c1009c622942b0d5a7b1afcf958, type: 2}
+  - {fileID: 11400000, guid: a0ea2960c5a931a4188bf0d41c903f52, type: 2}
+  - {fileID: 11400000, guid: d4b75a11e649b5241963900c416d0b00, type: 2}
+  - {fileID: 11400000, guid: 662d106b30a9c0d4ea2b01ef602ac5cb, type: 2}
 --- !u!4 &443794985
 Transform:
   m_ObjectHideFlags: 0
@@ -15568,7 +15568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &754668674
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29842,8 +29842,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1846477837}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.00000003607804, y: 0}
+  m_AnchorMax: {x: 0.5483516, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -37833,7 +37833,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: {fileID: 11400000, guid: ca471eb440b5fd344b1aac63aee07278, type: 2}
-  currentFishingRod: {fileID: 0}
+  currentFishingRod:
+    fishingRodSO: {fileID: 0}
+    durability: 0
+    aquireDate: 
   fishingController: {fileID: 1871768071}
   hudController: {fileID: 350805853}
   animator: {fileID: 1643146914}
@@ -37851,7 +37854,6 @@ MonoBehaviour:
   expRequire: 1
   _experience: 0
   level: 1
-  discoveredFish: []
   damage: 10
   attackBuff: 1
   pullProgressBuff: 10
@@ -50994,7 +50996,7 @@ RectTransform:
   m_Father: {fileID: 1090195445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

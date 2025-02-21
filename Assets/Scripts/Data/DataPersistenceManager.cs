@@ -1,20 +1,27 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 public class DataPersistenceManager : MonoBehaviour
 {
     [SerializeField] private string fileName;
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
+    [SerializeField] private List<BaseFish> gameFishList = new List<BaseFish>();
     public static DataPersistenceManager Instance { get; private set; }
-    public List<BaseFish> gameFish;
+    public Dictionary<string,BaseFish> gameFish = new Dictionary<string, BaseFish>();
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+        }
+        gameFish.Clear();
+        foreach (var fish in gameFishList)
+        {
+            gameFish.Add(fish.id, fish);
         }
     }
 
@@ -47,7 +54,8 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.SaveData(ref gameData);
         }
-        dataHandler.Save(gameData);
+        string a = dataHandler.Save(gameData);
+        Debug.Log(a);
     }
     private void OnApplicationQuit()
     {

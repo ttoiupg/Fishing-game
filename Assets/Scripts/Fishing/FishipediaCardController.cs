@@ -49,17 +49,8 @@ public class FishipediaCardController : MonoBehaviour
         cardTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         Front.sprite = fish.Card;
         Art.sprite = fish.Art;
-        DiscoveredFish discoveredFish = player.discoveredFish.Find((x) => x.baseFish == fish);
-        if (discoveredFish == null)
-        {
-            Art.color = Color.black;
-            Fishname.text = "???";
-            Rarity.text = fish.Rarity.name;
-            FavoriteFood.text = "???";
-            Weight.text = "??? ~ ???";
-            DiscoverDate.text = "Yet to be discovered!";
-        }
-        else
+        DiscoveredFish discoveredFish;
+        if (player.discoveredFish.TryGetValue(fish.id,out discoveredFish))
         {
             Art.color = Color.white;
             Fishname.text = fish.name;
@@ -67,6 +58,15 @@ public class FishipediaCardController : MonoBehaviour
             FavoriteFood.text = fish.FavoriteFood;
             Weight.text = fish.MinWeight + "~" + fish.MaxWeight;
             DiscoverDate.text = "Discover date : " + discoveredFish.discoverDate;
+        }
+        else
+        {
+            Art.color = Color.black;
+            Fishname.text = "???";
+            Rarity.text = fish.Rarity.name;
+            FavoriteFood.text = "???";
+            Weight.text = "??? ~ ???";
+            DiscoverDate.text = "Yet to be discovered!";
         }
         material.SetFloat("_EDITION", fish.FishipediaCardShader);
         Front.material = new Material(material);

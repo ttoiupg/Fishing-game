@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New fish", menuName = "Game/Fish/Fish")]
 public class BaseFish : ScriptableObject, IComparable<BaseFish>
 {
+    public string id;
     public Sprite Art;
     public float MinWeight;
     public float MaxWeight;
