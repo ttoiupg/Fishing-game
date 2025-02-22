@@ -9,13 +9,19 @@ public class GameData
 {
     public int level;
     public float experience;
+
     public Dictionary<string,DiscoveredFish> discoveredFish;
     public List<IDataDiscoverFish> dataDiscoverFishList = new List<IDataDiscoverFish>();
+
+    public List<FishingRod> ownedFishingRods;
+
     public GameData()
     {
+        FishingRod starterRod = new FishingRod();
         this.level = 1;
         this.experience = 0;
         discoveredFish = new Dictionary<string, DiscoveredFish>();
+        ownedFishingRods = new List<FishingRod>();
     }
     public void Init()
     {

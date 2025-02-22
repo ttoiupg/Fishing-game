@@ -9,9 +9,10 @@ public class DataPersistenceManager : MonoBehaviour
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
     [SerializeField] private List<BaseFish> gameFishList = new List<BaseFish>();
+    [SerializeField] private List<FishingRodSO> gameFishingRodsList = new List<FishingRodSO>();
     public static DataPersistenceManager Instance { get; private set; }
     public Dictionary<string,BaseFish> gameFish = new Dictionary<string, BaseFish>();
-
+    public Dictionary<string, FishingRodSO> gameFishingRods = new Dictionary<string, FishingRodSO>();
     private void Awake()
     {
         if (Instance == null)
@@ -22,6 +23,11 @@ public class DataPersistenceManager : MonoBehaviour
         foreach (var fish in gameFishList)
         {
             gameFish.Add(fish.id, fish);
+        }
+        gameFishingRods.Clear();
+        foreach (var fishingRod in gameFishingRodsList)
+        {
+            gameFishingRods.Add(fishingRod.id, fishingRod);
         }
     }
 
@@ -34,6 +40,8 @@ public class DataPersistenceManager : MonoBehaviour
     public void NewGame()
     {
         this.gameData = new GameData();
+        FishingRod starterRod = new FishingRod(gameFishingRods["rod_starter"],0,100, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+        this.gameData.ownedFishingRods.Add(starterRod);
     }
     public void LoadGame()
     {

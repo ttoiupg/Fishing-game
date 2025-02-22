@@ -295,14 +295,3 @@ public class Player : MonoBehaviour,IDataPersistence
     }
 }
 
-[System.Serializable]
-public class IDataDiscoverFish
-{
-    public string id;
-    public string discoverDate;
-    public IDataDiscoverFish(DiscoveredFish fish)
-    {
-        id = fish.baseFish.id;
-        discoverDate = fish.discoverDate;
-    }
-}

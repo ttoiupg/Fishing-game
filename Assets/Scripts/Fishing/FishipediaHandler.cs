@@ -49,11 +49,13 @@ public class FishipediaHandler : MonoBehaviour
 [System.Serializable]
 public class DiscoveredFish
 {
+    public int timeCatched;
     public string discoverDate;
     public BaseFish baseFish;
     public DiscoveredFish(BaseFish fish, string _discoverDate)
     {
         discoverDate = _discoverDate;
         baseFish = fish;
+        timeCatched = 1;
     }
 }
