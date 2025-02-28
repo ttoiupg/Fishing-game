@@ -40,8 +40,9 @@ public class DataPersistenceManager : MonoBehaviour
     public void NewGame()
     {
         this.gameData = new GameData();
-        FishingRod starterRod = new FishingRod(gameFishingRods["rod_starter"],0,100, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-        this.gameData.ownedFishingRods.Add(starterRod);
+        FishingRod rod = new FishingRod(gameFishingRods["rod_starter"], 0, 100, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+        IDataFishingRod starterRod = new IDataFishingRod(rod);
+        this.gameData.dataFishingRods.Add(starterRod);
     }
     public void LoadGame()
     {

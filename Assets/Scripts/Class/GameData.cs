@@ -9,34 +9,16 @@ public class GameData
 {
     public int level;
     public float experience;
-
-    public Dictionary<string,DiscoveredFish> discoveredFish;
+    public int equipedFishingRod;
     public List<IDataDiscoverFish> dataDiscoverFishList = new List<IDataDiscoverFish>();
-
-    public List<FishingRod> ownedFishingRods;
+    public List<IDataFishingRod> dataFishingRods = new List<IDataFishingRod>();
 
     public GameData()
     {
-        FishingRod starterRod = new FishingRod();
         this.level = 1;
         this.experience = 0;
-        discoveredFish = new Dictionary<string, DiscoveredFish>();
-        ownedFishingRods = new List<FishingRod>();
-    }
-    public void Init()
-    {
-        foreach(IDataDiscoverFish dis in dataDiscoverFishList)
-        {
-            BaseFish bf;
-            DataPersistenceManager.Instance.gameFish.TryGetValue(dis.id,out bf);
-            discoveredFish.Add(dis.id, new DiscoveredFish(bf, dis.discoverDate));
-        }
-    }
-    public void Prepare()
-    {
-        foreach(DiscoveredFish fish in discoveredFish.Values)
-        {
-            dataDiscoverFishList.Add(new IDataDiscoverFish(fish));
-        }
+        equipedFishingRod = 0;
+        dataDiscoverFishList = new List<IDataDiscoverFish>();
+        dataFishingRods = new List<IDataFishingRod>();
     }
 }

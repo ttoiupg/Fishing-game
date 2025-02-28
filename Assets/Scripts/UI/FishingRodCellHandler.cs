@@ -1,14 +1,17 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class FishingRodCellHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public FishingRodSO fishingRodSO;
     public RectTransform cell;
     public RectTransform wave;
     public RectTransform nameLabel;
     public Image cellImage;
+    public Image fishingRodImage;
     [Space]
     public Color normalColor;
     public Color hoverColor;
@@ -28,7 +31,11 @@ public class FishingRodCellHandler : MonoBehaviour, IPointerEnterHandler, IPoint
         Deselect();
         cellImage.color = normalColor;
     }
-
+    public void Init()
+    {
+        nameLabel.GetComponent<TextMeshProUGUI>().text = fishingRodSO.name;
+        fishingRodImage.sprite = fishingRodSO.spriteDisplay;
+    }
     public void Select()
     {
         if (selected) return;

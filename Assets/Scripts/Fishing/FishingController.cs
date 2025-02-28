@@ -249,9 +249,13 @@ public class FishingController : PlayerSystem
             DiscoveredFish discoveredFish = new DiscoveredFish(player.currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             player.discoveredFish.Add(discoveredFish.baseFish.id,discoveredFish);
             player.ID.playerEvents.OnFishUnlocked.Invoke(player.currentFish.fishType);
+            player.retrackDebounce = true;
+            yield return new WaitForSeconds(0.6f);
+            player.retrackDebounce = false;
         }
         else
         {
+            player.discoveredFish[player.currentFish.fishType.id].timeCatched += 1;
             player.retrackDebounce = true;
             yield return new WaitForSeconds(0.6f);
             player.retrackDebounce = false;

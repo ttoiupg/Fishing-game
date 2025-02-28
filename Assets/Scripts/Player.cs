@@ -11,7 +11,7 @@ public class Player : MonoBehaviour,IDataPersistence
 {
     public PlayerID ID;
 
-    public FishingRod currentFishingRod;
+    public int currentFishingRod;
     public PlayerInputActions playerInputs;
     public FishingController fishingController;
     public HUDController hudController;
@@ -174,14 +174,23 @@ public class Player : MonoBehaviour,IDataPersistence
         level = gameData.level;
         experience = gameData.experience;
         expRequire = (float)GetExpRQ(level);
+        currentFishingRod = gameData.equipedFishingRod;
         discoveredFish.Clear();
-        discoveredFish = gameData.discoveredFish;
+        foreach(IDataDiscoverFish dis in gameData.dataDiscoverFishList)
+        {
+            discoveredFish.Add(dis.id, new DiscoveredFish(dis));
+        }
     }
     public void SaveData(ref GameData gameData)
     {
         gameData.level = level;
         gameData.experience = experience;
-        gameData.discoveredFish = discoveredFish;
+        gameData.dataDiscoverFishList.Clear();
+        gameData.equipedFishingRod = currentFishingRod;
+        foreach(DiscoveredFish fish in discoveredFish.Values)
+        {
+           gameData.dataDiscoverFishList.Add(new IDataDiscoverFish(fish));
+        }
     }
     public void HandleMovement()
     {

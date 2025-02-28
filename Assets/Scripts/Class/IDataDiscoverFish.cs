@@ -13,10 +13,3 @@ public class IDataDiscoverFish
         timeCatched = fish.timeCatched;
     }
 }
-public class IDataFishingRod
-{
-    public string id;
-    public int timeUsed;
-    public float durability;
-    public string aquireDate;
-}

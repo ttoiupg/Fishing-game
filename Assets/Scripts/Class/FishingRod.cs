@@ -15,4 +15,11 @@ public class FishingRod
         this.durability = durability;
         this.aquireDate = aquireDate;
     }
+    public FishingRod(IDataFishingRod fishingRod)
+    {
+        this.fishingRodSO = DataPersistenceManager.Instance.gameFishingRods[fishingRod.id];
+        this.timeUsed = fishingRod.timeUsed;
+        this.durability = fishingRod.durability;
+        this.aquireDate = fishingRod.aquireDate;
+    }
 }

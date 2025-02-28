@@ -40,14 +40,12 @@ public class FileDataHandler
                 Debug.LogError("Error occured when trying to load data from file: " + fullPath + "\n" + e);
             }
         }
-        loadedData.Init();
         return loadedData;
     }
 
     public string Save(GameData data)
     {
         string fullPath = Path.Combine(dataDirPath, dataFileName);
-        data.Prepare();
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
