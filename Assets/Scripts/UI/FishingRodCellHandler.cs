@@ -35,6 +35,8 @@ public class FishingRodCellHandler : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         nameLabel.GetComponent<TextMeshProUGUI>().text = fishingRodSO.name;
         fishingRodImage.sprite = fishingRodSO.spriteDisplay;
+        cell.localRotation = Quaternion.Euler(new Vector3(0,0,70));
+        cell.DOLocalRotate(new Vector3(0, 0, 0), 0.35f).SetEase(Ease.OutBack);
     }
     public void Select()
     {

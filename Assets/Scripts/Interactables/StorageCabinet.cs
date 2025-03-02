@@ -1,6 +1,7 @@
 using UnityEngine;
 using Halfmoon.Utilities;
 using System.ComponentModel.Design;
+using UnityEngine.Events;
 
 public class StorageCabinet : MonoBehaviour, IInteractable
 {
@@ -11,6 +12,7 @@ public class StorageCabinet : MonoBehaviour, IInteractable
     [SerializeField] private Sprite _openSprite;
     [SerializeField] private Sprite _closeSprite;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    public UnityEvent triggered;
     public string InteractionPrompt => _prompt;
 
     public bool IsInstant => _isInstant;
@@ -50,6 +52,7 @@ public class StorageCabinet : MonoBehaviour, IInteractable
     }
     public void Interact(Player plyaer)
     {
+        triggered.Invoke();
         Debug.Log(gameObject.name + " interacted");
     }
 }
