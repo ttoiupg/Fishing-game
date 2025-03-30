@@ -1,34 +1,55 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StorageCabinetHandler : MonoBehaviour
 {
     public GameObject cellPrefab;
+    public Scrollbar scrollbar;
     public RectTransform mainFrame;
     public RectTransform contentView;
     public List<GameObject> cells;
-
+    public bool opened = false;
+    private const float CurrentX = -1455;
+    
     public void Open()
     {
-        mainFrame.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack);
-        float currentX = -1455;
-        for (int i = 0; i < InventoryManager.Instance.fishingRods.Count; i++)
+        if (opened) return;
+        opened = true;
+        mainFrame.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack).onComplete += () =>
         {
-            FishingRod fishingRod = InventoryManager.Instance.fishingRods[i];
-            GameObject cell = Instantiate(cellPrefab,contentView);
-            cell.GetComponent<RectTransform>().anchoredPosition = new Vector2(currentX + 214 * i, 267.46f);
-            cell.GetComponent<FishingRodCellHandler>().fishingRodSO = fishingRod.fishingRodSO;
-            cell.GetComponent<FishingRodCellHandler>().Init();
-            cells.Add(cell);
-        }
+            for (var i = 0; i < InventoryManager.Instance.fishingRods.Count; i++)
+            {
+                var fishingRod = InventoryManager.Instance.fishingRods[i];
+                var cell = Instantiate(cellPrefab,contentView);
+                var cellHandler = cell.GetComponent<FishingRodCellHandler>();
+                cell.GetComponent<RectTransform>().anchoredPosition = new Vector2(CurrentX + 214 * i, 267.46f);
+                cellHandler.fishingRodSO = fishingRod.fishingRodSO;
+                cellHandler.active = true;
+                cellHandler.damageLabel.text = "Damage: " + fishingRod.fishingRodSO.damage;
+                cellHandler.resilienceLabel.text = "Resilience: " + fishingRod.fishingRodSO.damage;
+                cellHandler.luckLabel.text = "Luck: " + fishingRod.fishingRodSO.damage;
+
+                cellHandler.Init();
+                cells.Add(cell);
+            }
+            scrollbar.value = 0;
+        };
     }
     public void Close()
     {
+        opened = false;
         mainFrame.DOScale(Vector3.zero, 0.35f).SetEase(Ease.OutQuint);
-        for (int i = cells.Count - 1; i >= 0; i--)
+        for (var i = cells.Count - 1; i >= 0; i--)
         {
+            cells[i].GetComponent<FishingRodCellHandler>().wave.DOKill();
+            cells[i].GetComponent<FishingRodCellHandler>().nameLabel.DOKill();
+            cells[i].GetComponent<FishingRodCellHandler>().container.DOKill();
+            cells[i].GetComponent<FishingRodCellHandler>().active = false;
             Destroy(cells[i]);
         }
+        cells.Clear();
     }
 }

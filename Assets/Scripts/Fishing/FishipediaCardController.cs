@@ -41,7 +41,7 @@ public class FishipediaCardController : MonoBehaviour
     }
     public IEnumerator OpenCard(BaseFish fish)
     {
-        SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.CharacterTransform, 0.8f);
+        SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.characterTransform, 0.8f);
         player.CardOpened = true;
         shadow.SetActive(true);
         cardTransform.rotation = Quaternion.Euler(0,180,0);
@@ -75,7 +75,7 @@ public class FishipediaCardController : MonoBehaviour
     }
     public void CloseCard()
     {
-        SoundFXManger.Instance.PlaySoundFXClip(CardClose, player.CharacterTransform, 0.8f);
+        SoundFXManger.Instance.PlaySoundFXClip(CardClose, player.characterTransform, 0.8f);
         player.CardOpened = false;
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);

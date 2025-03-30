@@ -1,502 +1,582 @@
-using Halfmoon.Utilities;
-using NUnit.Framework.Constraints;
 using System;
+using Halfmoon.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
+using System.Threading;
 using Unity.Cinemachine;
-using UnityEditor.Tilemaps;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
+using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random;
+using Timer = Halfmoon.Utilities.Timer;
 
 public class FishingController : PlayerSystem
 {
+    private static readonly int IsMoving = Animator.StringToHash("IsMoving");
+    private static readonly int CastFishingRod = Animator.StringToHash("CastFishingRod");
+    private static readonly int RetractFishingRod = Animator.StringToHash("RetractFishingRod");
+    public BiteNoticeUIManager biteNoticeUIManager;
     public float castRodCooldownlength = 3;
     public float retractDebounceLength = 0.6f;
-    public ZoneDisplayer[] Zones;
-    [Header("effect")]
-    public Image fishHealthBar;
+    public float FishingCameraDistance = 10f;
+    public float pullProgress;
+    public bool castDebounce;
+    public bool retractDebounce;
+    public bool isFishing;
+    public bool fishOnBait;
+    public bool boostApplied;
+
+    [FormerlySerializedAs("controlBarOverlaping")]
+    public bool ReelingBarOverlaping;
+
+    public Fish currentFish;
+    public Vector3 bobberOffset = new(0, 2f, 0);
+    [FormerlySerializedAs("Zones")] public ZoneDisplayer[] zones;
+    [Header("effect")] public Image fishHealthBar;
     public Sprite normalHealthBar;
     public Sprite whiteHealthBar;
-    public Slider fishCatchTimer;
-    public ScreenEffectsHandler screenEffectsHandler;
-    public CinemachinePositionComposer cinemachineCamera;
-    public GameObject ZoneContainer;
+
+    [FormerlySerializedAs("ZoneContainer")]
+    public GameObject zoneContainer;
+
     public float fishMaxHealth = 100;
     public float fishHealth = 100;
 
-    [Header("Pull state")]
-    public bool pointerLanded = false;
+    [Header("Pull state")] public bool pointerLanded;
 
-    [Header("Sound effects")]
-    public AudioClip attakFish;
+    [FormerlySerializedAs("attakFish")] [Header("Sound effects")]
+    public AudioClip attackFish;
+    public AudioClip biteNotifySound;
+
     public AudioClip pedalFlip;
-    public AudioClip pedalFlip2;
-    public AudioClip pedalFlip3;
-    public AudioClip BiteNotify;
-    public AudioClip LandOnGreenSoundFX;
-    public AudioClip LandOnOrangeSoundFX;
-    public AudioClip LandOnRedSoundFX;
-    public AudioClip PullStateSoundFX;
-    public AudioClip SpinningReel;
-    public AudioClip FishCatchedSoundFX;
-    public AudioClip FishFailedSoundFX;
-    public AudioMixer FishingAudioMixer;
+    [FormerlySerializedAs("BiteNotify")] public AudioClip biteNotify;
 
-    private AudioSource ReelSoundSource;
-    private List<BaseMutation> AvaliableMutations;
-    private List<BaseFish> AvailableFishes;
-    private Transform playerTransform;
-    private InputAction ControlBarAction;
-    private Animator animator;
+    [FormerlySerializedAs("LandOnGreenSoundFX")]
+    public AudioClip landOnGreenSoundFX;
 
-    private Countdowntimer castRodCooldownTimer;
-    private Countdowntimer retractDebounceTimer;
-    private Countdowntimer overlapFirstTimer;
-    private Countdowntimer overlapSecondTimer;
-    private Countdowntimer overlapThirdTimer;
-    private Countdowntimer damageCooldownTimer;
+    [FormerlySerializedAs("LandOnOrangeSoundFX")]
+    public AudioClip landOnOrangeSoundFX;
 
-    private List<Timer> timers;
+    [FormerlySerializedAs("LandOnRedSoundFX")]
+    public AudioClip landOnRedSoundFX;
 
-    Coroutine FishingCoroutine;
-    Coroutine PullCoroutine;
+    [FormerlySerializedAs("FishCatchedSoundFX")]
+    public AudioClip fishCatchedSoundFX;
 
-    [Header("Gamepad")]
-    public float RumbleLowFreq = 0.25f;
-    private bool IsInside(Vector2 A,Vector2 SizeA,Vector2 B)
+    [FormerlySerializedAs("FishFailedSoundFX")]
+    public AudioClip fishFailedSoundFX;
+
+    private AudioSource _reelSoundSource;
+    private List<BaseMutation> _avaliableMutations;
+    private List<BaseFish> _availableFishes;
+    private Transform _playerTransform;
+    private InputAction _controlBarAction;
+    private Animator _animator;
+    private Countdowntimer _castRodCooldownTimer;
+    private Countdowntimer _retractDebounceTimer;
+    private Countdowntimer _fishingTimer;
+    private Countdowntimer _damageCooldownTimer;
+    private SectionTimer _damageBoostTimer;
+    private CancellationTokenSource _castRodCancellationTokenSource;
+    private List<Timer> _timers;
+    private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
+
+    [FormerlySerializedAs("RumbleLowFreq")] [Header("Gamepad")]
+    public float rumbleLowFreq = 0.25f;
+
+    private static bool _isInside(Vector2 a, Vector2 sizeA, Vector2 b)
     {
-        bool result = false;
-        if (A.x - SizeA.x/2f <= B.x && A.x + SizeA.x/2f >= B.x && A.y - SizeA.y/2f <= B.y && A.y + SizeA.y/2f >= B.y)
-        {
-            result = true;
-        }
+        var result = a.x - sizeA.x / 2f <= b.x && a.x + sizeA.x / 2f >= b.x && a.y - sizeA.y / 2f <= b.y &&
+                     a.y + sizeA.y / 2f >= b.y;
         return result;
     }
-    private bool IsOverlap(float a1,float a2,float b1,float b2)
+
+    private bool _isReelingBarOverlap()
     {
-        float a_width = a2 - a1;
-        float b_width = b2 - b1;
+        var a1 = player.ReelCanvaManager.controlBarPosition - player.ID.pullBarSize / 2;
+        var a2 = player.ReelCanvaManager.controlBarPosition + player.ID.pullBarSize / 2;
+        var b1 = player.ReelCanvaManager.fishNeedlePosition - 14;
+        var b2 = player.ReelCanvaManager.fishNeedlePosition + 14f;
         if (b2 > a2) return a2 >= b1;
         if (b2 < a1) return a1 <= b2;
-        if (b2 < a2 && a1 > b2) return true;
         return true;
-        /*if (InBetween(b1, b2, a1) || InBetween(b1, b2, a2) || InBetween(a1, a2, b1) || InBetween(a1, a2, b2))
-        {
-            return true;
-        }
-
-        return false;*/
     }
 
-    #region Update functions
+    private void ConfigureCamera(float distance)
+    {
+        player.cinemachineCamera.CameraDistance = distance;
+    }
+
+    private void ConfigureCamera(float distance, Vector2 position)
+    {
+        player.cinemachineCamera.CameraDistance = distance;
+        player.cinemachineCamera.Composition.ScreenPosition = position;
+    }
+
+    public void HandleInput(InputAction.CallbackContext callbackContext)
+    {
+        if (player.currentZone == null) return;
+        if (!isFishing)
+        {
+            if (castDebounce) return;
+            castDebounce = true;
+            isFishing = true;
+            StartFishing();
+            _castRodCooldownTimer.Start();
+        }
+        else
+        {
+            if (castDebounce) return;
+            castDebounce = true;
+            isFishing = false;
+            StopFishing();
+            _retractDebounceTimer.Start();
+        }
+    }
+
     public void ZoneCheck()
     {
-        for (int i = 0; i < Zones.Length; i++)
+        foreach (var t in zones)
         {
-            if (IsInside(Zones[i].zone.position, Zones[i].zone.size, new Vector2(playerTransform.position.x, playerTransform.position.z)))
+            if (_isInside(t.zone.position, t.zone.size,
+                    new Vector2(_playerTransform.position.x, _playerTransform.position.z)))
             {
-                player.currentZone = Zones[i].zone;
+                player.currentZone = t.zone;
                 break;
             }
             else
             {
                 player.currentZone = null;
-            };
-        };
+            }
+        }
     }
-    public async Task AttackFish()
+
+    #region UnityFunction
+
+    private void SetUpTimers()
     {
-        Debug.Log("Attack with " + player.attackBuff.ToString() + "buff");
-        float damage = player.damage * player.attackBuff;
-        fishHealth -= damage;
-        player.pullCanvaManager.FlipDownAll();
-        player.canDamage = false;
-        damageCooldownTimer.Reset();
-        damageCooldownTimer.Start();
-        fishHealthBar.sprite = whiteHealthBar;
-        SoundFXManger.Instance.PlaySoundFXClip(attakFish, playerTransform, player.attackBuff);
+        TimerSection[] sections = { new(0), new(0.6f), new(1.2f), new(1.5f) };
+
+        _castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
+        _retractDebounceTimer = new Countdowntimer(retractDebounceLength);
+        _fishingTimer = new Countdowntimer(15f);
+        _damageBoostTimer = new SectionTimer(sections);
+        _damageCooldownTimer = new Countdowntimer(0.5f);
+        _timers = new List<Timer>(5)
+            { _castRodCooldownTimer, _retractDebounceTimer, _damageBoostTimer, _damageCooldownTimer, _fishingTimer };
+        _damageBoostTimer.OnSectionMeet += DamageSectionMet;
+        _fishingTimer.OnTimerStop += () => FishFailed();
+        _castRodCooldownTimer.OnTimerStop += () => castDebounce = false;
+        _retractDebounceTimer.OnTimerStop += () => castDebounce = false;
+        _damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
+    }
+
+    public override void Awake()
+    {
+        player = transform.root.GetComponent<Player>();
+        playerInput = new PlayerInputActions();
+        SetUpTimers();
+    }
+
+    private void OnEnable()
+    {
+        playerInput.Fishing.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Fishing.Disable();
+    }
+
+    private void Start()
+    {
+        _animator = player.GetComponent<Animator>();
+        _reelSoundSource = GetComponent<AudioSource>();
+        zones = zoneContainer.GetComponentsInChildren<ZoneDisplayer>();
+        _playerTransform = player.GetComponent<Transform>();
+        _controlBarAction = playerInput.Fishing.ControlFishingRod;
+    }
+
+    private void Update()
+    {
+        TickTimer();
+    }
+
+    #endregion
+
+    #region StartFishing
+
+    private void PreparePlayerForFishing()
+    {
+        _animator.SetBool(IsMoving, false);
+        player.ID.playerEvents.OnEnterFishingState?.Invoke();
+        _availableFishes = player.currentZone.GetSortedFeaturedFish();
+        _avaliableMutations = player.currentZone.GetSortedFeaturedMutations();
+    }
+
+    private void SpawnFishingBobber()
+    {
+        VisualFXManager.Instance.SpawnBobber(_playerTransform.position + bobberOffset, player.Facing);
+    }
+
+    private async void StartFishing()
+    {
+        Reset();
+        PreparePlayerForFishing();
+        ConfigureCamera(FishingCameraDistance);
+        SpawnFishingBobber();
+        _castRodCancellationTokenSource ??= new CancellationTokenSource();
+        _animator.SetTrigger(CastFishingRod);
+        await WaitForbite(_castRodCancellationTokenSource.Token);
+    }
+
+    #endregion
+
+    #region StopFishing
+
+    private void CleanCencellationToken()
+    {
+        _castRodCancellationTokenSource.Cancel();
+        _castRodCancellationTokenSource.Dispose();
+        _castRodCancellationTokenSource = null;
+    }
+
+    private void CleanFishingBobber()
+    {
+        VisualFXManager.Instance.DestroyBobber();
+    }
+
+    private void StopFishing()
+    {
+        CleanCencellationToken();
+        _animator.SetTrigger(RetractFishingRod);
+        ConfigureCamera(player.defaultCameraDistance);
+        CleanFishingBobber();
+    }
+
+    #endregion
+
+    #region AttackFish
+
+    private async UniTask DoAttackUIAnimation()
+    {
         fishHealthBar.DOFillAmount(fishHealth / fishMaxHealth, 0.2f).SetEase(Ease.OutBack);
-        await Task.Delay(100);
+        player.ReelCanvaManager.FlipDownAll();
+        fishHealthBar.sprite = whiteHealthBar;
+        await UniTask.Delay(100);
         fishHealthBar.sprite = normalHealthBar;
+    }
+
+    private void PlayAttachSound()
+    {
+        SoundFXManger.Instance.PlaySoundFXClip(attackFish, _playerTransform, player.attackBuff);
+    }
+
+    private void DoDamage()
+    {
+        Debug.Log(player.attackBuff);
+        var damage = player.damage * player.attackBuff;
+        fishHealth -= damage;
         if (fishHealth <= 0)
         {
             FishCatched();
         }
+
         player.attackBuff = 0.4f;
     }
-    public void PullStateUpdateFunction()
+
+    private void AttackFish()
     {
-        //check for overlap
-        if (IsOverlap(player.pullCanvaManager.controlBarPosition - player.ID.pullBarSize / 2, 
-                      player.pullCanvaManager.controlBarPosition + player.ID.pullBarSize / 2, 
-                      player.pullCanvaManager.fishNeedlePosition-14, player.pullCanvaManager.fishNeedlePosition + 14f))
-        {
-            if (player.canDamage)
-            {
-                if (!player.pullCanvaManager.secondFliped && !overlapFirstTimer.IsRunning)
-                {
-                    overlapFirstTimer.Reset(0.6f);
-                    overlapFirstTimer.Start();
-                }
-                if (!player.pullCanvaManager.thirdFliped && !overlapSecondTimer.IsRunning)
-                {
-                    overlapSecondTimer.Reset(1.2f);
-                    overlapSecondTimer.Start();
-                }
-                if (!overlapThirdTimer.IsRunning)
-                {
-                    overlapThirdTimer.Reset(1.5f);
-                    overlapThirdTimer.Start();
-                }
-                if (player.pullCanvaManager.firstFliped == false)
-                {
-                    player.pullCanvaManager.FlipFirst();
-                    SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
-                }
-            }
-            player.pullCanvaManager.isFishBarOverlaping = true;
-            player.pullCanvaManager.controlBar.GetComponent<Image>().color = new Color32(217, 77, 88, 255);
-            player.pullCanvaManager.controlBar.GetComponent<Outline>().effectColor = new Color32(0, 135, 164, 255);
-            //PullProgress += player.ID.pullProgressSpeed * Time.deltaTime;
-        }
-        else 
-        {
-            if (player.pullCanvaManager.isFishBarOverlaping && player.canDamage)
-            {
-                Task j = AttackFish();
-            }
-            overlapFirstTimer.Pause();
-            overlapSecondTimer.Pause();
-            overlapThirdTimer.Pause();
-            player.pullCanvaManager.isFishBarOverlaping = false;
-            player.pullCanvaManager.controlBar.GetComponent<Image>().color = new Color32(0, 135, 164, 255);
-            player.pullCanvaManager.controlBar.GetComponent<Outline>().effectColor = new Color32(217, 77, 88, 255);
-            //PullProgress -= player.ID.pullProgressLooseSpeed * Time.deltaTime;
-            //if (PullProgress < 0)
-            //{
-            //    PullProgress = 0;
-            //    StartCoroutine(FishFailed());
-            //}
-        }
-        //ProgressBarUI.style.width = new StyleLength(Length.Percent(PullProgress));
-        //if (PullProgress >= 100f)
-        //{
-        //    FishCatched();
-        //}
+        player.canDamage = false;
+        _damageCooldownTimer.Start();
+        PlayAttachSound();
+        DoDamage();
+        DoAttackUIAnimation();
     }
-    #endregion
-    #region Fishing
-    private BaseMutation RollForMutation()
-    {
-        BaseMutation catchedMutation = null;
-        float totalWeight = AvaliableMutations.Sum(x => 1f / x.OneIn);
-        float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        for (int i = AvaliableMutations.Count - 1; i >= 0; i--)
-        {
-            totalWeight -= 1f / AvaliableMutations[i].OneIn;
-            if (totalWeight <= randomValue)
-            {
-                catchedMutation = AvaliableMutations[i];
-                //Debug.Log(AvaliableMutations[i].name);
-                break;
-            }
-        }
-        return catchedMutation;
-    }
-    private BaseFish RollForFish()
-    {
-        BaseFish catchedFish = null;
-        float totalWeight = AvailableFishes.Sum(x => 1f / x.Rarity.OneIn);
-        float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        for (int i = AvailableFishes.Count - 1; i >= 0; i--)
-        {
-            totalWeight -= 1f / AvailableFishes[i].Rarity.OneIn;
-            if (totalWeight <= randomValue)
-            {
-                catchedFish = AvailableFishes[i];
-                //Debug.Log(AvailableFishes[i].name);
-                break;
-            }
-        }
-        return catchedFish;
-    }
-    private IEnumerator FishCatchedEffects()
+
+    private async UniTask FishCatchedEffects()
     {
         VisualFXManager.Instance.DestroyBobber();
-        animator.SetTrigger("FishCatched");
-        SoundFXManger.Instance.PlaySoundFXClip(FishCatchedSoundFX, playerTransform, 0.7f);
-        ReelSoundSource.Stop();
-        cinemachineCamera.CameraDistance = 8f;
+        _animator.SetTrigger("FishCatched");
+        SoundFXManger.Instance.PlaySoundFXClip(fishCatchedSoundFX, _playerTransform, 0.7f);
+        _reelSoundSource.Stop();
+        ConfigureCamera(player.defaultCameraDistance);
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
-        yield return new WaitForSeconds(0.2f);
+        await UniTask.Delay(200);
         Gamepad.current?.SetMotorSpeeds(0, 0);
-        yield return new WaitForSeconds(0.1f);
+        await UniTask.Delay(100);
         Gamepad.current?.SetMotorSpeeds(1f, 1f);
-        yield return new WaitForSeconds(0.1f);
+        await UniTask.Delay(100);
         InputSystem.ResetHaptics();
     }
-    private IEnumerator ProcessFish()
-    {
-        if (!player.discoveredFish.ContainsKey(player.currentFish.fishType.id))
-        {
-            //StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
-            DiscoveredFish discoveredFish = new DiscoveredFish(player.currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-            player.discoveredFish.Add(discoveredFish.baseFish.id,discoveredFish);
-            player.ID.playerEvents.OnFishUnlocked.Invoke(player.currentFish.fishType);
-            player.retrackDebounce = true;
-            yield return new WaitForSeconds(0.6f);
-            player.retrackDebounce = false;
-        }
-        else
-        {
-            player.discoveredFish[player.currentFish.fishType.id].timeCatched += 1;
-            player.retrackDebounce = true;
-            yield return new WaitForSeconds(0.6f);
-            player.retrackDebounce = false;
-        }
-        player.experience += player.currentFish.fishType.Experience;
-    }
+
     private void FishCatched()
     {
-        player.hudController.StartLootTag(player.currentFish.fishType.Art,player.currentFish.fishType.name,"Mutation:"+player.currentFish.mutation.name,player.currentFish.weight.ToString()+"Kg");
-        StartCoroutine(FishCatchedEffects());
-        StartCoroutine(ProcessFish());
-        //StopCoroutine(PullCoroutine);
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
-        player.ID.playerEvents.OnFishCatched?.Invoke(player.currentFish);
-        player.pullstate = false;
-        player.booststate = false;
-        player.fishing = false;
-        player.retrackDebounce = true;
-        retractDebounceTimer.Start();
+        player.hudController.StartLootTag(currentFish.fishType.Art, currentFish.fishType.name,
+            "Mutation:" + currentFish.mutation.name, currentFish.weight.ToString() + "Kg");
+        FishCatchedEffects();
+        _fishingTimer.Pause();
+        ProcessFish();
+        player.ID.playerEvents.OnFishCatched?.Invoke(currentFish);
+        Reset();
+        isFishing = false;
+        castDebounce = true;
+        _retractDebounceTimer.Start();
     }
+
     private void FishFailed()
     {
         VisualFXManager.Instance.DestroyBobber();
-        animator.SetTrigger("CatchingEnd");
-        ReelSoundSource.Stop();
-        //StopCoroutine(PullCoroutine);
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
-        cinemachineCamera.CameraDistance = 8f;
-        SoundFXManger.Instance.PlaySoundFXClip(FishFailedSoundFX, playerTransform, 1f);
+        _animator.SetTrigger("CatchingEnd");
+        _reelSoundSource.Stop();
+        ConfigureCamera(player.defaultCameraDistance);
+        SoundFXManger.Instance.PlaySoundFXClip(fishFailedSoundFX, _playerTransform, 1f);
         InputSystem.ResetHaptics();
-        player.retrackDebounce = true;
-        player.pullstate = false;
-        player.booststate = false;
-        player.fishing = false;
-        player.retrackDebounce = true;
-        retractDebounceTimer.Start();
+        Reset();
+        isFishing = false;
+        castDebounce = true;
+        _retractDebounceTimer.Start();
     }
-    public void ControlPullingBar()
+
+    private void ProcessFish()
     {
-        float Value = ControlBarAction.ReadValue<float>();
-        if (Value > 0)
+        DiscoveredFish fish;
+        if (!player.discoveredFish.TryGetValue(currentFish.fishType.id, out fish))
         {
-            animator.SetFloat("PullingSpeed", 1f + Value);
-            ReelSoundSource.pitch = 0.7f + Value * 0.35f;
-            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-            player.pullCanvaManager.controlBarGravity = 1500f * Value;
-            cinemachineCamera.CameraDistance = 8f - 2f * Value;
+            //StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
+            var discoveredFish =
+                new DiscoveredFish(currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+            player.discoveredFish.Add(discoveredFish.baseFish.id, discoveredFish);
+            player.ID.playerEvents.OnFishUnlocked.Invoke(currentFish.fishType);
         }
         else
         {
-            animator.SetFloat("PullingSpeed", 0.6f);
-            ReelSoundSource.pitch = 0.7f;
-            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-            player.pullCanvaManager.controlBarGravity = -1500;
-            cinemachineCamera.CameraDistance = 8f;
+            fish.timeCatched += 1;
         }
+
+        player.experience += currentFish.fishType.Experience;
     }
-    public void LandPointer(InputAction.CallbackContext callbackContext)
+
+    #endregion
+
+    #region ReelState
+
+    public void ControlReelingBar()
     {
-        if (!pointerLanded)
+        var Value = _controlBarAction.ReadValue<float>();
+        if (Value > 0)
         {
-            pointerLanded = true;
-            string result = player.boostCanvaManager.LandPointer();
-            if (result == "green")
-            {
-                player.pullProgressBuff = player.ID.GreenZonebuff;
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnGreenSoundFX, playerTransform, 0.45f);
-            }
-            else if (result == "orange")
-            {
-                player.pullProgressBuff = player.ID.OrangeZonebuff;
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnOrangeSoundFX, playerTransform, 0.4f);
-            }
-            else
-            {
-                player.pullProgressBuff = 10f;
-                SoundFXManger.Instance.PlaySoundFXClip(LandOnRedSoundFX, playerTransform, 1.2f);
-            }
-            player.booststate = false;
-            StartCoroutine(EnterPullState());
+            _animator.SetFloat("PullingSpeed", 1f + Value);
+            _reelSoundSource.pitch = 0.7f + Value * 0.35f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+            player.ReelCanvaManager.controlBarGravity = 1500f * Value;
+            ConfigureCamera(8f - 2f * Value);
+        }
+        else
+        {
+            _animator.SetFloat("PullingSpeed", 0.6f);
+            _reelSoundSource.pitch = 0.7f;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
+            player.ReelCanvaManager.controlBarGravity = -1500;
+            ConfigureCamera(player.defaultCameraDistance);
         }
     }
 
-    private IEnumerator EnterPullState()
+    public void ReelStateUpdateFunction()
     {
-        player.attackBuff = 0.4f;
-        BaseFish catchedBaseFish = RollForFish();
-        BaseMutation catchedBaseMutation = RollForMutation();
-        player.currentFish = new Fish(catchedBaseFish, catchedBaseMutation);
-        fishHealth = fishMaxHealth - player.pullProgressBuff;
-        fishHealthBar.fillAmount = fishHealth / fishMaxHealth;
-        player.ID.playerEvents.OnPullStage?.Invoke();
-        yield return new WaitForSeconds(0.5f);
-        player.boostCanvaManager.HideBoostUI();
-        player.pullCanvaManager.Init();
-        player.pullCanvaManager.ShowUI();
-        yield return new WaitForSeconds(0.6f);
-        player.pullstate = true;
-        //PullCoroutine = StartCoroutine(RandomFishBarPosition());
+        var overlap = _isReelingBarOverlap();
+        if (!player.canDamage) return;
+        switch (overlap)
+        {
+            case true when !_damageBoostTimer.IsRunning:
+                _damageBoostTimer.Reset();
+                _damageBoostTimer.Resume();
+                break;
+            case false when ReelingBarOverlaping:
+                AttackFish();
+                _damageBoostTimer.Stop();
+                break;
+        }
+
+        ReelingBarOverlaping = overlap;
+        player.ReelCanvaManager.SwitchReelingBarColor(ReelingBarOverlaping);
     }
+
+    private BaseMutation RollBaseMutation()
+    {
+        BaseMutation catchedMutation = null;
+        var totalWeight = _avaliableMutations.Sum(x => 1f / x.OneIn);
+        var randomValue = Random.Range(0f, totalWeight);
+        for (var i = _avaliableMutations.Count - 1; i >= 0; i--)
+        {
+            totalWeight -= 1f / _avaliableMutations[i].OneIn;
+            if (totalWeight > randomValue) continue;
+            catchedMutation = _avaliableMutations[i];
+            break;
+        }
+
+        return catchedMutation;
+    }
+
+    private BaseFish RollBaseFish()
+    {
+        BaseFish catchedFish = null;
+        var totalWeight = _availableFishes.Sum(x => 1f / x.Rarity.OneIn);
+        var randomValue = Random.Range(0f, totalWeight);
+        for (var i = _availableFishes.Count - 1; i >= 0; i--)
+        {
+            totalWeight -= 1f / _availableFishes[i].Rarity.OneIn;
+            if (totalWeight > randomValue) continue;
+            catchedFish = _availableFishes[i];
+            break;
+        }
+
+        return catchedFish;
+    }
+
+    private void PrepareFish()
+    {
+        var rolledBaseFish = RollBaseFish();
+        var rolledBaseMutation = RollBaseMutation();
+        currentFish = new Fish(rolledBaseFish, rolledBaseMutation);
+        fishHealth = fishMaxHealth;
+        fishHealthBar.fillAmount = fishHealth / fishMaxHealth;
+    }
+
+    private void PrepareReelUI()
+    {
+        player.ReelCanvaManager.ResetTimer();
+        player.boostCanvaManager.HideBoostUI();
+        player.ReelCanvaManager.Init();
+        player.ReelCanvaManager.ShowUI();
+    }
+
+    private async UniTask EnterReelState()
+    {
+        PrepareFish();
+        PrepareReelUI();
+        await UniTask.WaitForSeconds(0.6f);
+        _fishingTimer.Reset();
+        _fishingTimer.Start();
+        player.ReelCanvaManager.StartTimer(15f);
+        player.ReelCanvaManager.RandomFishBarPosition();
+    }
+
+    #endregion
+
+    #region BoostState
+
+    public async void LandPointer(InputAction.CallbackContext callbackContext)
+    {
+        if (pointerLanded) return;
+        pointerLanded = true;
+        var result = player.boostCanvaManager.LandPointer();
+        switch (result)
+        {
+            case "green":
+                player.pullProgressBuff = player.ID.GreenZonebuff;
+                SoundFXManger.Instance.PlaySoundFXClip(landOnGreenSoundFX, _playerTransform, 0.45f);
+                break;
+            case "orange":
+                player.pullProgressBuff = player.ID.OrangeZonebuff;
+                SoundFXManger.Instance.PlaySoundFXClip(landOnOrangeSoundFX, _playerTransform, 0.4f);
+                break;
+            default:
+                player.pullProgressBuff = 10f;
+                SoundFXManger.Instance.PlaySoundFXClip(landOnRedSoundFX, _playerTransform, 1.2f);
+                break;
+        }
+
+        await UniTask.WaitForSeconds(0.5f);
+        boostApplied = true;
+        EnterReelState();
+    }
+
     public void EnterBoostState()
     {
         player.boostCanvaManager.ShowBoostUI();
         pointerLanded = false;
         player.ID.playerEvents.OnBoostStage?.Invoke();
     }
-    private void SetHook()
+
+    private async UniTask SetHook()
     {
-        animator.SetTrigger("FishBite");
-        ReelSoundSource.Play();
-        SoundFXManger.Instance.PlaySoundFXClip(BiteNotify, playerTransform, 1f);
-        cinemachineCamera.CameraDistance = 7f;
-        Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-        player.booststate = true;
-    }
-    public IEnumerator WaitForbite()
-    {
-        float randTime = UnityEngine.Random.Range(3.5f, 6f);
-        yield return new WaitForSeconds(randTime);
-        SetHook();
+        biteNoticeUIManager.StartAnimation();
+        SoundFXManger.Instance.PlaySoundFXClip(biteNotifySound, _playerTransform, 1f);
+        ConfigureCamera(2.15f, _biteNoticeScreenPosition);
+        await UniTask.WaitForSeconds(2);
+        fishOnBait = true;
+        ConfigureCamera(6f, Vector2.zero);
+        _animator.SetTrigger("FishBite");
+        _reelSoundSource.Play();
+        SoundFXManger.Instance.PlaySoundFXClip(biteNotify, _playerTransform, 1f);
+        Gamepad.current?.SetMotorSpeeds(rumbleLowFreq, 0);
     }
 
     #endregion
-    #region Casting fishing rod
-    public void CastOrRetract(InputAction.CallbackContext callbackContext)
-    {
-        if (player.currentZone != null)
-        {
-            if (!player.fishing)
-            {
-                if (!player.castRodDebounce)
-                {
-                    player.castRodDebounce = true;
-                    player.fishing = true;
-                    CastFishingRod();
-                    castRodCooldownTimer.Start();
-                }
-            }
-            else
-            {
-                if (!player.castRodDebounce)
-                {
-                    player.retrackDebounce = true;
-                    player.fishing = false;
-                    RetractFishingRod();
-                    retractDebounceTimer.Start();
-                }
-            }
-        }
-    }
 
-    public void CastFishingRod()
+    #region WaitState
+
+    private async UniTask WaitForbite(CancellationToken token)
     {
-        animator.SetBool("IsMoving", false);
-        player.ID.playerEvents.OnEnterFishingState?.Invoke();
-        AvailableFishes = player.currentZone.GetSortedFeaturedFish();
-        AvaliableMutations = player.currentZone.GetSortedFeaturedMutations();
-        if (FishingCoroutine != null)
+        var randTime = (int)(Random.Range(3.5f, 6f) * 1000);
+        try
         {
-            StopCoroutine(FishingCoroutine);
+            await UniTask.Delay(randTime, false, PlayerLoopTiming.Update, token);
+            SetHook();
         }
-        animator.SetTrigger("CastFishingRod");
-        cinemachineCamera.CameraDistance = 12f;
-        VisualFXManager.Instance.SpawnBobber(playerTransform.position + new Vector3(0, 2f, 0), player.Facing);
-        FishingCoroutine = StartCoroutine(WaitForbite());
-    }
-    public void RetractFishingRod()
-    {
-        Debug.Log("retract");
-        if (FishingCoroutine != null)
+        catch (OperationCanceledException)
         {
-            StopCoroutine(FishingCoroutine);
         }
-        animator.SetTrigger("RetractFishingRod");
-        cinemachineCamera.CameraDistance = 8f;
-        player.ID.playerEvents.OnExitFishingState?.Invoke();
-        VisualFXManager.Instance.DestroyBobber();
     }
 
     #endregion
-    #region Unity functions
-    public override void Awake()
+
+    private void Reset()
     {
-        player = transform.root.GetComponent<Player>();
-        playerInput = new PlayerInputActions();
-        castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
-        retractDebounceTimer = new Countdowntimer(retractDebounceLength);
-        overlapFirstTimer = new Countdowntimer(0.6f);
-        overlapSecondTimer = new Countdowntimer(1.2f);
-        overlapThirdTimer = new Countdowntimer(1.5f);
-        damageCooldownTimer = new Countdowntimer(0.5f);
-        timers = new List<Timer>(6) { castRodCooldownTimer, retractDebounceTimer, 
-            overlapFirstTimer, overlapSecondTimer, 
-            overlapThirdTimer, damageCooldownTimer};
-        castRodCooldownTimer.OnTimerStop += () => player.castRodDebounce = false;
-        retractDebounceTimer.OnTimerStop += () => player.retrackDebounce = false;
-        overlapFirstTimer.OnTimerStop += () => {
-            player.pullCanvaManager.FlipSecond();
-            SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
-        };
-        overlapSecondTimer.OnTimerStop += () => {
-            player.pullCanvaManager.FlipThird();
-            SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, playerTransform, 0.7f);
-        };
-        overlapThirdTimer.OnTimerStop += async () =>
-        {
-            await AttackFish();
-        };
-        damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
+        fishOnBait = false;
+        boostApplied = false;
+        currentFish = null;
     }
-    void HandleTimer()
+
+    private void DamageSectionMet(int index)
     {
-        foreach (var timer in timers)
+        switch (index)
+        {
+            case 0:
+                player.ReelCanvaManager.FlipFirst();
+                SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                break;
+            case 1:
+                player.ReelCanvaManager.FlipSecond();
+                SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                break;
+            case 2:
+                player.ReelCanvaManager.FlipThird();
+                SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                break;
+            case 3:
+                AttackFish();
+                _damageBoostTimer.Stop();
+                break;
+        }
+    }
+
+    private void TickTimer()
+    {
+        foreach (var timer in _timers)
         {
             timer.Tick(Time.deltaTime);
         }
     }
-    private void OnEnable()
-    {
-        playerInput.Fishing.Enable();
-    }
-    private void OnDisable()
-    {
-        playerInput.Fishing.Disable();
-    }
-    private void Start()
-    {
-        animator = player.GetComponent<Animator>();
-        ReelSoundSource = GetComponent<AudioSource>();
-        Zones = ZoneContainer.GetComponentsInChildren<ZoneDisplayer>();
-        playerTransform = player.GetComponent<Transform>();
-        ControlBarAction = playerInput.Fishing.ControlFishingRod;
-    }
-    // Update is called once per frame
-    private void Update()
-    {
-        HandleTimer();
-    }
+
     private void OnApplicationQuit()
     {
         InputSystem.ResetHaptics();
     }
-    #endregion
 }

@@ -6,12 +6,12 @@ public class FishingState : BaseState
 
     public override void OnEnter()
     {
-        Debug.Log("enter fishing state");
-        player.playerInputs.Fishing.CastFishingRod.performed += player.fishingController.CastOrRetract;
+        Debug.Log("Entered fishing state");
+        player.PlayerInputs.Fishing.CastFishingRod.performed += player.fishingController.HandleInput;
     }
     public override void OnExit() 
     {
-        Debug.Log("exit fishing state");
-        player.playerInputs.Fishing.CastFishingRod.performed -= player.fishingController.CastOrRetract;
+        Debug.Log("Exit fishing state");
+        player.PlayerInputs.Fishing.CastFishingRod.performed -= player.fishingController.HandleInput;
     }
 }

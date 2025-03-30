@@ -7,13 +7,11 @@ public class FishingBoostState : BaseState
 
     public override void OnEnter()
     {
-        Debug.Log("enter boost state");
-        player.playerInputs.Fishing.CastFishingRod.performed += player.fishingController.LandPointer;
+        player.PlayerInputs.Fishing.CastFishingRod.performed += player.fishingController.LandPointer;
         player.fishingController.EnterBoostState();
     }
     public override void OnExit()
     {
-        Debug.Log("exit boost state");
-        player.playerInputs.Fishing.CastFishingRod.performed -= player.fishingController.LandPointer;
+        player.PlayerInputs.Fishing.CastFishingRod.performed -= player.fishingController.LandPointer;
     }
 }

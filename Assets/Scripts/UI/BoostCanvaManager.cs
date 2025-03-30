@@ -66,7 +66,7 @@ public class BoostCanvaManager : PlayerSystem
     }
     public void ShowBoostUI()
     {
-        SoundFXManger.Instance.PlaySoundFXClip(openSound, player.CharacterTransform, 1f);
+        SoundFXManger.Instance.PlaySoundFXClip(openSound, player.characterTransform, 1f);
         currentRotation = Random.Range(-moveRange, moveRange);
         greenZone.rotation = Quaternion.Euler(0, 0, currentRotation);
         orangeZone.rotation = Quaternion.Euler(0, 0, currentRotation);

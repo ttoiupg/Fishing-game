@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Halfmoon.Utilities
 {
@@ -74,5 +74,46 @@ namespace Halfmoon.Utilities
 
         public void Reset() => Time = 0;
         public float GetTime() => Time;
+    }
+
+    public class SectionTimer : Timer
+    {
+        public SectionTimer() : base(0) { }
+
+        public SectionTimer(TimerSection[] sections) : base(0){this.Sections = sections;}
+        private TimerSection[] Sections { get; set; }
+        public Action<int> OnSectionMeet = delegate { };
+        public override void Tick(float deltaTime)
+        {
+            if (!IsRunning) return;
+            Time += deltaTime;
+            for (var i = 0; i < Sections.Length; i++)
+            {
+                if (Time < Sections[i].Time ||Sections[i].Met) continue;
+                OnSectionMeet.Invoke(i);
+                Sections[i].Met = true;
+            }
+        }
+        
+        public void Reset()
+        {
+            Time = 0;
+            foreach (var section in Sections)
+            {
+                section.Met = false;
+            }
+        }
+        public float GetTime() => Time;
+    }
+
+    public class TimerSection
+    {
+        public bool Met;
+        public float Time;
+
+        public TimerSection(float time)
+        {
+            Time = time;
+        }
     }
 }

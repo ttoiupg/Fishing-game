@@ -47,6 +47,7 @@ public class HUDController : PlayerSystem
     public RectTransform fishipediaButton;
     public RectTransform settingButton;
     public RectTransform quitButton;
+    public RectTransform menuSeaEffect;
     public bool isPageOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
@@ -77,12 +78,12 @@ public class HUDController : PlayerSystem
     {
         promptText.text = prompt;
         promptName.text = name;
-        SoundFXManger.Instance.PlaySoundFXClip(popUpSound, player.CharacterTransform, 0.3f);
+        SoundFXManger.Instance.PlaySoundFXClip(popUpSound, player.characterTransform, 0.3f);
         interactionPrompt.DOScale(Vector3.one,0.2f).SetEase(Ease.OutBack);
     }
     public void HideInteractionPrompt()
     {
-        SoundFXManger.Instance.PlaySoundFXClip(hideSound, player.CharacterTransform, 0.3f);
+        SoundFXManger.Instance.PlaySoundFXClip(hideSound, player.characterTransform, 0.3f);
         interactionPrompt.DOScale(Vector3.zero, 0.15f);
     }
     public void StartLootTag(Sprite image, string name, string desc, string value)
@@ -110,6 +111,7 @@ public class HUDController : PlayerSystem
         fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
+        menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
     }
     public void MenuCloseAnimation()
     {
@@ -122,6 +124,7 @@ public class HUDController : PlayerSystem
         fishipediaButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.1f);
         settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.2f);
         quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.3f);
+        menuSeaEffect.DOAnchorPos(new Vector3(0,-1100,0),0.8f).SetEase(Ease.OutQuint);
     }
     private void UpdateRadialProgress()
     {
@@ -237,14 +240,14 @@ public class HUDController : PlayerSystem
     }
     public void OpenUI(RectTransform ui)
     {
-        SoundFXManger.Instance.PlaySoundFXClip(FrameOpenSound, player.CharacterTransform, 1f);
+        SoundFXManger.Instance.PlaySoundFXClip(FrameOpenSound, player.characterTransform, 1f);
         currentPage = ui;
         isPageOpen = true;
         ui.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
     }
     public void CloseUI()
     {
-        SoundFXManger.Instance.PlaySoundFXClip(FrameCloseSound, player.CharacterTransform, 1f);
+        SoundFXManger.Instance.PlaySoundFXClip(FrameCloseSound, player.characterTransform, 1f);
         isPageOpen = false;
         currentPage.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
     }
