@@ -506,11 +506,13 @@ public class FishingController : PlayerSystem
 
     private async UniTask SetHook()
     {
+        castDebounce = true;
         biteNoticeUIManager.StartAnimation();
         SoundFXManger.Instance.PlaySoundFXClip(biteNotifySound, _playerTransform, 1f);
         ConfigureCamera(2.15f, _biteNoticeScreenPosition);
         await UniTask.WaitForSeconds(2);
         fishOnBait = true;
+        castDebounce = false;
         ConfigureCamera(6f, Vector2.zero);
         _animator.SetTrigger("FishBite");
         _reelSoundSource.Play();

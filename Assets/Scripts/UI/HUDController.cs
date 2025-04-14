@@ -20,7 +20,9 @@ public class HUDController : PlayerSystem
     float targetProgress = 0.0f;
     float _levelTween = 0.0f;
     float _ExpTween = 0.0f;
-    [Header("level progress ui")]
+    private string _MenuOpenAnimatorTrigger = "MenuOpen";
+    public GameObject hudContainer;
+    [Header("level progress ui")] 
     public RectTransform needle;
     public RectTransform paper;
     public RectTransform closeButton;
@@ -37,7 +39,8 @@ public class HUDController : PlayerSystem
     public TextMeshProUGUI lootNameText;
     public TextMeshProUGUI lootDesciptionText;
     public TextMeshProUGUI lootValueText;
-    [Header("Menu UI")]
+    [Header("Menu UI")] 
+    public GameObject menuContainer;
     public AudioClip OpenSound;
     public AudioClip CloseSound;
     public AudioClip FrameOpenSound;
@@ -112,6 +115,12 @@ public class HUDController : PlayerSystem
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
         menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
+    }
+
+    public void OldMenuOpenAnimation()
+    {
+        hudContainer.SetActive(false);
+        player.animator.SetTrigger(_MenuOpenAnimatorTrigger);
     }
     public void MenuCloseAnimation()
     {
