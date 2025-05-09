@@ -51,6 +51,7 @@ public class FishingController : PlayerSystem
 
     [FormerlySerializedAs("attakFish")] [Header("Sound effects")]
     public AudioClip attackFish;
+
     public AudioClip biteNotifySound;
 
     public AudioClip pedalFlip;
@@ -280,13 +281,13 @@ public class FishingController : PlayerSystem
     private void DoDamage()
     {
         Debug.Log(player.attackBuff);
-        var damage = player.damage * player.attackBuff;
+        FishingRodSO fishingRodSo = InventoryManager.Instance.fishingRods[player.currentFishingRod].fishingRodSO;
+        var damage = fishingRodSo.damage * player.attackBuff;
         fishHealth -= damage;
         if (fishHealth <= 0)
         {
             FishCatched();
         }
-
         player.attackBuff = 0.4f;
     }
 
@@ -356,6 +357,7 @@ public class FishingController : PlayerSystem
         }
         else
         {
+            InventoryManager.Instance.fishingRods[player.currentFishingRod].fishCaught++;
             fish.timeCatched += 1;
         }
 

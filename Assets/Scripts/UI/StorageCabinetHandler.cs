@@ -4,7 +4,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StorageCabinetHandler : MonoBehaviour
+public class StorageCabinetHandler : PlayerSystem
 {
     public GameObject cellPrefab;
     public Scrollbar scrollbar;
@@ -26,12 +26,8 @@ public class StorageCabinetHandler : MonoBehaviour
                 var cell = Instantiate(cellPrefab,contentView);
                 var cellHandler = cell.GetComponent<FishingRodCellHandler>();
                 cell.GetComponent<RectTransform>().anchoredPosition = new Vector2(CurrentX + 214 * i, 267.46f);
-                cellHandler.fishingRodSO = fishingRod.fishingRodSO;
+                cellHandler.fishingRod = fishingRod;
                 cellHandler.active = true;
-                cellHandler.damageLabel.text = "Damage: " + fishingRod.fishingRodSO.damage;
-                cellHandler.resilienceLabel.text = "Resilience: " + fishingRod.fishingRodSO.damage;
-                cellHandler.luckLabel.text = "Luck: " + fishingRod.fishingRodSO.damage;
-
                 cellHandler.Init();
                 cells.Add(cell);
             }

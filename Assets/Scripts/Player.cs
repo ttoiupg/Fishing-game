@@ -26,7 +26,9 @@ public class Player : MonoBehaviour, IDataPersistence
     public HUDController hudController;
     public Animator animator;
     public CinemachinePositionComposer cinemachineCamera;
-
+    public SpriteRenderer fishingRodSprite;
+    public SpriteRenderer fishingRodReelSprite;
+    
     [FormerlySerializedAs("CharacterTransform")]
     public Transform characterTransform;
 
@@ -64,7 +66,10 @@ public class Player : MonoBehaviour, IDataPersistence
     public float attackBuff = 1;
     public float pullProgressBuff = 10f;
     public BoostCanvaManager boostCanvaManager;
-    [FormerlySerializedAs("pullCanvaManager")] public ReelCanvaManager ReelCanvaManager;
+
+    [FormerlySerializedAs("pullCanvaManager")]
+    public ReelCanvaManager ReelCanvaManager;
+
     public Fish currentFish;
     public BaseZone currentZone;
     public bool pullstate;
@@ -91,6 +96,11 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private string currentPrompt;
     [SerializeField] private float currentLength;
     [Header("Testing")] public bool CanInteract = true;
+
+    private void Start()
+    {
+        AudioListener.volume = PlayerPrefs.GetFloat("Volume");
+    }
 
     private void Awake()
     {
@@ -164,7 +174,7 @@ public class Player : MonoBehaviour, IDataPersistence
         expRequire = (float)GetExpRequirement(level);
         currentFishingRod = gameData.equipedFishingRod;
         discoveredFish.Clear();
-        foreach (IDataDiscoverFish dis in gameData.dataDiscoverFishList)
+        foreach (var dis in gameData.dataDiscoverFishList)
         {
             discoveredFish.Add(dis.id, new DiscoveredFish(dis));
         }
@@ -216,8 +226,6 @@ public class Player : MonoBehaviour, IDataPersistence
                 Facing = -1;
                 characterTransform.localScale = new Vector3(-1, 1, 1);
             }
-
-            ;
         }
 
         var flatDirection = new Vector3(direction.x, 0, direction.z);
@@ -256,9 +264,8 @@ public class Player : MonoBehaviour, IDataPersistence
             hudController.ShowInteractionPrompt(currentPrompt, closest.name);
             currentInteract.PromptShow(this);
         }
-        else
+        else if(!isEnter)
         {
-            if (isEnter) return;
             interactionDebounce = true;
             hudController.HideInteractionPrompt();
             currentInteract.PromptHide(this);
@@ -292,5 +299,17 @@ public class Player : MonoBehaviour, IDataPersistence
                 hudController.interacting = false;
                 break;
         }
+    }
+
+    public void EquipFishingRod(FishingRod fishingRod)
+    {
+        currentFishingRod = InventoryManager.Instance.fishingRods.FindIndex(fRod => fRod == fishingRod);
+        ChangeFishingRodAppearance(fishingRod);
+    }
+
+    private void ChangeFishingRodAppearance(FishingRod fishingRod)
+    {
+        fishingRodSprite.sprite = fishingRod.fishingRodSO.spriteWorldRod;
+        fishingRodReelSprite.sprite = fishingRod.fishingRodSO.spriteWorldReel;
     }
 }

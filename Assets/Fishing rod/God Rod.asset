@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 640883006d1f41e449300d72f9bb41c8, type: 3}
+  m_Name: God Rod
+  m_EditorClassIdentifier: 
+  id: rod_God
+  description: This is where you start!
+  spriteDisplay: {fileID: -1918786822, guid: c5639e46c6bd82d48ad229b3dfcbdd1b, type: 3}
+  spriteWorldRod: {fileID: 78552723, guid: b5d939aa2173e5d498e061fc79eb2277, type: 3}
+  spriteWorldReel: {fileID: 2003892950, guid: b5d939aa2173e5d498e061fc79eb2277, type: 3}
+  rarity: {fileID: 11400000, guid: d3727fd43dbd03b44bbf5cd38544d64d, type: 2}
+  damage: 9999
+  luck: 0
+  resilience: 10

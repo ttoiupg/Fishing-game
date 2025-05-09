@@ -10,8 +10,10 @@ public class DataPersistenceManager : MonoBehaviour
     private FileDataHandler dataHandler;
     [SerializeField] private List<BaseFish> gameFishList = new List<BaseFish>();
     [SerializeField] private List<FishingRodSO> gameFishingRodsList = new List<FishingRodSO>();
+    [SerializeField] private List<BaseMutation> gameMutationList = new List<BaseMutation>();
     public static DataPersistenceManager Instance { get; private set; }
     public Dictionary<string,BaseFish> gameFish = new Dictionary<string, BaseFish>();
+    public Dictionary<string, BaseMutation> gameMutations = new Dictionary<string, BaseMutation>();
     public Dictionary<string, FishingRodSO> gameFishingRods = new Dictionary<string, FishingRodSO>();
     private void Awake()
     {
@@ -28,6 +30,10 @@ public class DataPersistenceManager : MonoBehaviour
         foreach (var fishingRod in gameFishingRodsList)
         {
             gameFishingRods.Add(fishingRod.id, fishingRod);
+        }
+        foreach (var mutation in gameMutationList)
+        {
+            gameMutations.Add(mutation.id, mutation);
         }
     }
 

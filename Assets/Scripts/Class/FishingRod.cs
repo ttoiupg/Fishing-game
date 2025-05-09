@@ -1,24 +1,25 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class FishingRod
 {
     public FishingRodSO fishingRodSO;
-    public int timeUsed;
+    [FormerlySerializedAs("timeUsed")] public int fishCaught;
     public float durability;
     public string aquireDate;
 
-    public FishingRod(FishingRodSO fishingRodSO, int timeUsed, float durability, string aquireDate)
+    public FishingRod(FishingRodSO fishingRodSO, int fishCaught, float durability, string aquireDate)
     {
         this.fishingRodSO = fishingRodSO;
-        this.timeUsed = timeUsed;
+        this.fishCaught = fishCaught;
         this.durability = durability;
         this.aquireDate = aquireDate;
     }
     public FishingRod(IDataFishingRod fishingRod)
     {
         this.fishingRodSO = DataPersistenceManager.Instance.gameFishingRods[fishingRod.id];
-        this.timeUsed = fishingRod.timeUsed;
+        this.fishCaught = fishingRod.fishCaught;
         this.durability = fishingRod.durability;
         this.aquireDate = fishingRod.aquireDate;
     }

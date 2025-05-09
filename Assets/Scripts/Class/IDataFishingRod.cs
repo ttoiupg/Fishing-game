@@ -1,14 +1,16 @@
-﻿[System.Serializable]
+﻿using UnityEngine.Serialization;
+
+[System.Serializable]
 public class IDataFishingRod
 {
     public string id;
-    public int timeUsed;
+    [FormerlySerializedAs("timeUsed")] public int fishCaught;
     public float durability;
     public string aquireDate;
     public IDataFishingRod(FishingRod fishingRod)
     {
         id = fishingRod.fishingRodSO.id;
-        timeUsed = fishingRod.timeUsed;
+        fishCaught = fishingRod.fishCaught;
         durability = fishingRod.durability;
         aquireDate = fishingRod.aquireDate;
     }
