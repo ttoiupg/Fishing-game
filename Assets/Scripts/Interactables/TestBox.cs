@@ -1,6 +1,7 @@
 using UnityEngine;
 using Halfmoon.Utilities;
 using System.ComponentModel.Design;
+using UnityEngine.Events;
 
 public class TestBox : MonoBehaviour, IInteractable
 {
@@ -8,6 +9,7 @@ public class TestBox : MonoBehaviour, IInteractable
     [SerializeField] private bool _isInstant;
     [SerializeField] private float _length;
     public string InteractionPrompt => _prompt;
+    public UnityEvent triggered = new UnityEvent();
 
     public bool IsInstant => _isInstant;
 
@@ -44,6 +46,7 @@ public class TestBox : MonoBehaviour, IInteractable
     }
     public void Interact(Player plyaer)
     {
+        triggered.Invoke();
         Debug.Log(gameObject.name + " interacted");
     }
 }

@@ -6,7 +6,7 @@ namespace Halfmoon.StateMachine
     {
         protected readonly Player player;
         protected readonly Animator animator;
-
+        
         protected BaseState(Player player, Animator animator)
         {
             this.player = player;

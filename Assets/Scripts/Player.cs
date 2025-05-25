@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IDataPersistence
     public CinemachinePositionComposer cinemachineCamera;
     public SpriteRenderer fishingRodSprite;
     public SpriteRenderer fishingRodReelSprite;
-    
+
     [FormerlySerializedAs("CharacterTransform")]
     public Transform characterTransform;
 
@@ -108,11 +108,15 @@ public class Player : MonoBehaviour, IDataPersistence
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
         PlayerInputs = new PlayerInputActions();
         _playerStateMachine = new StateMachine();
+        
+        //declare what states we have
         var locomotionState = new LocomotionState(this, animator);
         var fishingState = new FishingState(this, animator);
         var inactiveState = new InactiveState(this, animator);
         var fishingBoostState = new FishingBoostState(this, animator);
         var fishingReelState = new FishingReelState(this, animator);
+        
+        //add transition
         At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
         At(locomotionState, inactiveState, new FuncPredicate(() => isActive == true));
         At(inactiveState, locomotionState, new FuncPredicate(() => isActive == false));
@@ -145,7 +149,7 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         _playerStateMachine.FixedUpdate();
     }
-
+    
     private Collider GetClosestCollider(Collider[] colliders)
     {
         var distance = 10000f;
@@ -165,6 +169,11 @@ public class Player : MonoBehaviour, IDataPersistence
     float GetExpRequirement(int level)
     {
         return Mathf.Round((4 * (Mathf.Pow((float)level, 3f))) / 5);
+    }
+
+    public FishingRod GetFishingRod()
+    {
+        return InventoryManager.Instance.fishingRods[currentFishingRod];
     }
 
     public void LoadData(GameData gameData)
@@ -264,7 +273,7 @@ public class Player : MonoBehaviour, IDataPersistence
             hudController.ShowInteractionPrompt(currentPrompt, closest.name);
             currentInteract.PromptShow(this);
         }
-        else if(!isEnter)
+        else if (!isEnter)
         {
             interactionDebounce = true;
             hudController.HideInteractionPrompt();

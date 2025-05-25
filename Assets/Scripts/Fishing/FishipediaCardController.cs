@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -11,6 +12,7 @@ using Unity.VisualScripting;
 
 public class FishipediaCardController : MonoBehaviour
 {
+    public static FishipediaCardController instance;
     public Player player;
     public AudioClip CardOpen;
     public AudioClip CardClose;
@@ -28,6 +30,14 @@ public class FishipediaCardController : MonoBehaviour
     public float y_RotateAmount;
 
     public bool isOpen = false;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -69,6 +79,31 @@ public class FishipediaCardController : MonoBehaviour
             DiscoverDate.text = "Yet to be discovered!";
         }
         material.SetFloat("_EDITION", fish.FishipediaCardShader);
+        Front.material = new Material(material);
+        yield return new WaitForSeconds(0.5f);
+        isOpen = true;
+    }
+    public IEnumerator OpenCard(Fish fish)
+    {
+        SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.characterTransform, 0.8f);
+        player.CardOpened = true;
+        shadow.SetActive(true);
+        cardTransform.rotation = Quaternion.Euler(0,180,0);
+        cardTransform.DORotate(new Vector3(0,0,0),.5f).SetEase(Ease.OutBack);
+        cardTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+        Front.sprite = fish.fishType.Card;
+        Art.sprite = fish.fishType.Art;
+        DiscoveredFish discoveredFish;
+        if (player.discoveredFish.TryGetValue(fish.fishType.id,out discoveredFish))
+        {
+            Art.color = Color.white;
+            Fishname.text = fish.fishType.name;
+            Rarity.text = fish.fishType.Rarity.name;
+            FavoriteFood.text = "Mutation : "+fish.mutation.name;
+            Weight.text = fish.weight.ToString() + " KG";
+            DiscoverDate.text = "Discover date : " + discoveredFish.discoverDate;
+        }
+        material.SetFloat("_EDITION", fish.fishType.FishipediaCardShader);
         Front.material = new Material(material);
         yield return new WaitForSeconds(0.5f);
         isOpen = true;

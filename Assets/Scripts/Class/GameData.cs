@@ -13,6 +13,7 @@ public class GameData
     public List<IDataDiscoverFish> dataDiscoverFishList = new List<IDataDiscoverFish>();
     public List<IDataFishingRod> dataFishingRods = new List<IDataFishingRod>();
     public List<IDataFish> dataFish = new List<IDataFish>();
+    public List<IDataGameItem> dataGameItem = new List<IDataGameItem>();
 
     public GameData()
     {
@@ -22,5 +23,6 @@ public class GameData
         dataDiscoverFishList = new List<IDataDiscoverFish>();
         dataFishingRods = new List<IDataFishingRod>();
         dataFish = new List<IDataFish>();
+        dataGameItem = new List<IDataGameItem>();
     }
 }

@@ -16,6 +16,7 @@ public class FishingReelState : BaseState
     }
     public override void Update()
     {
+        if (!GameManager.Instance.CurrentBattle.battleStarted) return;
         player.ReelCanvaManager.UpdatePosition();
         player.fishingController.ControlReelingBar();
         player.fishingController.ReelStateUpdateFunction();

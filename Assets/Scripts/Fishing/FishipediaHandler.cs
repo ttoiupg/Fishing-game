@@ -37,7 +37,7 @@ public class FishipediaHandler : MonoBehaviour
         List<BaseFish> pondFish = gameConfiguration.PondFishes.OrderBy(x => 1f/x.Rarity.OneIn).ToList();
         foreach(BaseFish baseFish in pondFish)
         {
-            FishIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishIconDisplayer>();
+            FishipediaIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishipediaIconDisplayer>();
             icon.fish = baseFish;
             icon.cardController = cardController;
             icon.player = player;

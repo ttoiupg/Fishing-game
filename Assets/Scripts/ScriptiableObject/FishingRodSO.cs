@@ -11,6 +11,9 @@ public class FishingRodSO : ScriptableObject
     public Sprite spriteWorldReel;
     public BaseRarity rarity;
     public float damage;
+    public float accuracy;
+    public float critChance;
+    public float critMultiplier;
     public float luck;
     public float resilience;
 }

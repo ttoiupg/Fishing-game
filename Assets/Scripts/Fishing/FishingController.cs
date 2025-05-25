@@ -2,12 +2,10 @@ using System;
 using Halfmoon.Utilities;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using DG.Tweening;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using UnityEngine.Serialization;
@@ -34,7 +32,6 @@ public class FishingController : PlayerSystem
     [FormerlySerializedAs("controlBarOverlaping")]
     public bool ReelingBarOverlaping;
 
-    public Fish currentFish;
     public Vector3 bobberOffset = new(0, 2f, 0);
     [FormerlySerializedAs("Zones")] public ZoneDisplayer[] zones;
     [Header("effect")] public Image fishHealthBar;
@@ -44,6 +41,7 @@ public class FishingController : PlayerSystem
     [FormerlySerializedAs("ZoneContainer")]
     public GameObject zoneContainer;
 
+    public Fish currentFish;
     public float fishMaxHealth = 100;
     public float fishHealth = 100;
 
@@ -73,16 +71,13 @@ public class FishingController : PlayerSystem
     public AudioClip fishFailedSoundFX;
 
     private AudioSource _reelSoundSource;
-    private List<BaseMutation> _avaliableMutations;
-    private List<BaseFish> _availableFishes;
     private Transform _playerTransform;
     private InputAction _controlBarAction;
     private Animator _animator;
     private Countdowntimer _castRodCooldownTimer;
     private Countdowntimer _retractDebounceTimer;
-    private Countdowntimer _fishingTimer;
     private Countdowntimer _damageCooldownTimer;
-    private SectionTimer _damageBoostTimer;
+    public SectionTimer damageBoostTimer;
     private CancellationTokenSource _castRodCancellationTokenSource;
     private List<Timer> _timers;
     private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
@@ -162,16 +157,14 @@ public class FishingController : PlayerSystem
     private void SetUpTimers()
     {
         TimerSection[] sections = { new(0), new(0.6f), new(1.2f), new(1.5f) };
-
         _castRodCooldownTimer = new Countdowntimer(castRodCooldownlength);
         _retractDebounceTimer = new Countdowntimer(retractDebounceLength);
-        _fishingTimer = new Countdowntimer(15f);
-        _damageBoostTimer = new SectionTimer(sections);
+        damageBoostTimer = new SectionTimer(sections);
         _damageCooldownTimer = new Countdowntimer(0.5f);
         _timers = new List<Timer>(5)
-            { _castRodCooldownTimer, _retractDebounceTimer, _damageBoostTimer, _damageCooldownTimer, _fishingTimer };
-        _damageBoostTimer.OnSectionMeet += DamageSectionMet;
-        _fishingTimer.OnTimerStop += () => FishFailed();
+            { _castRodCooldownTimer, _retractDebounceTimer, damageBoostTimer, _damageCooldownTimer };
+        damageBoostTimer.OnSectionMeet += DamageSectionMet;
+        damageBoostTimer.OnTimerStop += AttackFish;
         _castRodCooldownTimer.OnTimerStop += () => castDebounce = false;
         _retractDebounceTimer.OnTimerStop += () => castDebounce = false;
         _damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
@@ -201,6 +194,8 @@ public class FishingController : PlayerSystem
         zones = zoneContainer.GetComponentsInChildren<ZoneDisplayer>();
         _playerTransform = player.GetComponent<Transform>();
         _controlBarAction = playerInput.Fishing.ControlFishingRod;
+        player.ID.playerEvents.OnFishCatched += fish => { FishCatched(); };
+        player.ID.playerEvents.OnFishFailed += () => FishFailed();
     }
 
     private void Update()
@@ -216,8 +211,6 @@ public class FishingController : PlayerSystem
     {
         _animator.SetBool(IsMoving, false);
         player.ID.playerEvents.OnEnterFishingState?.Invoke();
-        _availableFishes = player.currentZone.GetSortedFeaturedFish();
-        _avaliableMutations = player.currentZone.GetSortedFeaturedMutations();
     }
 
     private void SpawnFishingBobber()
@@ -264,40 +257,24 @@ public class FishingController : PlayerSystem
 
     #region AttackFish
 
-    private async UniTask DoAttackUIAnimation()
-    {
-        fishHealthBar.DOFillAmount(fishHealth / fishMaxHealth, 0.2f).SetEase(Ease.OutBack);
-        player.ReelCanvaManager.FlipDownAll();
-        fishHealthBar.sprite = whiteHealthBar;
-        await UniTask.Delay(100);
-        fishHealthBar.sprite = normalHealthBar;
-    }
-
-    private void PlayAttachSound()
+    private void PlayAttackSound()
     {
         SoundFXManger.Instance.PlaySoundFXClip(attackFish, _playerTransform, player.attackBuff);
     }
 
     private void DoDamage()
     {
-        Debug.Log(player.attackBuff);
-        FishingRodSO fishingRodSo = InventoryManager.Instance.fishingRods[player.currentFishingRod].fishingRodSO;
-        var damage = fishingRodSo.damage * player.attackBuff;
-        fishHealth -= damage;
-        if (fishHealth <= 0)
-        {
-            FishCatched();
-        }
-        player.attackBuff = 0.4f;
+        var fishingRod = player.GetFishingRod();
+        var info = fishingRod.GetDamage();
+        GameManager.Instance.CurrentBattle.Attack(info);
     }
 
     private void AttackFish()
     {
         player.canDamage = false;
         _damageCooldownTimer.Start();
-        PlayAttachSound();
+        PlayAttackSound();
         DoDamage();
-        DoAttackUIAnimation();
     }
 
     private async UniTask FishCatchedEffects()
@@ -318,12 +295,7 @@ public class FishingController : PlayerSystem
 
     private void FishCatched()
     {
-        player.hudController.StartLootTag(currentFish.fishType.Art, currentFish.fishType.name,
-            "Mutation:" + currentFish.mutation.name, currentFish.weight.ToString() + "Kg");
         FishCatchedEffects();
-        _fishingTimer.Pause();
-        ProcessFish();
-        player.ID.playerEvents.OnFishCatched?.Invoke(currentFish);
         Reset();
         isFishing = false;
         castDebounce = true;
@@ -342,26 +314,6 @@ public class FishingController : PlayerSystem
         isFishing = false;
         castDebounce = true;
         _retractDebounceTimer.Start();
-    }
-
-    private void ProcessFish()
-    {
-        DiscoveredFish fish;
-        if (!player.discoveredFish.TryGetValue(currentFish.fishType.id, out fish))
-        {
-            //StartCoroutine(screenEffectsHandler.PlayFishFirstCatchAnimation(player.currentFish));
-            var discoveredFish =
-                new DiscoveredFish(currentFish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-            player.discoveredFish.Add(discoveredFish.baseFish.id, discoveredFish);
-            player.ID.playerEvents.OnFishUnlocked.Invoke(currentFish.fishType);
-        }
-        else
-        {
-            InventoryManager.Instance.fishingRods[player.currentFishingRod].fishCaught++;
-            fish.timeCatched += 1;
-        }
-
-        player.experience += currentFish.fishType.Experience;
     }
 
     #endregion
@@ -392,62 +344,23 @@ public class FishingController : PlayerSystem
     public void ReelStateUpdateFunction()
     {
         var overlap = _isReelingBarOverlap();
+        GameManager.Instance.CurrentBattle.SetOverlapping(overlap);
         if (!player.canDamage) return;
         switch (overlap)
         {
-            case true when !_damageBoostTimer.IsRunning:
-                _damageBoostTimer.Reset();
-                _damageBoostTimer.Resume();
+            case true when !damageBoostTimer.IsRunning:
+                damageBoostTimer.Reset();
+                damageBoostTimer.Resume();
                 break;
             case false when ReelingBarOverlaping:
-                AttackFish();
-                _damageBoostTimer.Stop();
+                //AttackFish();
+                damageBoostTimer.Stop();
                 break;
         }
 
         ReelingBarOverlaping = overlap;
         player.ReelCanvaManager.SwitchReelingBarColor(ReelingBarOverlaping);
-    }
-
-    private BaseMutation RollBaseMutation()
-    {
-        BaseMutation catchedMutation = null;
-        var totalWeight = _avaliableMutations.Sum(x => 1f / x.OneIn);
-        var randomValue = Random.Range(0f, totalWeight);
-        for (var i = _avaliableMutations.Count - 1; i >= 0; i--)
-        {
-            totalWeight -= 1f / _avaliableMutations[i].OneIn;
-            if (totalWeight > randomValue) continue;
-            catchedMutation = _avaliableMutations[i];
-            break;
-        }
-
-        return catchedMutation;
-    }
-
-    private BaseFish RollBaseFish()
-    {
-        BaseFish catchedFish = null;
-        var totalWeight = _availableFishes.Sum(x => 1f / x.Rarity.OneIn);
-        var randomValue = Random.Range(0f, totalWeight);
-        for (var i = _availableFishes.Count - 1; i >= 0; i--)
-        {
-            totalWeight -= 1f / _availableFishes[i].Rarity.OneIn;
-            if (totalWeight > randomValue) continue;
-            catchedFish = _availableFishes[i];
-            break;
-        }
-
-        return catchedFish;
-    }
-
-    private void PrepareFish()
-    {
-        var rolledBaseFish = RollBaseFish();
-        var rolledBaseMutation = RollBaseMutation();
-        currentFish = new Fish(rolledBaseFish, rolledBaseMutation);
-        fishHealth = fishMaxHealth;
-        fishHealthBar.fillAmount = fishHealth / fishMaxHealth;
+        player.ReelCanvaManager.RandomFishBarPosition();
     }
 
     private void PrepareReelUI()
@@ -460,13 +373,12 @@ public class FishingController : PlayerSystem
 
     private async UniTask EnterReelState()
     {
-        PrepareFish();
+        GameManager.Instance.FishEnemy = new FishEnemy();
+        GameManager.Instance.NewBattle(BattleType.Fish,GameManager.Instance.FishEnemy);
         PrepareReelUI();
-        await UniTask.WaitForSeconds(0.6f);
-        _fishingTimer.Reset();
-        _fishingTimer.Start();
+        await UniTask.WaitForSeconds(1.38f);
+        GameManager.Instance.StartBattle();
         player.ReelCanvaManager.StartTimer(15f);
-        player.ReelCanvaManager.RandomFishBarPosition();
     }
 
     #endregion
@@ -495,8 +407,8 @@ public class FishingController : PlayerSystem
         }
 
         await UniTask.WaitForSeconds(0.5f);
-        boostApplied = true;
         EnterReelState();
+        boostApplied = true;
     }
 
     public void EnterBoostState()
@@ -555,18 +467,21 @@ public class FishingController : PlayerSystem
             case 0:
                 player.ReelCanvaManager.FlipFirst();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage1);
                 break;
             case 1:
                 player.ReelCanvaManager.FlipSecond();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage2);
                 break;
             case 2:
                 player.ReelCanvaManager.FlipThird();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
+                GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage3);
                 break;
             case 3:
-                AttackFish();
-                _damageBoostTimer.Stop();
+                //AttackFish();
+                damageBoostTimer.Stop();
                 break;
         }
     }

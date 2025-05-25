@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour, IDataPersistence
@@ -7,6 +8,7 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
     public static InventoryManager Instance;
     [Space] public List<FishingRod> fishingRods = new List<FishingRod>();
     [Space] public List<Fish> fishes = new List<Fish>();
+    [Space] public List<GameItem> items = new List<GameItem>();
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -30,6 +32,11 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
         {
             fishes.Add(new Fish(dataFish));
         }
+        items.Clear();
+        foreach (var item in data.dataGameItem)
+        {
+            items.Add(new GameItem(item));
+        }
     }
 
     public void SaveData(ref GameData data)
@@ -45,6 +52,11 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
         foreach (var fish in fishes)
         {
             data.dataFish.Add(new IDataFish(fish));
+        }
+        data.dataGameItem.Clear();
+        foreach (var gameItem in items)
+        {
+            data.dataGameItem.Add(new IDataGameItem(gameItem));
         }
     }
 }

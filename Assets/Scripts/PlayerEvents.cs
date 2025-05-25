@@ -19,6 +19,7 @@ public struct PlayerEvents
     public Action OnRodThrew;
     public Action OnFishBite;
     public Action<Fish> OnFishCatched;
+    public Action OnFishFailed;
     public Action<BaseFish> OnFishUnlocked;
     public Action OnBoostStage;
     public Action OnPullStage;

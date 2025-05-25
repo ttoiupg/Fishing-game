@@ -81,7 +81,7 @@ namespace Halfmoon.Utilities
         public SectionTimer() : base(0) { }
 
         public SectionTimer(TimerSection[] sections) : base(0){this.Sections = sections;}
-        private TimerSection[] Sections { get; set; }
+        public TimerSection[] Sections { get; set; }
         public Action<int> OnSectionMeet = delegate { };
         public override void Tick(float deltaTime)
         {

@@ -33,6 +33,7 @@ public class ReelCanvaManager : PlayerSystem
     public float rawLeftBound = -286;
     public float rawRightBound = 286f;
 
+    private bool _fishBarMoved = true;
     private static readonly Color32 Red = new Color32(217, 77, 88, 255);
     private static readonly Color32 Blue = new Color32(0, 135, 164, 255);
     private Animator animator;
@@ -107,14 +108,12 @@ public class ReelCanvaManager : PlayerSystem
 
     public void FlipSecond()
     {
-        player.attackBuff = 1f;
         fishPedalL1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
         fishPedalR1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
     }
 
     public void FlipThird()
     {
-        player.attackBuff = 1.5f;
         fishPedalL2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
         fishPedalR2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
     }
@@ -130,20 +129,27 @@ public class ReelCanvaManager : PlayerSystem
 
     public async UniTask RandomFishBarPosition()
     {
-        if (player.fishingController.fishHealth <= 0) return;
+        if (!_fishBarMoved) return;
+        _fishBarMoved = false;
+        Debug.Log("RandomFishBarPosition");
+        var battle = GameManager.Instance.CurrentBattle;
+        var enemy = battle.battleStats.enemy;
+        var fish = GameManager.Instance.FishEnemy;
+        if (GameManager.Instance.CurrentBattle.battleStats.enemy.IsDead()) return;
         var RandSecond = Random.Range(
-            player.fishingController.currentFish.fishType.MinFishBarChangeTime,
-            player.fishingController.currentFish.fishType.MaxFishBarChangeTime);
+            fish.fish.fishType.MinFishBarChangeTime,
+            fish.fish.fishType.MaxFishBarChangeTime);
         var RandPosition = Random.Range(-283.5f, 283.5f);
         while (Mathf.Abs(RandPosition - fishNeedleTargetPosition) >
-               player.fishingController.currentFish.fishType.MaxFishBarChangeDistance)
+               fish.fish.fishType.MaxFishBarChangeDistance)
         {
             RandPosition = UnityEngine.Random.Range(-283.5f, 283.5f);
         }
         fishNeedleTargetPosition = RandPosition;
         fishNeedleSpeed = UnityEngine.Random.Range(0.05f, 6f);
         await UniTask.WaitForSeconds(RandSecond);
-        RandomFishBarPosition();
+        Debug.Log("RandomFishBarPosition finished");
+        _fishBarMoved = true;
     }
 
     public void GamepadVibration()
