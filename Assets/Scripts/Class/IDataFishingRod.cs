@@ -1,4 +1,5 @@
-﻿using UnityEngine.Serialization;
+﻿using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class IDataFishingRod
@@ -6,12 +7,15 @@ public class IDataFishingRod
     public string id;
     [FormerlySerializedAs("timeUsed")] public int fishCaught;
     public float durability;
-    public string aquireDate;
+    [FormerlySerializedAs("aquireDate")] public string acquireDate;
+    public List<string> modifiers;
     public IDataFishingRod(FishingRod fishingRod)
     {
         id = fishingRod.fishingRodSO.id;
         fishCaught = fishingRod.fishCaught;
         durability = fishingRod.durability;
-        aquireDate = fishingRod.aquireDate;
+        acquireDate = fishingRod.acquireDate;
+        modifiers = new List<string>();
+        fishingRod.modifiers.ForEach(modifier => modifiers.Add(modifier.id));
     }
 }

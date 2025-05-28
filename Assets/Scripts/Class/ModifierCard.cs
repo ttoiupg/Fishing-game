@@ -4,7 +4,6 @@ using UnityEditor;
 public interface IModifier
 {
     string ModifierType { get; }
-    string Id { get; }
     string Description { get; }
 
     // Event-driven methods
@@ -19,14 +18,13 @@ public interface IModifier
 [System.Serializable]
 public abstract class ModifierBase : ScriptableObject, IModifier
 {
-    [SerializeField] protected string id;
     [SerializeField] protected string description;
+    [SerializeField] public string id;
     [SerializeField] protected bool isActive;
     [SerializeField] protected float cooldownTime;
     [SerializeField] protected float lastActivationTime;
 
     public abstract string ModifierType { get; }
-    public virtual string Id => id;
     public virtual string Description => description;
     public bool IsActive => isActive;
 

@@ -2,13 +2,19 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using UnityEditor.ShaderKeywordFilter;
+using UnityEngine.Serialization;
 
 public class DataPersistenceManager : MonoBehaviour
 {
-    [SerializeField] private string fileName;
+    [FormerlySerializedAs("fileName")] [SerializeField] private string playerDataFileName;
+    [SerializeField] private string fishingRodDataFileName;
+    [SerializeField] private string itemDataFileName;
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
-    private FileDataHandler dataHandler;
+    private FileDataHandler<PlayerData> playerDataHandler;
+    private FileDataHandler<FishingRodData> fishingRodDataHandler;
+    private FileDataHandler<ItemData> itemDataHandler;
     [SerializeField] private List<BaseFish> gameFishList = new List<BaseFish>();
     [SerializeField] private List<FishingRodSO> gameFishingRodsList = new List<FishingRodSO>();
     [SerializeField] private List<BaseMutation> gameMutationList = new List<BaseMutation>();
@@ -42,6 +48,10 @@ public class DataPersistenceManager : MonoBehaviour
         {
             gameItems.Add(item.id, item);
         }
+        foreach (var modifier in ModifierCardList)
+        {
+            ModifierCards.Add(modifier.id, modifier);
+        }
     }
 
     private void Awake()
@@ -56,29 +66,33 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
-        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        this.playerDataHandler = new FileDataHandler<PlayerData>(Application.persistentDataPath, playerDataFileName);
+        this.fishingRodDataHandler = new FileDataHandler<FishingRodData>(Application.persistentDataPath, fishingRodDataFileName);
+        this.itemDataHandler = new FileDataHandler<ItemData>(Application.persistentDataPath, itemDataFileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadGame();
     }
-
-    public void NewGame()
+    
+    public void NewFishingRodData()
     {
-        this.gameData = new GameData();
         FishingRod rod = new FishingRod(gameFishingRods["rod_starter"], 0, 100,
             System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
         IDataFishingRod starterRod = new IDataFishingRod(rod);
-        this.gameData.dataFishingRods.Add(starterRod);
+        this.gameData.fishingRodData.fishingRods.Add(starterRod);
     }
 
     public void LoadGame()
     {
-        this.gameData = dataHandler.Load();
-        if (this.gameData == null)
+        this.gameData = new GameData();
+        this.gameData.playerData = playerDataHandler.Load() ?? new PlayerData();
+        this.gameData.itemData = itemDataHandler.Load() ?? new ItemData();
+        this.gameData.fishingRodData = fishingRodDataHandler.Load();
+        if (this.gameData.fishingRodData == null)
         {
-            Debug.Log("there's no game data");
-            NewGame();
+            Debug.Log("there's no fishing rod data");
+            this.gameData.fishingRodData = new FishingRodData();
+            NewFishingRodData();
         }
-
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
@@ -92,8 +106,12 @@ public class DataPersistenceManager : MonoBehaviour
             dataPersistenceObj.SaveData(ref gameData);
         }
 
-        string a = dataHandler.Save(gameData);
-        Debug.Log(a);
+        string playerSave = playerDataHandler.Save(gameData.playerData);
+        string fishingRodSave = fishingRodDataHandler.Save(gameData.fishingRodData);
+        string itemSave = itemDataHandler.Save(gameData.itemData);
+        Debug.Log(playerSave);
+        Debug.Log(fishingRodSave);
+        Debug.Log(itemSave);
     }
 
     private void OnApplicationQuit()

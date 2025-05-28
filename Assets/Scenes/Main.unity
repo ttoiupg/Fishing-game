@@ -306,7 +306,6 @@ MonoBehaviour:
   CurrentBattle:
     battleType: 0
     battleStats:
-      isInBattle: 0
       isOverlapping: 0
       overlapTime: 0
       currentDamageStage: 0
@@ -3210,7 +3209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -17791786, y: 292.305}
+  m_AnchoredPosition: {x: -17920378, y: 292.305}
   m_SizeDelta: {x: 3128.0005, y: 584.61}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &337818280
@@ -4209,7 +4208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed9ed3d46caadb429a06587a7d6bc33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: data.Tide
+  playerDataFileName: tide.PlayerData
+  fishingRodDataFileName: tide.FishingRodData
+  itemDataFileName: tide.ItemData
   gameFishList:
   - {fileID: 11400000, guid: 0f54f15b7bc8dd94381c87252a357440, type: 2}
   - {fileID: 11400000, guid: 28d9b1a8abc864843abcd72b68490be3, type: 2}
@@ -4236,7 +4237,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd03a1aac9b5ed349b5e617c35fa2fc2, type: 2}
   gameItemList: []
   ModifierCardList:
-  - {fileID: 11400000, guid: 3307cba26656faa47bb94d00c9712041, type: 2}
+  - {fileID: 11400000, guid: 56ce18c709939c549b17e97031e7a8fa, type: 2}
+  - {fileID: 11400000, guid: 05ea60c3b4531df439641bf6ae7bb6b7, type: 2}
 --- !u!4 &443794985
 Transform:
   m_ObjectHideFlags: 0
@@ -33748,7 +33750,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -648978.44, y: 455664.16}
+  m_AnchoredPosition: {x: -798067, y: 552902.75}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1336885457

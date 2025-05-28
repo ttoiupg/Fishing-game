@@ -178,12 +178,12 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData gameData)
     {
-        level = gameData.level;
-        experience = gameData.experience;
+        level = gameData.playerData.level;
+        experience = gameData.playerData.experience;
         expRequire = (float)GetExpRequirement(level);
-        currentFishingRod = gameData.equipedFishingRod;
+        currentFishingRod = gameData.playerData.equipedFishingRod;
         discoveredFish.Clear();
-        foreach (var dis in gameData.dataDiscoverFishList)
+        foreach (var dis in gameData.playerData.discoverFishList)
         {
             discoveredFish.Add(dis.id, new DiscoveredFish(dis));
         }
@@ -191,13 +191,13 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public void SaveData(ref GameData gameData)
     {
-        gameData.level = level;
-        gameData.experience = experience;
-        gameData.dataDiscoverFishList.Clear();
-        gameData.equipedFishingRod = currentFishingRod;
+        gameData.playerData.level = level;
+        gameData.playerData.experience = experience;
+        gameData.playerData.discoverFishList.Clear();
+        gameData.playerData.equipedFishingRod = currentFishingRod;
         foreach (var fish in discoveredFish.Values)
         {
-            gameData.dataDiscoverFishList.Add(new IDataDiscoverFish(fish));
+            gameData.playerData.discoverFishList.Add(new IDataDiscoverFish(fish));
         }
     }
 

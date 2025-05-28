@@ -32,7 +32,7 @@ public class FishingRod
     public float tempCritChance;
     public float tempCritMultiplier;
     public float durability;
-    public string aquireDate;
+    [FormerlySerializedAs("aquireDate")] public string acquireDate;
 
     public DamageInfo GetDamage()
     {
@@ -43,12 +43,12 @@ public class FishingRod
         return new DamageInfo(finalDamage, crit, hit,this);
     }
 
-    public FishingRod(FishingRodSO fishingRodSO, int fishCaught, float durability, string aquireDate)
+    public FishingRod(FishingRodSO fishingRodSO, int fishCaught, float durability, string acquireDate)
     {
         this.fishingRodSO = fishingRodSO;
         this.fishCaught = fishCaught;
         this.durability = durability;
-        this.aquireDate = aquireDate;
+        this.acquireDate = acquireDate;
     }
 
     public FishingRod(IDataFishingRod fishingRod)
@@ -56,7 +56,8 @@ public class FishingRod
         this.fishingRodSO = DataPersistenceManager.Instance.gameFishingRods[fishingRod.id];
         this.fishCaught = fishingRod.fishCaught;
         this.durability = fishingRod.durability;
-        this.aquireDate = fishingRod.aquireDate;
+        this.acquireDate = fishingRod.acquireDate;
+        fishingRod.modifiers.ForEach(id => this.modifiers.Add(DataPersistenceManager.Instance.ModifierCards[id]));
     }
 
     public void onBattleEvent(BattleEvent battleEvent)

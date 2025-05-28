@@ -6,7 +6,7 @@ using System.IO;
 using UnityEditor.SceneTemplate;
 using System.Linq;
 
-public class FileDataHandler
+public class FileDataHandler<T>
 {
     private string dataDirPath = "";
     private string dataFileName = "";
@@ -17,10 +17,10 @@ public class FileDataHandler
         this.dataFileName = dataFileName;
     }
 
-    public GameData Load()
+    public T Load()
     {
         string fullPath = Path.Combine(dataDirPath, dataFileName);
-        GameData loadedData =  null;
+        T loadedData =  default(T);
         if (File.Exists(fullPath))
         {
             try
@@ -33,7 +33,7 @@ public class FileDataHandler
                         dataToLoad = reader.ReadToEnd();
                     }
                 }
-                loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
+                loadedData = JsonUtility.FromJson<T>(dataToLoad);
             }
             catch(Exception e)
             {
@@ -43,7 +43,7 @@ public class FileDataHandler
         return loadedData;
     }
 
-    public string Save(GameData data)
+    public string Save(T data)
     {
         string fullPath = Path.Combine(dataDirPath, dataFileName);
         try

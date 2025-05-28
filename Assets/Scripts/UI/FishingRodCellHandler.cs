@@ -66,7 +66,7 @@ public class FishingRodCellHandler : MonoBehaviour, IPointerClickHandler, IPoint
         luckLabel.text = "Luck: " + fishingRod.fishingRodSO.damage;
         timeUsedLabel.text = "Fish caught: " + fishingRod.fishCaught;
         durabilityLabel.text = "Durability: " + fishingRod.durability;
-        aquireDateLabel.text = "Aquire Date: " + fishingRod.aquireDate;
+        aquireDateLabel.text = "Aquire Date: " + fishingRod.acquireDate;
     }
 
     private async UniTask DoEquipEffect()
