@@ -3209,7 +3209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -17920378, y: 292.305}
+  m_AnchoredPosition: {x: -17954450, y: 292.305}
   m_SizeDelta: {x: 3128.0005, y: 584.61}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &337818280
@@ -33750,7 +33750,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -798067, y: 552902.75}
+  m_AnchoredPosition: {x: -832609.2, y: 574189.75}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1336885457
@@ -46893,7 +46893,9 @@ MonoBehaviour:
   fishIconDisplayer: {fileID: 1342334047188820820, guid: 6a18bd874cd36f143b6734399ec6ddcf, type: 3}
   baitBoxContent: {fileID: 1336885456}
   itemContent: {fileID: 1848705209}
-  inventoryContent: {fileID: 671987965}
+  fishContent: {fileID: 671987965}
+  _itemIconDisplayers: []
+  _fishIconDisplayers: []
 --- !u!1 &1664662462
 GameObject:
   m_ObjectHideFlags: 0

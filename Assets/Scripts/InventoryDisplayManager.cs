@@ -11,9 +11,9 @@ public class InventoryDisplayManager : MonoBehaviour
     [Header("contents")]
     public RectTransform baitBoxContent;
     public RectTransform itemContent;
-    public RectTransform inventoryContent;
-    private List<ItemIconDisplayer> _itemIconDisplayers = new List<ItemIconDisplayer>();
-    private List<FishIconDisplayer> _fishIconDisplayers = new List<FishIconDisplayer>();
+    public RectTransform fishContent;
+    [SerializeField]private List<ItemIconDisplayer> _itemIconDisplayers = new List<ItemIconDisplayer>();
+    [SerializeField]private List<FishIconDisplayer> _fishIconDisplayers = new List<FishIconDisplayer>();
     
     public void PrepareItems()
     {
@@ -43,7 +43,7 @@ public class InventoryDisplayManager : MonoBehaviour
         var FishList = InventoryManager.Instance.fishes.ToList();
         foreach (var fish in FishList)
         {
-            var icon = Instantiate(fishIconDisplayer.gameObject, itemContent);
+            var icon = Instantiate(fishIconDisplayer.gameObject, fishContent);
             var iconDisplayer = icon.GetComponent<FishIconDisplayer>();
             iconDisplayer.fish = fish;
             iconDisplayer.Init();
@@ -56,11 +56,14 @@ public class InventoryDisplayManager : MonoBehaviour
         for (int i = _itemIconDisplayers.Count - 1; i >= 0; i--)
         {
             Destroy(_itemIconDisplayers[i].gameObject);
+            _itemIconDisplayers.RemoveAt(i);
         }
         for (int i = _fishIconDisplayers.Count - 1; i >= 0; i--)
         {
             Destroy(_fishIconDisplayers[i].gameObject);
+            _fishIconDisplayers.RemoveAt(i);
         }
+        
     }
 
     public void ShowInventory()
