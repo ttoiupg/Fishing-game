@@ -3,8 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using System.Runtime.InteropServices;
-using Unity;
-using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 using UnityEditor;
@@ -99,6 +97,7 @@ public class FishingRodGamepad : Gamepad
 {
     static FishingRodGamepad()
     {
+        Debug.Log("instancing...");
         // This is one way to match the Device.
          InputSystem.RegisterLayout<FishingRodGamepad>(
            matches: new InputDeviceMatcher()
