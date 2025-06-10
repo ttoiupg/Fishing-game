@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
@@ -12,6 +13,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Halfmoon.Utilities;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
+
 public class HUDController : PlayerSystem
 {
     int prevLevel = 0;
@@ -66,6 +69,13 @@ public class HUDController : PlayerSystem
     public float requiredInteractTime = 1;
     [SerializeField] private AudioClip popUpSound;
     [SerializeField] private AudioClip hideSound;
+    private EventSystem _eventSystem;
+
+    private void Start()
+    {
+        _eventSystem = EventSystem.current;
+    }
+
     float BackLerp(float x)
     {
         float c1 = 1.70158f;
@@ -115,6 +125,7 @@ public class HUDController : PlayerSystem
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
         menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
+       
     }
 
     public void OldMenuOpenAnimation()
@@ -124,6 +135,7 @@ public class HUDController : PlayerSystem
     }
     public void MenuCloseAnimation()
     {
+        _eventSystem.SetSelectedGameObject(null);
         SoundFXManger.Instance.PlaySoundFXClip(CloseSound, player.transform, 0.5f);
         resumeButton.GetComponent<Image>().raycastTarget = false;
         fishipediaButton.GetComponent<Image>().raycastTarget = false;
@@ -203,6 +215,7 @@ public class HUDController : PlayerSystem
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
+                _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
             }
             else
             {
@@ -210,6 +223,7 @@ public class HUDController : PlayerSystem
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);
+                _eventSystem.SetSelectedGameObject(null);
             }
         }
     }
@@ -229,6 +243,7 @@ public class HUDController : PlayerSystem
             {
                 player.menuOpen = true;
                 MenuOpenAnimation();
+                _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
             }
             else
             {
@@ -236,6 +251,7 @@ public class HUDController : PlayerSystem
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);
+                _eventSystem.SetSelectedGameObject(null);
             }
         }
     }

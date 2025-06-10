@@ -1532,6 +1532,8 @@ GameObject:
   - component: {fileID: 154152643}
   - component: {fileID: 154152642}
   - component: {fileID: 154152641}
+  - component: {fileID: 154152645}
+  - component: {fileID: 154152644}
   m_Layer: 5
   m_Name: close
   m_TagString: Untagged
@@ -1612,7 +1614,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
     m_PressedColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1644,6 +1646,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1106781009}
+        m_TargetAssemblyTypeName: Halfmoon.SetsUiElementToSelectOnInteraction, Assembly-CSharp
+        m_MethodName: JumpToElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &154152643
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1652,6 +1666,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154152639}
   m_CullTransparentMesh: 1
+--- !u!114 &154152644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154152639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 154152642}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
+--- !u!114 &154152645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154152639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 0}
+  lastSelectedElement: {fileID: 0}
 --- !u!1 &168073689
 GameObject:
   m_ObjectHideFlags: 0
@@ -3209,7 +3253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -66375.86, y: 292.305}
+  m_AnchoredPosition: {x: -265495.66, y: 292.305}
   m_SizeDelta: {x: 3128.0005, y: 584.61}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &337818280
@@ -5288,6 +5332,8 @@ GameObject:
   - component: {fileID: 572738976}
   - component: {fileID: 572738979}
   - component: {fileID: 572738978}
+  - component: {fileID: 572738981}
+  - component: {fileID: 572738980}
   - component: {fileID: 572738977}
   m_Layer: 5
   m_Name: close
@@ -5369,7 +5415,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
     m_PressedColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -5409,6 +5455,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 572738975}
   m_CullTransparentMesh: 1
+--- !u!114 &572738980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572738975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 572738978}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
+--- !u!114 &572738981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572738975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 0}
+  lastSelectedElement: {fileID: 0}
 --- !u!1 &578856009
 GameObject:
   m_ObjectHideFlags: 0
@@ -17351,6 +17427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 2973515650697716919, guid: 2cabf0bcb86d4854e98eadc0305cfa63, type: 3}
+  closeButton: {fileID: 0}
   scrollbar: {fileID: 1989354136}
   mainFrame: {fileID: 652161208}
   contentView: {fileID: 332391131}
@@ -17368,6 +17445,7 @@ GameObject:
   - component: {fileID: 765968738}
   - component: {fileID: 765968737}
   - component: {fileID: 765968736}
+  - component: {fileID: 765968739}
   m_Layer: 5
   m_Name: close
   m_TagString: Untagged
@@ -17448,7 +17526,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
     m_PressedColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -17480,6 +17558,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1442175878}
+        m_TargetAssemblyTypeName: Halfmoon.SetsUiElementToSelectOnInteraction, Assembly-CSharp
+        m_MethodName: JumpToElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &765968738
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17488,6 +17578,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765968734}
   m_CullTransparentMesh: 1
+--- !u!114 &765968739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765968734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 765968737}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &776522956
 GameObject:
   m_ObjectHideFlags: 0
@@ -31335,7 +31441,9 @@ GameObject:
   - component: {fileID: 1106781006}
   - component: {fileID: 1106781005}
   - component: {fileID: 1106781004}
+  - component: {fileID: 1106781008}
   - component: {fileID: 1106781007}
+  - component: {fileID: 1106781009}
   m_Layer: 5
   m_Name: Setting
   m_TagString: Untagged
@@ -31376,10 +31484,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1442175873}
+    m_SelectOnDown: {fileID: 1168267483}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
@@ -31394,7 +31502,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -31438,6 +31546,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 1387640363}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 154152644}
+        m_TargetAssemblyTypeName: Halfmoon.SetsUiElementToSelectOnInteraction, Assembly-CSharp
+        m_MethodName: JumpToElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -31494,6 +31614,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuOption: {fileID: 1106781003}
+--- !u!114 &1106781008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106781002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  lastSelectedElement: {fileID: 0}
+--- !u!114 &1106781009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106781002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 1106781004}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &1107437302
 GameObject:
   m_ObjectHideFlags: 0
@@ -32149,6 +32299,7 @@ GameObject:
   - component: {fileID: 1168267485}
   - component: {fileID: 1168267484}
   - component: {fileID: 1168267483}
+  - component: {fileID: 1168267487}
   - component: {fileID: 1168267486}
   m_Layer: 5
   m_Name: Quit
@@ -32190,10 +32341,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1106781004}
+    m_SelectOnDown: {fileID: 1976031529}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
@@ -32208,7 +32359,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -32272,6 +32423,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuOption: {fileID: 1168267482}
+--- !u!114 &1168267487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168267481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  lastSelectedElement: {fileID: 0}
 --- !u!1 &1177491987
 GameObject:
   m_ObjectHideFlags: 0
@@ -32840,7 +33005,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -33750,7 +33915,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -77243.21, y: 52870.312}
+  m_AnchoredPosition: {x: -310311.28, y: 206206.34}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1336885457
@@ -34631,7 +34796,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -34773,7 +34938,9 @@ GameObject:
   - component: {fileID: 1442175875}
   - component: {fileID: 1442175874}
   - component: {fileID: 1442175873}
+  - component: {fileID: 1442175877}
   - component: {fileID: 1442175876}
+  - component: {fileID: 1442175878}
   m_Layer: 5
   m_Name: Fishipedia
   m_TagString: Untagged
@@ -34814,10 +34981,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1976031529}
+    m_SelectOnDown: {fileID: 1106781004}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
@@ -34832,7 +34999,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -34876,6 +35043,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 1062834570}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 765968739}
+        m_TargetAssemblyTypeName: Halfmoon.SetsUiElementToSelectOnInteraction, Assembly-CSharp
+        m_MethodName: JumpToElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -34932,6 +35111,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuOption: {fileID: 1442175872}
+--- !u!114 &1442175877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442175871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  lastSelectedElement: {fileID: 0}
+--- !u!114 &1442175878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442175871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 1442175873}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &1448301797
 GameObject:
   m_ObjectHideFlags: 0
@@ -35554,7 +35763,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -46891,6 +47100,7 @@ MonoBehaviour:
   InventoryDisplay: {fileID: 1663556916}
   itemIconDisplayer: {fileID: 7916608979868415947, guid: 0ea4513143d533e45b0e2cf4c4ed4af0, type: 3}
   fishIconDisplayer: {fileID: 1342334047188820820, guid: 6a18bd874cd36f143b6734399ec6ddcf, type: 3}
+  closeButton: {fileID: 1840113179}
   baitBoxContent: {fileID: 1336885456}
   itemContent: {fileID: 1848705209}
   fishContent: {fileID: 671987965}
@@ -48579,6 +48789,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 572738980}
+        m_TargetAssemblyTypeName: Halfmoon.SetsUiElementToSelectOnInteraction, Assembly-CSharp
+        m_MethodName: JumpToElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1829546388
 GameObject:
   m_ObjectHideFlags: 0
@@ -49054,7 +49276,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
     m_PressedColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -55267,6 +55489,8 @@ GameObject:
   - component: {fileID: 1976031530}
   - component: {fileID: 1976031529}
   - component: {fileID: 1976031532}
+  - component: {fileID: 1976031533}
+  - component: {fileID: 1976031534}
   m_Layer: 5
   m_Name: Resume
   m_TagString: Untagged
@@ -55307,10 +55531,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1168267483}
+    m_SelectOnDown: {fileID: 1442175873}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
@@ -55325,7 +55549,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 115379780, guid: 027e4af6211777941ac8c6dde867ec31, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -55401,6 +55625,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuOption: {fileID: 1976031528}
+--- !u!114 &1976031533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976031527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  lastSelectedElement: {fileID: 0}
+--- !u!114 &1976031534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976031527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b06b745732ad347991ad057b12c56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  elementToSelect: {fileID: 1976031529}
+  showVisuallization: 0
+  navigationColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &1980204203
 GameObject:
   m_ObjectHideFlags: 0

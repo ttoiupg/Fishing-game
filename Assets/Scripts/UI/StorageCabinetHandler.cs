@@ -1,22 +1,32 @@
+using System;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class StorageCabinetHandler : PlayerSystem
 {
     public GameObject cellPrefab;
+    public GameObject closeButton; 
     public Scrollbar scrollbar;
     public RectTransform mainFrame;
     public RectTransform contentView;
     public List<GameObject> cells;
     public bool opened = false;
     private const float CurrentX = -1455;
-    
+    private EventSystem _eventSystem;
+
+    public void Start()
+    {
+        _eventSystem = EventSystem.current;
+    }
+
     public void Open()
     {
         if (opened) return;
+        _eventSystem.SetSelectedGameObject(closeButton);
         opened = true;
         mainFrame.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack).onComplete += () =>
         {

@@ -1,20 +1,28 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InventoryDisplayManager : MonoBehaviour
 {
     public RectTransform InventoryDisplay;
     public ItemIconDisplayer itemIconDisplayer;
     public FishIconDisplayer fishIconDisplayer;
-    
+    public GameObject closeButton;
     [Header("contents")]
     public RectTransform baitBoxContent;
     public RectTransform itemContent;
     public RectTransform fishContent;
     [SerializeField]private List<ItemIconDisplayer> _itemIconDisplayers = new List<ItemIconDisplayer>();
     [SerializeField]private List<FishIconDisplayer> _fishIconDisplayers = new List<FishIconDisplayer>();
-    
+    private EventSystem _eventSystem;
+
+    private void Start()
+    {
+        _eventSystem = EventSystem.current;
+    }
+
     public void PrepareItems()
     {
         //filter out other item, for this, we're filtering out non bait item
@@ -69,11 +77,13 @@ public class InventoryDisplayManager : MonoBehaviour
     public void ShowInventory()
     {
         InventoryDisplay.localScale = Vector3.one;
+        _eventSystem.SetSelectedGameObject(closeButton);
     }
 
     public void HideIventory()
     {
         InventoryDisplay.localScale = Vector3.zero;
+        _eventSystem.SetSelectedGameObject(null);
     }
     
     public void OpenInventory()
