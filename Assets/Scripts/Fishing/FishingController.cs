@@ -200,6 +200,10 @@ public class FishingController : PlayerSystem
 
     private void Update()
     {
+        if (Input.anyKeyDown && Input.GetKeyDown(KeyCode.Joystick1Button0))
+        {
+            HandleInput(new InputAction.CallbackContext());
+        }
         TickTimer();
     }
 
