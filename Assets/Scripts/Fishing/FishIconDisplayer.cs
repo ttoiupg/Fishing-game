@@ -12,6 +12,6 @@ public class FishIconDisplayer : MonoBehaviour
     }
     public void Clicked()
     {
-        FishipediaCardController.instance.toggleCard(fish);
+        FishipediaCardController.instance.toggleCard(fish,gameObject);
     }
 }

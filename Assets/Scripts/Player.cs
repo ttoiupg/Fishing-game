@@ -21,7 +21,7 @@ public class Player : MonoBehaviour, IDataPersistence
     public float defaultCameraDistance = 8f;
     public int currentFishingRod;
     public bool isActive;
-    public PlayerInputActions PlayerInputs;
+    public DefaultInputActions PlayerInputs;
     public FishingController fishingController;
     public HUDController hudController;
     public Animator animator;
@@ -73,7 +73,6 @@ public class Player : MonoBehaviour, IDataPersistence
     public Fish currentFish;
     public BaseZone currentZone;
     public bool pullstate;
-    public bool menuOpen;
     public bool inspecting;
     public bool CardOpened;
     public bool canDamage = true;
@@ -106,7 +105,7 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         interactionDebounceTimer = new Countdowntimer(0.5f);
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
-        PlayerInputs = new PlayerInputActions();
+        PlayerInputs = new DefaultInputActions();
         _playerStateMachine = new StateMachine();
         
         //declare what states we have

@@ -1,20 +1,13 @@
-using System;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
-
-using System.Runtime.CompilerServices;
 using TMPro;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine.UI;
-using Unity.Collections;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using Halfmoon.Utilities;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
-
 public class HUDController : PlayerSystem
 {
     int prevLevel = 0;
@@ -115,6 +108,10 @@ public class HUDController : PlayerSystem
     }
     public void MenuOpenAnimation()
     {
+        resumeButton.GetComponent<Button>().interactable = true;
+        fishipediaButton.GetComponent<Button>().interactable = true;
+        settingButton.GetComponent<Button>().interactable = true;
+        quitButton.GetComponent<Button>().interactable = true;
         SoundFXManger.Instance.PlaySoundFXClip(OpenSound, player.transform, 0.5f);
         resumeButton.GetComponent<Image>().raycastTarget = true;
         fishipediaButton.GetComponent<Image>().raycastTarget = true;
@@ -146,6 +143,10 @@ public class HUDController : PlayerSystem
         settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.2f);
         quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.3f);
         menuSeaEffect.DOAnchorPos(new Vector3(0,-1100,0),0.8f).SetEase(Ease.OutQuint);
+        resumeButton.GetComponent<Button>().interactable = false;
+        fishipediaButton.GetComponent<Button>().interactable = false;
+        settingButton.GetComponent<Button>().interactable = false;
+        quitButton.GetComponent<Button>().interactable = false;
     }
     private void UpdateRadialProgress()
     {
@@ -205,21 +206,21 @@ public class HUDController : PlayerSystem
         if (player.inspecting == true || player.CardOpened == true) return;
         if (isPageOpen)
         {
-            player.menuOpen = true;
+            player.isActive = true;
             isPageOpen = false;
             CloseUI();
         }
         else
         {
-            if (!player.menuOpen)
+            if (!player.isActive)
             {
-                player.menuOpen = true;
+                player.isActive = true;
                 MenuOpenAnimation();
                 _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
             }
             else
             {
-                player.menuOpen = false;
+                player.isActive = false;
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);
@@ -233,21 +234,21 @@ public class HUDController : PlayerSystem
         if (player.inspecting == true || player.CardOpened == true) return;
         if (isPageOpen)
         {
-            player.menuOpen = true;
+            player.isActive = true;
             isPageOpen = false;
             CloseUI();
         }
         else
         {
-            if (!player.menuOpen)
+            if (!player.isActive)
             {
-                player.menuOpen = true;
+                player.isActive = true;
                 MenuOpenAnimation();
                 _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
             }
             else
             {
-                player.menuOpen = false;
+                player.isActive = false;
                 MenuCloseAnimation();
                 MenuDebounce = true;
                 Invoke("ResetMenuState", 0.5f);

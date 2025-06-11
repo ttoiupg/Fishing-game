@@ -173,7 +173,7 @@ public class FishingController : PlayerSystem
     public override void Awake()
     {
         player = transform.root.GetComponent<Player>();
-        playerInput = new PlayerInputActions();
+        playerInput = new DefaultInputActions();
         SetUpTimers();
     }
 

@@ -11,13 +11,17 @@ public class LocomotionState : BaseState
         player.PlayerInputs.Fishing.Enable();
         player.PlayerInputs.UI.Enable();
         player.PlayerInputs.Fishing.CastFishingRod.performed += player.fishingController.HandleInput;
-        player.PlayerInputs.UI.OpenMenu.performed += player.hudController.SwitchMenu;
+        player.PlayerInputs.UI.Menu.performed += player.hudController.SwitchMenu;
+        player.PlayerInputs.Player.Interact.started += player.InteractInput;
+        player.PlayerInputs.Player.Interact.canceled += player.InteractInput;
     }
     public override void OnExit()
     {
         //Debug.Log("exit locomotion state");
         player.PlayerInputs.Fishing.CastFishingRod.performed -= player.fishingController.HandleInput;
-        player.PlayerInputs.UI.OpenMenu.performed -= player.hudController.SwitchMenu;
+        player.PlayerInputs.UI.Menu.performed -= player.hudController.SwitchMenu;
+        player.PlayerInputs.Player.Interact.started -= player.InteractInput;
+        player.PlayerInputs.Player.Interact.canceled -= player.InteractInput;
     }
     public override void Update()
     {

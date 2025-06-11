@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using JetBrains.Annotations;
 using TMPro;
 using Unity.Burst.Intrinsics;
 using Unity.Mathematics;
@@ -33,6 +34,7 @@ public class FishipediaCardController : MonoBehaviour
 
     public bool isOpen = false;
     private EventSystem _eventSystem;
+    private bool _debounce = false;
 
     private void Awake()
     {
@@ -53,7 +55,7 @@ public class FishipediaCardController : MonoBehaviour
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
-    public IEnumerator OpenCard(BaseFish fish)
+    private IEnumerator OpenCard(BaseFish fish)
     {
         SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.characterTransform, 0.8f);
         player.CardOpened = true;
@@ -86,13 +88,13 @@ public class FishipediaCardController : MonoBehaviour
         Front.material = new Material(material);
         yield return new WaitForSeconds(0.5f);
         isOpen = true;
+        _debounce = false;
     }
-    public IEnumerator OpenCard(Fish fish)
+    private IEnumerator OpenCard(Fish fish)
     {
         SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.characterTransform, 0.8f);
         player.CardOpened = true;
         shadow.SetActive(true);
-
         cardTransform.rotation = Quaternion.Euler(0, 180, 0);
         cardTransform.DORotate(new Vector3(0, 0, 0), .5f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
@@ -112,22 +114,50 @@ public class FishipediaCardController : MonoBehaviour
         Front.material = new Material(material);
         yield return new WaitForSeconds(0.5f);
         isOpen = true;
-        _eventSystem.SetSelectedGameObject(shadow);
+        _debounce = false;
     }
-    public void CloseCard()
+
+    public void CloseCard([CanBeNull] GameObject displayer)
     {
         SoundFXManger.Instance.PlaySoundFXClip(CardClose, player.characterTransform, 0.8f);
         player.CardOpened = false;
         isOpen = false;
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint).SetDelay(0.1f);
+        if (displayer != null)
+        {
+            _eventSystem.SetSelectedGameObject(displayer);
+        }
+        shadow.SetActive(false);
     }
-    public void toggleCard(Fish fish)
+    public void toggleCard(Fish fish,GameObject iconDisplayer)
     {
+        if (_debounce)
+        {
+            return;
+        }
+        _debounce = true;
         if (isOpen)
         {
-            Debug.Log("Close");
-            CloseCard();
+            CloseCard(iconDisplayer);
+            _debounce = false;
+        }
+        else
+        {
+            StartCoroutine(OpenCard(fish));
+        }
+    }
+    public void toggleCard(BaseFish fish,GameObject displayer)
+    {
+        if (_debounce)
+        {
+            return;
+        }
+        _debounce = true;
+        if (isOpen)
+        {
+            CloseCard(displayer);
+            _debounce = false;
         }
         else
         {

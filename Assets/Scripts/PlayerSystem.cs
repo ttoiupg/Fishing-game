@@ -7,11 +7,11 @@ using UnityEngine.InputSystem;
 public abstract class PlayerSystem : MonoBehaviour
 {
     protected Player player;
-    protected PlayerInputActions playerInput;
+    protected DefaultInputActions playerInput;
 
     public virtual void Awake()
     {
         player = transform.root.GetComponent<Player>();
-        playerInput = new PlayerInputActions();
+        playerInput = new DefaultInputActions();
     }
 }

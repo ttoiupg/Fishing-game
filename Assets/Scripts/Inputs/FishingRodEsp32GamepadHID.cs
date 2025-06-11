@@ -36,7 +36,7 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
     [FieldOffset(1)] public byte leftStickX;
     [FieldOffset(2)] public byte leftStickY;
 
-    [InputControl(name = "button_1", displayName = "buttonSouth", bit = 5)]
+    [InputControl(name = "buttonSouth", displayName = "buttonSouth", bit = 5)]
     [FieldOffset(5)] public byte buttons1;
     [FieldOffset(30)] public byte batteryLevel;
 }

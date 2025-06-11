@@ -39,7 +39,6 @@ public class FishipediaHandler : MonoBehaviour
         {
             FishipediaIconDisplayer icon = Instantiate(fishipediaDisplayIcon, Categories[0]).GetComponent<FishipediaIconDisplayer>();
             icon.fish = baseFish;
-            icon.cardController = cardController;
             icon.player = player;
             icon.enabled = true;
             icon.Init();

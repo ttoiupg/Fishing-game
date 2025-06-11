@@ -10,7 +10,6 @@ public class FishipediaIconDisplayer : MonoBehaviour
     public Player player;
     public BaseFish fish;
     public Image Icon;
-    public FishipediaCardController cardController;
     private void OnEnable()
     {
         player.ID.playerEvents.OnFishUnlocked += Refresh;
@@ -34,6 +33,6 @@ public class FishipediaIconDisplayer : MonoBehaviour
     }
     public void Clicked()
     {
-        StartCoroutine(cardController.OpenCard(fish));
+        FishipediaCardController.instance.toggleCard(fish,gameObject);
     }
 }
