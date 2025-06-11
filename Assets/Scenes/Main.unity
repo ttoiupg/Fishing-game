@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: 106857241}
   - component: {fileID: 106857240}
   - component: {fileID: 106857239}
+  - component: {fileID: 106857243}
   m_Layer: 5
   m_Name: Shadow
   m_TagString: Untagged
@@ -897,6 +898,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1820, y: 980}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &106857243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106857238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd949bebc99427d99df3eaae8aa4fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 2035986722}
+  lastSelectedElement: {fileID: 0}
 --- !u!1 &115405317
 GameObject:
   m_ObjectHideFlags: 0
@@ -3253,7 +3268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -265495.66, y: 292.305}
+  m_AnchoredPosition: {x: -355529.8, y: 292.305}
   m_SizeDelta: {x: 3128.0005, y: 584.61}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &337818280
@@ -33915,7 +33930,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -310311.28, y: 206206.34}
+  m_AnchoredPosition: {x: -417958.06, y: 275372.3}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1336885457
@@ -42156,6 +42171,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3a5d955c-0b2d-4c25-bde5-4665e4e03bbd
     m_ActionName: 'Player/Interact[/Keyboard/e,/XInputControllerWindows/buttonWest]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 56f34ddb-c0ec-45c5-b4f5-f4b62aaad29d
+    m_ActionName: 'UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

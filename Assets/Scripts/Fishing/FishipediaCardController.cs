@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class FishipediaCardController : MonoBehaviour
 {
@@ -30,6 +32,7 @@ public class FishipediaCardController : MonoBehaviour
     public float y_RotateAmount;
 
     public bool isOpen = false;
+    private EventSystem _eventSystem;
 
     private void Awake()
     {
@@ -42,6 +45,7 @@ public class FishipediaCardController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _eventSystem = EventSystem.current;
         cardTransform = GetComponent<Transform>();
         Debug.Log("started");
     }
@@ -88,18 +92,19 @@ public class FishipediaCardController : MonoBehaviour
         SoundFXManger.Instance.PlaySoundFXClip(CardOpen, player.characterTransform, 0.8f);
         player.CardOpened = true;
         shadow.SetActive(true);
-        cardTransform.rotation = Quaternion.Euler(0,180,0);
-        cardTransform.DORotate(new Vector3(0,0,0),.5f).SetEase(Ease.OutBack);
+
+        cardTransform.rotation = Quaternion.Euler(0, 180, 0);
+        cardTransform.DORotate(new Vector3(0, 0, 0), .5f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         Front.sprite = fish.fishType.Card;
         Art.sprite = fish.fishType.Art;
         DiscoveredFish discoveredFish;
-        if (player.discoveredFish.TryGetValue(fish.fishType.id,out discoveredFish))
+        if (player.discoveredFish.TryGetValue(fish.fishType.id, out discoveredFish))
         {
             Art.color = Color.white;
             Fishname.text = fish.fishType.name;
             Rarity.text = fish.fishType.Rarity.name;
-            FavoriteFood.text = "Mutation : "+fish.mutation.name;
+            FavoriteFood.text = "Mutation : " + fish.mutation.name;
             Weight.text = fish.weight.ToString() + " KG";
             DiscoverDate.text = "Discover date : " + discoveredFish.discoverDate;
         }
@@ -107,6 +112,7 @@ public class FishipediaCardController : MonoBehaviour
         Front.material = new Material(material);
         yield return new WaitForSeconds(0.5f);
         isOpen = true;
+        _eventSystem.SetSelectedGameObject(shadow);
     }
     public void CloseCard()
     {
@@ -116,19 +122,31 @@ public class FishipediaCardController : MonoBehaviour
         cardTransform.DORotate(new Vector3(0, 180, 0), .4f).SetEase(Ease.OutBack);
         cardTransform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.OutQuint).SetDelay(0.1f);
     }
+    public void toggleCard(Fish fish)
+    {
+        if (isOpen)
+        {
+            Debug.Log("Close");
+            CloseCard();
+        }
+        else
+        {
+            StartCoroutine(OpenCard(fish));
+        }
+    }
     void Update()
     {
-        if (isOpen == true)
+        if (isOpen == true && Gamepad.all.Count == 0)
         {
             int screenWidth = Screen.width;
             int screenHeight = Screen.height;
             Vector2 mousePos = Input.mousePosition;
-            Vector2 screenCenter = new Vector2(screenWidth/2,screenHeight/2);
-            Vector2 Converted = new Vector2((mousePos.x-screenCenter.x)/(screenWidth/2), (mousePos.y-screenCenter.y)/(screenHeight/2));
-            float xAngle = -Converted.x*x_RotateAmount;
-            float yAngle = Converted.y*y_RotateAmount;
+            Vector2 screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
+            Vector2 Converted = new Vector2((mousePos.x - screenCenter.x) / (screenWidth / 2), (mousePos.y - screenCenter.y) / (screenHeight / 2));
+            float xAngle = -Converted.x * x_RotateAmount;
+            float yAngle = Converted.y * y_RotateAmount;
             cardTransform.rotation = Quaternion.Euler(yAngle, xAngle, 0f);
-            Front.material.SetVector("_Rotation",new Vector2(Remap(xAngle,-20,20,-0.5f,0.5f), Remap(yAngle,-20,20,-0.5f,0.5f)));
+            Front.material.SetVector("_Rotation", new Vector2(Remap(xAngle, -20, 20, -0.5f, 0.5f), Remap(yAngle, -20, 20, -0.5f, 0.5f)));
         }
     }
 }
