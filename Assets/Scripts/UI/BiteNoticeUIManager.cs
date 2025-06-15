@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class BiteNoticeUIManager : MonoBehaviour
 {
-    private Animator _animator;
-    private readonly int _start = Animator.StringToHash("Start");
+    private Animation _animation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _animator = GetComponent<Animator>();
+        _animation = GetComponent<Animation>();
     }
 
     public void StartAnimation()
     {
-        _animator.SetTrigger(_start);
+        _animation.Play();
     }
 }
