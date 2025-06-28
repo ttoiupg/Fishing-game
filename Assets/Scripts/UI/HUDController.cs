@@ -8,6 +8,10 @@ using Unity.VisualScripting;
 using UnityEngine.UI;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.PostProcessing;
+using DepthOfField = UnityEngine.Rendering.Universal.DepthOfField;
+
 public class HUDController : PlayerSystem
 {
     int prevLevel = 0;
@@ -46,7 +50,7 @@ public class HUDController : PlayerSystem
     public RectTransform fishipediaButton;
     public RectTransform settingButton;
     public RectTransform quitButton;
-    public RectTransform menuSeaEffect;
+    public Volume globalVolume;
     public bool isPageOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
@@ -121,8 +125,8 @@ public class HUDController : PlayerSystem
         fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
-        menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
-       
+        //menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
+        globalVolume.weight = 0;
     }
 
     public void OldMenuOpenAnimation()
@@ -142,11 +146,12 @@ public class HUDController : PlayerSystem
         fishipediaButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.1f);
         settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.2f);
         quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.3f);
-        menuSeaEffect.DOAnchorPos(new Vector3(0,-1100,0),0.8f).SetEase(Ease.OutQuint);
+        //menuSeaEffect.DOAnchorPos(new Vector3(0,-1100,0),0.8f).SetEase(Ease.OutQuint);
         resumeButton.GetComponent<Button>().interactable = false;
         fishipediaButton.GetComponent<Button>().interactable = false;
         settingButton.GetComponent<Button>().interactable = false;
         quitButton.GetComponent<Button>().interactable = false;
+        globalVolume.weight = 1;
     }
     private void UpdateRadialProgress()
     {
