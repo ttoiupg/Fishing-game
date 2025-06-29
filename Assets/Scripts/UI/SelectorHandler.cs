@@ -35,9 +35,10 @@ public class SelectorHandler : MonoBehaviour
             selector.rotation = Quaternion.Lerp(selector.rotation, _selectTransform.rotation, speed * Time.deltaTime);
             selector.sizeDelta = Vector3.Lerp(selector.sizeDelta, size, speed * Time.deltaTime);
             selector.localScale = Vector3.Lerp(selector.localScale, _selectTransform.localScale, speed * Time.deltaTime);
-        }else
+        }
+        else
         {
-          selector.gameObject.SetActive(false);  
+            selector.gameObject.SetActive(false);
         }
     }
 }

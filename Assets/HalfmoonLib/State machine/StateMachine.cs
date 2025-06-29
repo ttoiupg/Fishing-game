@@ -27,7 +27,7 @@ namespace Halfmoon.StateMachine
             current = nodes[state.GetType()];
             current.State?.OnEnter();
         }
-        void ChangeState(IState state)
+        public void ChangeState(IState state)
         {
             if (state == current.State) return;
 
