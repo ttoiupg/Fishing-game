@@ -1,11 +1,15 @@
+using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PauseViewModel : MonoBehaviour, IViewFrame
 {
+    public static PauseViewModel Instance { get; private set; }
     public GameObject menuContainer;
     public AudioClip OpenSound;
     public AudioClip CloseSound;
@@ -22,11 +26,33 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     public bool MenuDebounce = false;
     private Player _player;
     private EventSystem _eventSystem;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        _eventSystem = EventSystem.current;
+    }
+
     void Start()
     {
         _player = FindAnyObjectByType<Player>();
     }
 
+    public void Trigger(InputAction.CallbackContext context)
+    {
+        if (MenuDebounce) return;
+        MenuDebounce = true;
+        ViewManager.instance.OpenView(this);
+        HandleDebounce();
+    }
+    private async UniTask HandleDebounce()
+    {
+        await UniTask.WaitForSeconds(0.25f);
+        MenuDebounce = false;
+    }
     public void MenuOpenAnimation()
     {
         resumeButton.GetComponent<Button>().interactable = true;
@@ -39,9 +65,9 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         settingButton.GetComponent<Image>().raycastTarget = true;
         quitButton.GetComponent<Image>().raycastTarget = true;
         resumeButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
-        fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
-        settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
-        quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
+        fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.06f);
+        settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.12f);
+        quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.18f);
         globalVolume.weight = 0;
     }
     public void MenuCloseAnimation()
@@ -53,21 +79,22 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         settingButton.GetComponent<Image>().raycastTarget = false;
         quitButton.GetComponent<Image>().raycastTarget = false;
         resumeButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-        fishipediaButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.1f);
-        settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.2f);
-        quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.3f);
+        fishipediaButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.06f);
+        settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.12f);
+        quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.18f);
         resumeButton.GetComponent<Button>().interactable = false;
         fishipediaButton.GetComponent<Button>().interactable = false;
         settingButton.GetComponent<Button>().interactable = false;
         quitButton.GetComponent<Button>().interactable = false;
         globalVolume.weight = 1;
     }
-    public void begin()
+    public void Begin()
     {
-
+        MenuOpenAnimation();
+        _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
     }
     public void End()
     {
-
+        MenuCloseAnimation();
     }
 }

@@ -10,13 +10,13 @@ public class InactiveState : BaseState
     public override void OnEnter()
     {
         player.PlayerInputs.UI.Enable();
-        player.PlayerInputs.UI.Menu.performed += player.hudController.SwitchMenu;
+        player.PlayerInputs.UI.Pause.performed += PauseViewModel.Instance.Trigger;
         Debug.Log("enter menu open state");
     }
 
     public override void OnExit()
     {
-        player.PlayerInputs.UI.Menu.performed -= player.hudController.SwitchMenu;
+        player.PlayerInputs.UI.Pause.performed -= PauseViewModel.Instance.Trigger;
         Debug.Log("exit menu open state");
     }
 }

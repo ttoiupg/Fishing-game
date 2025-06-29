@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6824022531364018625}
   - component: {fileID: 4433920136305792564}
   - component: {fileID: 9107682250184710684}
+  - component: {fileID: 6955427642266292988}
   m_Layer: 5
   m_Name: FishipediaDisplayIcon
   m_TagString: Untagged
@@ -149,6 +150,19 @@ MonoBehaviour:
   player: {fileID: 0}
   fish: {fileID: 0}
   Icon: {fileID: 7441172943565477083}
+--- !u!114 &6955427642266292988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554398549753091696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3743b110434cbaae05ca5816dfddbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 0}
 --- !u!1 &5005757381038453229
 GameObject:
   m_ObjectHideFlags: 0

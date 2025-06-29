@@ -117,8 +117,8 @@ public class Player : MonoBehaviour, IDataPersistence
         
         //add transition
         At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
-        At(locomotionState, inactiveState, new FuncPredicate(() => isActive == true));
-        At(inactiveState, locomotionState, new FuncPredicate(() => isActive == false));
+        At(locomotionState, inactiveState, new FuncPredicate(() => isActive == false));
+        At(inactiveState, locomotionState, new FuncPredicate(() => isActive == true));
         At(fishingState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
         At(fishingState, fishingBoostState, new FuncPredicate(() => fishingController.fishOnBait));
         At(fishingBoostState, fishingReelState, new FuncPredicate(() => fishingController.boostApplied));

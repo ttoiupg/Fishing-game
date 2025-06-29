@@ -3,6 +3,6 @@ using Halfmoon.StateMachine;
 
 public interface IViewFrame
 {
-    void begin();
+    void Begin();
     void End();
 }

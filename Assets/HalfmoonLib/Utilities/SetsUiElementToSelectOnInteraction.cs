@@ -24,7 +24,10 @@ namespace Halfmoon
             Gizmos.color = navigationColor;
             Gizmos.DrawLine(gameObject.transform.position, elementToSelect.gameObject.transform.position);
         }
-
+        private void Start()
+        {
+            eventSystem = EventSystem.current;
+        }
         private void Reset()
         {
             eventSystem = EventSystem.current;
