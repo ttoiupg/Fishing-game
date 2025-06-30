@@ -23,6 +23,7 @@ public class FishCardHandler : MonoBehaviour
     public Transform cardTransform;
     public GameObject cardOverlay;
     public GameObject shadow;
+    public GameObject closeButton;
     public SpriteRenderer Front;
     public SpriteRenderer Art;
     public TextMeshPro Fishname;
@@ -36,6 +37,7 @@ public class FishCardHandler : MonoBehaviour
 
     public bool isOpen = false;
     private EventSystem _eventSystem;
+    private GameObject _triggerObject;
     [SerializeField]private bool _debounce = false;
 
     private void Awake()
@@ -92,7 +94,7 @@ public class FishCardHandler : MonoBehaviour
         }
         material.SetFloat("_EDITION", fish.FishipediaCardShader);
         Front.material = new Material(material);
-        //_eventSystem.SetSelectedGameObject(shadow);
+        _eventSystem.SetSelectedGameObject(closeButton);
         await UniTask.WaitForSeconds(0.5f);
         isOpen = true;
         _debounce = false;
@@ -122,7 +124,7 @@ public class FishCardHandler : MonoBehaviour
         }
         material.SetFloat("_EDITION", fish.fishType.FishipediaCardShader);
         Front.material = new Material(material);
-        //_eventSystem.SetSelectedGameObject(shadow);
+        _eventSystem.SetSelectedGameObject(closeButton);
         await UniTask.WaitForSeconds(0.5f);
         isOpen = true;
         _debounce = false;
@@ -140,6 +142,10 @@ public class FishCardHandler : MonoBehaviour
         cardOverlay.SetActive(false);
         shadow.SetActive(false);
         _debounce = false;
+        if (_triggerObject != null)
+        {
+            _eventSystem.SetSelectedGameObject(_triggerObject);
+        }
     }
     public void toggleCard(Fish fish,GameObject iconDisplayer)
     {
@@ -147,11 +153,11 @@ public class FishCardHandler : MonoBehaviour
         if (isOpen)
         {
             CloseCard();
-            _eventSystem.SetSelectedGameObject(iconDisplayer);
         }
         else
         {
             OpenCard(fish);
+            _triggerObject = iconDisplayer;
         }
     }
     public void toggleCard(BaseFish fish,GameObject displayer)
@@ -160,11 +166,11 @@ public class FishCardHandler : MonoBehaviour
         if (isOpen)
         {
             CloseCard();
-            _eventSystem.SetSelectedGameObject(displayer);
         }
         else
         {
             OpenCard(fish);
+            _triggerObject = displayer;
         }
     }
     void Update()

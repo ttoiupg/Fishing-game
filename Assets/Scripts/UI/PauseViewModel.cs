@@ -20,7 +20,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     public RectTransform fishipediaButton;
     public RectTransform settingButton;
     public RectTransform quitButton;
-    public Volume globalVolume;
+    public DofController dofController;
     public bool isPageOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
@@ -39,6 +39,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     void Start()
     {
         _player = FindAnyObjectByType<Player>();
+        dofController = FindAnyObjectByType<DofController>();
     }
 
     public void Trigger(InputAction.CallbackContext context)
@@ -68,7 +69,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.06f);
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.12f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.18f);
-        globalVolume.weight = 0;
+        dofController.SetFocusDistance(0.1f);
     }
     public void MenuCloseAnimation()
     {
@@ -86,7 +87,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         fishipediaButton.GetComponent<Button>().interactable = false;
         settingButton.GetComponent<Button>().interactable = false;
         quitButton.GetComponent<Button>().interactable = false;
-        globalVolume.weight = 1;
+        dofController.SetFocusDistance(2f);
     }
     public void Begin()
     {

@@ -1,10 +1,7 @@
-using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEngine.UI;
 using System.Linq;
-using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
 public class FishipediaViewModel : MonoBehaviour, IViewFrame
@@ -20,8 +17,7 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
     public List<RectTransform> Labels = new List<RectTransform>();
     public int CurrentCategory;
     public List<RectTransform> Categories = new List<RectTransform>();
-    public Volume globalVolume;
-
+    public DofController dofController;
     public void CategorySelected(int number)
     {
         CurrentCategory = number;
@@ -53,13 +49,14 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
             icon.enabled = true;
             icon.Init();
         }
+        dofController = FindAnyObjectByType<DofController>();
     }
 
     public void OpenUI()
     {
         SoundFXManger.Instance.PlaySoundFXClip(openSound, player.characterTransform, 1f);
         mainFrame.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-        globalVolume.weight = 0;
+        dofController.SetFocusDistance(0.1f);
     }
 
     public void CloseUI()
@@ -67,7 +64,7 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
         FishCardHandler.instance.CloseCard();
         SoundFXManger.Instance.PlaySoundFXClip(closeSound, player.characterTransform, 1f);
         mainFrame.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-        globalVolume.weight = 1;
+        dofController.SetFocusDistance(2f);
     }
 
     public void Begin()

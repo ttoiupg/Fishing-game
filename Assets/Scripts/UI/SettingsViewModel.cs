@@ -9,13 +9,13 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
 {
     public Slider volumeSlider;
     public RectTransform mainFrame;
-    private Volume _globalVolume;
+    public  DofController dofController;
     private Player _player;
     public void Start()
     {
         _player = GameManager.Instance.player;
         volumeSlider.value = PlayerPrefs.GetFloat("Volume");
-        _globalVolume = FindAnyObjectByType<Volume>();
+        dofController = FindAnyObjectByType<DofController>();
     }
 
     public void UpdateMainMixerVolume()
@@ -27,15 +27,14 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultOpenSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(true);
-        _globalVolume.weight = 0;
+        dofController.SetFocusDistance(0.1f);
     }
 
     public void CloseUI()
     {
-        FishCardHandler.instance.CloseCard();
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultCloseSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(false);
-        _globalVolume.weight = 1;
+        dofController.SetFocusDistance(2f);
     }
     public void Begin()
     {
