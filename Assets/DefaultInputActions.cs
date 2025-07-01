@@ -766,6 +766,24 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""9184a56d-6771-4a96-a482-a3722fb52a9b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""9221fd74-f346-4b0d-bf4e-be8f4ff1124d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1120,6 +1138,50 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c0f27f5-4fc4-4dc9-8d09-d23113e8f58a"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e9fb308-484b-4c99-b2df-4225a29a630b"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""182ae6dd-a136-41fe-9d7a-538cc02f391d"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44ba38a7-e579-4daa-8d82-81107e42334b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1215,6 +1277,8 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_Navigations = m_UI.FindAction("Navigations", throwIfNotFound: true);
+        m_UI_LeftSwitch = m_UI.FindAction("LeftSwitch", throwIfNotFound: true);
+        m_UI_RightSwitch = m_UI.FindAction("RightSwitch", throwIfNotFound: true);
     }
 
     ~@DefaultInputActions()
@@ -1599,6 +1663,8 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Pause;
     private readonly InputAction m_UI_Navigations;
+    private readonly InputAction m_UI_LeftSwitch;
+    private readonly InputAction m_UI_RightSwitch;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1654,6 +1720,14 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/Navigations".
         /// </summary>
         public InputAction @Navigations => m_Wrapper.m_UI_Navigations;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/LeftSwitch".
+        /// </summary>
+        public InputAction @LeftSwitch => m_Wrapper.m_UI_LeftSwitch;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/RightSwitch".
+        /// </summary>
+        public InputAction @RightSwitch => m_Wrapper.m_UI_RightSwitch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1713,6 +1787,12 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Navigations.started += instance.OnNavigations;
             @Navigations.performed += instance.OnNavigations;
             @Navigations.canceled += instance.OnNavigations;
+            @LeftSwitch.started += instance.OnLeftSwitch;
+            @LeftSwitch.performed += instance.OnLeftSwitch;
+            @LeftSwitch.canceled += instance.OnLeftSwitch;
+            @RightSwitch.started += instance.OnRightSwitch;
+            @RightSwitch.performed += instance.OnRightSwitch;
+            @RightSwitch.canceled += instance.OnRightSwitch;
         }
 
         /// <summary>
@@ -1757,6 +1837,12 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Navigations.started -= instance.OnNavigations;
             @Navigations.performed -= instance.OnNavigations;
             @Navigations.canceled -= instance.OnNavigations;
+            @LeftSwitch.started -= instance.OnLeftSwitch;
+            @LeftSwitch.performed -= instance.OnLeftSwitch;
+            @LeftSwitch.canceled -= instance.OnLeftSwitch;
+            @RightSwitch.started -= instance.OnRightSwitch;
+            @RightSwitch.performed -= instance.OnRightSwitch;
+            @RightSwitch.canceled -= instance.OnRightSwitch;
         }
 
         /// <summary>
@@ -2032,5 +2118,19 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNavigations(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftSwitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftSwitch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightSwitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightSwitch(InputAction.CallbackContext context);
     }
 }
