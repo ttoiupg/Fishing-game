@@ -12,11 +12,8 @@ public class FishipediaIconDisplayer : MonoBehaviour
     public Image Icon;
     private void OnEnable()
     {
-        player.ID.playerEvents.OnFishUnlocked += Refresh;
-    }
-    private void OnDisable()
-    {
-        player.ID.playerEvents.OnFishUnlocked -= Refresh;
+        Debug.Log("start icon");
+        Refresh(fish);
     }
     public void Init()
     {

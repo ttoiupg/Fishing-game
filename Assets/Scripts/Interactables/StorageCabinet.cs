@@ -1,6 +1,5 @@
 using UnityEngine;
 using Halfmoon.Utilities;
-using System.ComponentModel.Design;
 using UnityEngine.Events;
 
 public class StorageCabinet : MonoBehaviour, IInteractable

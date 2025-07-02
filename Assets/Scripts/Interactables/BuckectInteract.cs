@@ -1,8 +1,8 @@
+﻿using Halfmoon.Utilities;
 using UnityEngine;
-using Halfmoon.Utilities;
 using UnityEngine.Events;
 
-public class TestBox : MonoBehaviour, IInteractable
+public class BuckectInteract : MonoBehaviour, IInteractable
 {
     [SerializeField] private string _prompt;
     [SerializeField] private bool _isInstant;
@@ -18,6 +18,7 @@ public class TestBox : MonoBehaviour, IInteractable
     {
         return player.CanInteract;
     }
+
     public void InteractionProgressing(Player player, float p)
     {
         Debug.Log(p+"%");

@@ -47,12 +47,6 @@ public class SelectorHandler : MonoBehaviour
             {
                 _selected = _eventSystem.currentSelectedGameObject;
                 _selectTransform = _selected.GetComponent<RectTransform>();
-                // if (!_debounce)
-                // {
-                //     _debounce = true;
-                //     SoundFXManger.Instance.PlaySoundFXClip(moveSound,GameManager.Instance.player.transform,0.5f);
-                //     HandleDebounce();
-                // }
             }
             selector.gameObject.SetActive(true);
             var size = _selectTransform.sizeDelta + offset;

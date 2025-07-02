@@ -1,7 +1,5 @@
 using DG.Tweening;
-using UnityEditor.Tilemaps;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class BoostCanvaManager : PlayerSystem

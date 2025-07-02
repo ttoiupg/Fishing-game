@@ -187,5 +187,18 @@ public class FishCardHandler : MonoBehaviour
             cardTransform.rotation = Quaternion.Euler(yAngle, xAngle, 0f);
             Front.material.SetVector("_Rotation", new Vector2(Remap(xAngle, -20, 20, -0.5f, 0.5f), Remap(yAngle, -20, 20, -0.5f, 0.5f)));
         }
+        else
+        {
+            int screenWidth = Screen.width;
+            int screenHeight = Screen.height;
+            Vector2 lookPos = player.PlayerInputs.Player.Look.ReadValue<Vector2>();
+            Vector2 screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
+            Vector2 inputPos = new Vector2(screenCenter.x + screenWidth/2*lookPos.x, screenCenter.y + screenHeight/2*lookPos.y);
+            Vector2 Converted = new Vector2((inputPos.x - screenCenter.x) / (screenWidth / 2), (inputPos.y - screenCenter.y) / (screenHeight / 2));
+            float xAngle = -Converted.x * x_RotateAmount;
+            float yAngle = Converted.y * y_RotateAmount;
+            cardTransform.rotation = Quaternion.Euler(yAngle, xAngle, 0f);
+            Front.material.SetVector("_Rotation", new Vector2(Remap(xAngle, -20, 20, -0.5f, 0.5f), Remap(yAngle, -20, 20, -0.5f, 0.5f)));
+        }
     }
 }

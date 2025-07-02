@@ -7,9 +7,10 @@ public class TideCodexCategory : MonoBehaviour
 {
     [Header("Setup")]
     public TideCodexViewModel codex;
-    public GameObject mainView;
+    public GameObject[] containers;
     public List<GameObject> tabs = new List<GameObject>();
     public List<Image> tabButtons = new List<Image>();
+    public List<Button> icons = new List<Button>();
     [Header("Sprite")]
     public Sprite normalSprite;
     public Sprite selectedSprite;
@@ -44,6 +45,7 @@ public class TideCodexCategory : MonoBehaviour
     }
     public void SwitchToTab(int index)
     {
+        Debug.Log(gameObject.name + " switch to " + index);
         SwitchEffect(index);
     }
 }

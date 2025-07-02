@@ -319,17 +319,6 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8c8e490b-c610-4785-884f-f04217b23ca4"",
-                    ""path"": ""<Pointer>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3e5f5442-8668-4b27-a940-df99bad7e831"",
                     ""path"": ""<Joystick>/{Hatswitch}"",
                     ""interactions"": """",
@@ -991,7 +980,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
+                    ""groups"": "";Gamepad;Joystick"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1002,7 +991,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad;Joystick"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1013,7 +1002,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad;Joystick"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1024,7 +1013,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad;Joystick"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1046,7 +1035,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1057,7 +1046,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1068,7 +1057,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1079,7 +1068,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true

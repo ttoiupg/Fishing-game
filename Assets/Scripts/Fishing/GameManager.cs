@@ -160,7 +160,8 @@ public class GameManager : MonoBehaviour
             var discoveredFish =
                 new DiscoveredFish(FishEnemy.fish.fishType, System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             player.discoveredFish.Add(discoveredFish.baseFish.id, discoveredFish);
-            player.ID.playerEvents.OnFishUnlocked.Invoke(FishEnemy.fish.fishType);
+            Debug.Log($"playerEvents: {player.ID.playerEvents.OnFishUnlocked}");
+            player.ID.playerEvents.OnFishUnlocked?.Invoke(discoveredFish.baseFish);
         }
         else
         {

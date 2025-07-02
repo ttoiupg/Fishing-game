@@ -13,11 +13,15 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
     public AudioClip closeSound;
     public GameConfiguration gameConfiguration;
     public GameObject fishipediaDisplayIcon;
-    [FormerlySerializedAs("cardController")] public FishCardHandler cardHandler;
+
+    [FormerlySerializedAs("cardController")]
+    public FishCardHandler cardHandler;
+
     public List<RectTransform> Labels = new List<RectTransform>();
     public int CurrentCategory;
     public List<RectTransform> Categories = new List<RectTransform>();
     public DofController dofController;
+
     public void CategorySelected(int number)
     {
         CurrentCategory = number;
@@ -49,6 +53,7 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
             icon.enabled = true;
             icon.Init();
         }
+
         dofController = FindAnyObjectByType<DofController>();
     }
 

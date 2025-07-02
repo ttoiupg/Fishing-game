@@ -71,8 +71,8 @@ public class ViewManager : MonoBehaviour
 
     public void BackToPreviousView()
     {
-        currentViewFrame.End();
-        lastViewFrame.Begin();
+        currentViewFrame?.End();
+        lastViewFrame?.Begin();
         (lastViewFrame, currentViewFrame) = (currentViewFrame, lastViewFrame);
     }
     // void Update()
