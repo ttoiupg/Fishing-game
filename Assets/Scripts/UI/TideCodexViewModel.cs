@@ -184,7 +184,7 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
         FishCardHandler.instance.CloseCard();
         SoundFXManger.Instance.PlaySoundFXClip(closeSound, player.characterTransform, 1f);
         codex.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-        dofController.SetFocusDistance(2f);
+        dofController.SetFocusDistance(4.05f);
         await UniTask.WaitForSeconds(0.15f);
         mainFrame.gameObject.SetActive(false);
     }

@@ -69,7 +69,7 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
         FishCardHandler.instance.CloseCard();
         SoundFXManger.Instance.PlaySoundFXClip(closeSound, player.characterTransform, 1f);
         mainFrame.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-        dofController.SetFocusDistance(2f);
+        dofController.SetFocusDistance(4.05f);
     }
 
     public void Begin()

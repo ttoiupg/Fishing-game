@@ -34,7 +34,7 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultCloseSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(false);
-        dofController.SetFocusDistance(2f);
+        dofController.SetFocusDistance(4.05f);
     }
     public void Begin()
     {

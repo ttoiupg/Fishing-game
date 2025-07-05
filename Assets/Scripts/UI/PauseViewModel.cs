@@ -87,7 +87,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         fishipediaButton.GetComponent<Button>().interactable = false;
         settingButton.GetComponent<Button>().interactable = false;
         quitButton.GetComponent<Button>().interactable = false;
-        dofController.SetFocusDistance(2f);
+        dofController.SetFocusDistance(4.05f);
     }
     public void Begin()
     {
