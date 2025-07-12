@@ -16,8 +16,9 @@ Material:
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -85,9 +86,11 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _Ambient: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -100,9 +103,11 @@ Material:
     - _EnvironmentReflections: 1
     - _FoamAmount: 34
     - _FoamCutoff: 1.1
+    - _FoamDistance: 1
     - _FoamHeight: 0
     - _FoamScale: 0.00005
     - _FoamSpeed: 56.3
+    - _FoamStrength: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -125,7 +130,11 @@ Material:
     - _WaveSpeed: 1
     - _WaveStrength: 0.000005
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 0
+    - _smoothness: 0
+    - _strength: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -133,6 +142,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Spect_color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
     - _SurfaceColor: {r: 0, g: 1.6792452, b: 0.57451326, a: 0.8235294}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
