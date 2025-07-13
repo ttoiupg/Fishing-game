@@ -13,6 +13,7 @@ public class BucketGoddessController : MonoBehaviour
 
     public void TriggerGoddess()
     {
+        goddessRenderObject.SetActive(true);
         animator.enabled = true;
     }
 }

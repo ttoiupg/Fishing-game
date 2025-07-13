@@ -39,8 +39,6 @@ public class HUDController : PlayerSystem
     public TextMeshProUGUI lootNameText;
     public TextMeshProUGUI lootDesciptionText;
     public TextMeshProUGUI lootValueText;
-    [Header("Fishipedia")]
-    public RectTransform fishipediaPage;
     [Header("Interaction prompt")]
     public RectTransform interactionPrompt;
     public Image promptImage;
@@ -52,6 +50,16 @@ public class HUDController : PlayerSystem
     [SerializeField] private AudioClip popUpSound;
     [SerializeField] private AudioClip hideSound;
     private EventSystem _eventSystem;
+    public static HUDController instance;
+
+    public override void Awake()
+    {
+        base.Awake();
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -87,48 +95,6 @@ public class HUDController : PlayerSystem
         lootTag.DOShakeAnchorPos(0.5f,50,100,90).SetDelay(0.15f);
         lootTag.DOScale(Vector3.zero, 0.1f).SetEase(Ease.OutQuint).SetDelay(3f);
     }
-    // private void ResetMenuState()
-    // {
-    //     MenuDebounce = false;
-    // }
-    // public void MenuOpenAnimation()
-    // {
-    //     resumeButton.GetComponent<Button>().interactable = true;
-    //     fishipediaButton.GetComponent<Button>().interactable = true;
-    //     settingButton.GetComponent<Button>().interactable = true;
-    //     quitButton.GetComponent<Button>().interactable = true;
-    //     SoundFXManger.Instance.PlaySoundFXClip(OpenSound, player.transform, 0.5f);
-    //     resumeButton.GetComponent<Image>().raycastTarget = true;
-    //     fishipediaButton.GetComponent<Image>().raycastTarget = true;
-    //     settingButton.GetComponent<Image>().raycastTarget = true;
-    //     quitButton.GetComponent<Image>().raycastTarget = true;
-    //     resumeButton.DOScale(Vector3.one,0.2f).SetEase(Ease.OutBack);
-    //     fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
-    //     settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
-    //     quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
-    //     //menuSeaEffect.DOAnchorPos(new Vector3(0,200,0),0.8f).SetEase(Ease.OutBack);
-    //     globalVolume.weight = 0;
-    // }
-    //
-    // public void MenuCloseAnimation()
-    // {
-    //     _eventSystem.SetSelectedGameObject(null);
-    //     SoundFXManger.Instance.PlaySoundFXClip(CloseSound, player.transform, 0.5f);
-    //     resumeButton.GetComponent<Image>().raycastTarget = false;
-    //     fishipediaButton.GetComponent<Image>().raycastTarget = false;
-    //     settingButton.GetComponent<Image>().raycastTarget = false;
-    //     quitButton.GetComponent<Image>().raycastTarget = false;
-    //     resumeButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-    //     fishipediaButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.1f);
-    //     settingButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.2f);
-    //     quitButton.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint).SetDelay(0.3f);
-    //     //menuSeaEffect.DOAnchorPos(new Vector3(0,-1100,0),0.8f).SetEase(Ease.OutQuint);
-    //     resumeButton.GetComponent<Button>().interactable = false;
-    //     fishipediaButton.GetComponent<Button>().interactable = false;
-    //     settingButton.GetComponent<Button>().interactable = false;
-    //     quitButton.GetComponent<Button>().interactable = false;
-    //     globalVolume.weight = 1;
-    // }
     private void UpdateRadialProgress()
     {
         targetLevel = player.level;
@@ -181,159 +147,6 @@ public class HUDController : PlayerSystem
             }
         }
     }
-    // public void SwitchMenu(InputAction.CallbackContext callbackContext)
-    // {
-    //     if (MenuDebounce) return;
-    //     if (player.inspecting == true || player.CardOpened == true) return;
-    //     if (isPageOpen)
-    //     {
-    //         player.isActive = true;
-    //         isPageOpen = false;
-    //         CloseUI();
-    //     }
-    //     else
-    //     {
-    //         if (!player.isActive)
-    //         {
-    //             player.isActive = true;
-    //             MenuOpenAnimation();
-    //             _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
-    //         }
-    //         else
-    //         {
-    //             player.isActive = false;
-    //             MenuCloseAnimation();
-    //             MenuDebounce = true;
-    //             Invoke("ResetMenuState", 0.5f);
-    //             _eventSystem.SetSelectedGameObject(null);
-    //         }
-    //     }
-    // }
-    // public void SwitchMenu()
-    // {
-    //     if (MenuDebounce) return;
-    //     if (player.inspecting == true || player.CardOpened == true) return;
-    //     if (isPageOpen)
-    //     {
-    //         player.isActive = true;
-    //         isPageOpen = false;
-    //         CloseUI();
-    //     }
-    //     else
-    //     {
-    //         if (!player.isActive)
-    //         {
-    //             player.isActive = true;
-    //             MenuOpenAnimation();
-    //             _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
-    //         }
-    //         else
-    //         {
-    //             player.isActive = false;
-    //             MenuCloseAnimation();
-    //             MenuDebounce = true;
-    //             Invoke("ResetMenuState", 0.5f);
-    //             _eventSystem.SetSelectedGameObject(null);
-    //         }
-    //     }
-    // }
-    // public void SetOpenSound(AudioClip sound)
-    // {
-    //     FrameOpenSound = sound;
-    // }
-    // public void SetCloseSound(AudioClip sound)
-    // {
-    //     FrameCloseSound = sound;
-    // }
-    // public void OpenUI(RectTransform ui)
-    // {
-    //     SoundFXManger.Instance.PlaySoundFXClip(FrameOpenSound, player.characterTransform, 1f);
-    //     currentPage = ui;
-    //     isPageOpen = true;
-    //     ui.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-    // }
-    // public void CloseUI()
-    // {
-    //     SoundFXManger.Instance.PlaySoundFXClip(FrameCloseSound, player.characterTransform, 1f);
-    //     isPageOpen = false;
-    //     currentPage.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-    // }
-    //private void RotateNeedle()
-    //{
-    //    if (currentNeedleLocation != lastNeedleLocation)
-    //    {
-    //        lastNeedleLocation = currentNeedleLocation;
-    //        if (lastNeedleLocation == "up")
-    //        {
-    //            needleDegree = 0f;
-    //        }
-    //        else if (lastNeedleLocation == "right")
-    //        {
-    //            needleDegree = -90f;
-    //        }
-    //        else if (lastNeedleLocation == "down")
-    //        {
-    //            needleDegree = 180f;
-    //        }
-    //        else if (lastNeedleLocation == "left")
-    //        {
-    //            needleDegree = 90f;
-    //        }
-    //        SoundFXManger.Instance.PlaySoundFXClip(RotateSound, player.transform, 1f);
-    //        MenuNeedle.DORotate(new Vector3(0, 0, needleDegree), spinSpeed).SetEase(Ease.OutBack);
-    //    }
-    //}
-    //private void TrackNeedlePosition()
-    //{
-    //    if (isMenuOpen) {
-    //        if (!isDpadCurrentInputing)
-    //        {
-    //            Vector2 mousePosition = Mouse.current.position.value;
-    //            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-    //            Vector2 deltaVector = mousePosition - screenCenter;
-    //            if (deltaVector.y > 0f && deltaVector.y > Mathf.Abs(deltaVector.x))
-    //            {
-    //                currentNeedleLocation = "up";
-    //            }
-    //            else if (deltaVector.x > 0f && deltaVector.x > Mathf.Abs(deltaVector.y))
-    //            {
-    //                currentNeedleLocation = "right";
-    //            }
-    //            else if (deltaVector.y < 0f && Mathf.Abs(deltaVector.x) < Mathf.Abs(deltaVector.y))
-    //            {
-    //                currentNeedleLocation = "down";
-    //            }
-    //            else if (deltaVector.x < 0f && Mathf.Abs(deltaVector.y) < Mathf.Abs(deltaVector.x))
-    //            {
-    //                currentNeedleLocation = "left";
-    //            }
-    //        }
-    //        RotateNeedle();
-    //    }
-    //}
-    //private void SelectMenu(InputAction.CallbackContext callbackContext)
-    //{
-    //    if (!isMenuOpen) return;
-    //    if (player.isControllerConnected)
-    //    {
-    //        isDpadCurrentInputing = false;
-    //        currentNeedleLocation = callbackContext.control.name;
-    //        RotateNeedle();
-    //        isMenuOpen = false;
-    //    }
-    //    else
-    //    {
-    //        isMenuOpen = false;
-    //    }
-    //    if (Pages.TryGetValue(currentNeedleLocation,out CurrentPage))
-    //    {
-    //        isPageOpen = true;
-    //        CurrentPage.DOScale(Vector3.one,0.3f).SetEase(Ease.OutBack);
-    //    }
-    //    MenuCloseAnimation();
-    //    MenuDebounce = true;
-    //    Invoke("ResetMenuState",0.5f);
-    //}
     private void Update()
     {
         UpdateRadialProgress();

@@ -4728,7 +4728,6 @@ MonoBehaviour:
   lootNameText: {fileID: 1043303955}
   lootDesciptionText: {fileID: 642609150}
   lootValueText: {fileID: 904597426}
-  fishipediaPage: {fileID: 0}
   interactionPrompt: {fileID: 1889303950}
   promptImage: {fileID: 1577425090}
   promptText: {fileID: 580613216}
@@ -13481,7 +13480,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -16580,7 +16579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfba890e1a189b459f9e4cb5db3e11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goddessRenderObject: {fileID: 0}
+  goddessRenderObject: {fileID: 1479013891}
 --- !u!1 &1134502731
 GameObject:
   m_ObjectHideFlags: 0
@@ -17878,7 +17877,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: 0
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -17937,7 +17936,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 50
   field of view: 46
   orthographic: 1
   orthographic size: 6.18
@@ -19482,7 +19481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -57832764, y: 37672304}
+  m_AnchoredPosition: {x: -59309696, y: 38636944}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1336885457
@@ -22161,7 +22160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1479013892
 RectTransform:
   m_ObjectHideFlags: 0

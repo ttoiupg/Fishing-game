@@ -46,6 +46,7 @@ public class BuckectInteract : MonoBehaviour, IInteractable
     public void Interact(Player plyaer)
     {
         triggered.Invoke();
+        
         Debug.Log(gameObject.name + " interacted");
     }
 }
