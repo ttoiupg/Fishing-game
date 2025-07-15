@@ -11,6 +11,7 @@ public class InactiveState : BaseState
     {
         player.PlayerInputs.UI.Enable();
         player.PlayerInputs.UI.Pause.performed += PauseViewModel.Instance.Trigger;
+        player.currentInteract?.PromptHide(player);
         Debug.Log("enter menu open state");
     }
 
