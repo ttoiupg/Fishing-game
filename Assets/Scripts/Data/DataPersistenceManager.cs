@@ -64,6 +64,15 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
+        // this.playerDataHandler = new FileDataHandler<PlayerData>(Application.persistentDataPath, playerDataFileName);
+        // this.fishingRodDataHandler = new FileDataHandler<FishingRodData>(Application.persistentDataPath, fishingRodDataFileName);
+        // this.itemDataHandler = new FileDataHandler<ItemData>(Application.persistentDataPath, itemDataFileName);
+        // this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+        // LoadGame();
+    }
+
+    public void Setup()
+    {
         this.playerDataHandler = new FileDataHandler<PlayerData>(Application.persistentDataPath, playerDataFileName);
         this.fishingRodDataHandler = new FileDataHandler<FishingRodData>(Application.persistentDataPath, fishingRodDataFileName);
         this.itemDataHandler = new FileDataHandler<ItemData>(Application.persistentDataPath, itemDataFileName);

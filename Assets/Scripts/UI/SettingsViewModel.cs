@@ -27,14 +27,14 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultOpenSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(true);
-        dofController.SetFocusDistance(0.1f);
+        dofController.SetFocusDistance(0f);
     }
 
     public void CloseUI()
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultCloseSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(false);
-        dofController.SetFocusDistance(4.05f);
+        dofController.SetFocusDistance(100f);
     }
     public void Begin()
     {

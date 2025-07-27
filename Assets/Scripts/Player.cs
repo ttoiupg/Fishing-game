@@ -58,7 +58,6 @@ public class Player : MonoBehaviour, IDataPersistence
             }
         }
     }
-
     public Dictionary<string, DiscoveredFish> discoveredFish = new Dictionary<string, DiscoveredFish>();
     private StateMachine _playerStateMachine;
 
@@ -98,11 +97,16 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void Start()
     {
+        Debug.Log("Graphics API: " + SystemInfo.graphicsDeviceType);
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
     }
 
-    private void Awake()
+    public void Setup()
     {
+        fishingController.Setup();
+        hudController = GameObject.Find("View(Clone)").GetComponent<HUDController>();
+        cinemachineCamera = GameObject.Find("CinemachineCamera").GetComponent<CinemachinePositionComposer>();
+        cinemachineCamera.transform.GetComponent<CinemachineCamera>().Follow = this.transform;
         interactionDebounceTimer = new Countdowntimer(0.5f);
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
         PlayerInputs = new DefaultInputActions();
@@ -124,11 +128,36 @@ public class Player : MonoBehaviour, IDataPersistence
         At(fishingBoostState, fishingReelState, new FuncPredicate(() => fishingController.boostApplied));
         At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
         _playerStateMachine.SetState(locomotionState);
+        PlayerInputs?.Player.Enable();
+    }
+    private void Awake()
+    {
+        // interactionDebounceTimer = new Countdowntimer(0.5f);
+        // interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
+        // PlayerInputs = new DefaultInputActions();
+        // _playerStateMachine = new StateMachine();
+        //
+        // //declare what states we have
+        // var locomotionState = new LocomotionState(this, animator);
+        // var fishingState = new FishingState(this, animator);
+        // var inactiveState = new InactiveState(this, animator);
+        // var fishingBoostState = new FishingBoostState(this, animator);
+        // var fishingReelState = new FishingReelState(this, animator);
+        //
+        // //add transition
+        // At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
+        // At(locomotionState, inactiveState, new FuncPredicate(() => isActive == false));
+        // At(inactiveState, locomotionState, new FuncPredicate(() => isActive == true));
+        // At(fishingState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
+        // At(fishingState, fishingBoostState, new FuncPredicate(() => fishingController.fishOnBait));
+        // At(fishingBoostState, fishingReelState, new FuncPredicate(() => fishingController.boostApplied));
+        // At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
+        // _playerStateMachine.SetState(locomotionState);
     }
 
     private void OnEnable()
     {
-        PlayerInputs.Player.Enable();
+        PlayerInputs?.Player.Enable();
     }
 
     private void OnDisable()
@@ -141,12 +170,12 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void Update()
     {
-        _playerStateMachine.Update();
+        _playerStateMachine?.Update();
     }
 
     private void FixedUpdate()
     {
-        _playerStateMachine.FixedUpdate();
+        _playerStateMachine?.FixedUpdate();
     }
     
     private Collider GetClosestCollider(Collider[] colliders)

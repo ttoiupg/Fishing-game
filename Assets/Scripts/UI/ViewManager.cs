@@ -12,6 +12,7 @@ public class ViewManager : MonoBehaviour
     [Header("Assets")]
     public AudioClip defaultOpenSound;
     public AudioClip defaultCloseSound;
+    public TideCodexViewModel tideViewModel;
     
     private Player _player;
     //private StateMachine _viewStateMachine;
@@ -24,9 +25,11 @@ public class ViewManager : MonoBehaviour
             instance = this;
         }
     }
-    private void Start()
+
+    public void Setup()
     {
         _player = FindAnyObjectByType<Player>();
+        tideViewModel.Initialize();
     }
 
     public void OpenView(IViewFrame viewFrame)

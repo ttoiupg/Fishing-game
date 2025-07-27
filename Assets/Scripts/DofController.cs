@@ -1,11 +1,21 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class DofController : MonoBehaviour
 {
+    public static DofController instance;
     public Volume volume; // Assign this in the inspector or find it at runtime
     private DepthOfField dof;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     void Start()
     {
@@ -26,11 +36,14 @@ public class DofController : MonoBehaviour
 
     public void SetFocusDistance(float newFocusDistance)
     {
-        if (dof != null)
-        {
-            dof.focusDistance.overrideState = true; // Ensure it's being overridden
-            dof.focusDistance.value = newFocusDistance;
-            Debug.Log("Focus distance set to: " + newFocusDistance);
-        }
+        SetBlur(newFocusDistance == 0f);
+    }
+
+    public void SetBlur(bool blur)
+    {
+        dof.mode.overrideState = true;
+        dof.mode.value = (blur) ? DepthOfFieldMode.Gaussian : DepthOfFieldMode.Off;
+        dof.gaussianEnd.overrideState = true;
+        dof.gaussianEnd.value = (blur) ? 0f : 100f;
     }
 }

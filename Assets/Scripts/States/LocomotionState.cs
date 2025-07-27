@@ -5,6 +5,10 @@ public class LocomotionState : BaseState
 {
     public LocomotionState(Player player, Animator animator) : base(player, animator) { }
 
+    public void empty()
+    {
+        
+    }
     public override void OnEnter()
     {
         //Debug.Log("enter locomotion state");
@@ -14,6 +18,8 @@ public class LocomotionState : BaseState
         player.PlayerInputs.UI.Pause.performed += PauseViewModel.Instance.Trigger;
         player.PlayerInputs.Player.Interact.started += player.InteractInput;
         player.PlayerInputs.Player.Interact.canceled += player.InteractInput;
+        Debug.Log(InventoryDisplayManager.instance);
+        player.PlayerInputs.UI.Inventory.performed += InventoryDisplayManager.instance.ToggleInventory;
     }
     public override void OnExit()
     {
@@ -22,6 +28,7 @@ public class LocomotionState : BaseState
         player.PlayerInputs.UI.Pause.performed -= PauseViewModel.Instance.Trigger;
         player.PlayerInputs.Player.Interact.started -= player.InteractInput;
         player.PlayerInputs.Player.Interact.canceled -= player.InteractInput;
+        player.PlayerInputs.UI.Inventory.performed -= InventoryDisplayManager.instance.ToggleInventory;
     }
     public override void Update()
     {

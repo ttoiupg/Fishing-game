@@ -4,12 +4,10 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Halfmoon.Utilities;
+using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
-
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -28,12 +26,23 @@ public class GameManager : MonoBehaviour
     public FishEnemy FishEnemy;
     public Countdowntimer battleTimer;
     public bool fishing;
-    [Header("effect")] public Image fishHealthBar;
-    public Sprite normalHealthBar;
-    public Sprite whiteHealthBar;
+    [Header("effect")] public RectTransform fishHealthBar;
+    public TextMeshProUGUI fishHealthText;
+    public Image seaBackground;
     public Battle CurrentBattle;
 
     private void Start()
+    {
+        // battleTimer = new Countdowntimer(15f);
+        // player = FindAnyObjectByType<Player>();
+        // battleTimer.OnTimerStop += () =>
+        // {
+        //     if (!CurrentBattle.battleStarted) return;
+        //     EndBattle();
+        // };
+    }
+
+    public void Setup()
     {
         battleTimer = new Countdowntimer(15f);
         player = FindAnyObjectByType<Player>();
@@ -43,7 +52,6 @@ public class GameManager : MonoBehaviour
             EndBattle();
         };
     }
-
     private void Update()
     {
         if (fishing)
@@ -52,15 +60,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public async UniTask AttackFishEffect()
+    public void AttackFishEffect()
     {
-        fishHealthBar
-            .DOFillAmount(CurrentBattle.battleStats.enemy.health / CurrentBattle.battleStats.enemy.maxHealth, 0.2f)
-            .SetEase(Ease.OutBack);
-        player.ReelCanvaManager.FlipDownAll();
-        fishHealthBar.sprite = whiteHealthBar;
-        await UniTask.Delay(100);
-        fishHealthBar.sprite = normalHealthBar;
+        // seaBackground.material.DOFloat(CurrentBattle.battleStats.enemy.health / CurrentBattle.battleStats.enemy.maxHealth,"_Height",0.25f).SetEase(Ease.OutBack);
+        // fishHealthBar
+        //     .DOScaleX(CurrentBattle.battleStats.enemy.health / CurrentBattle.battleStats.enemy.maxHealth, 0.25f)
+        //     .SetEase(Ease.OutBack);
+        // fishHealthText.text = $"{CurrentBattle.battleStats.enemy.health}/{CurrentBattle.battleStats.enemy.maxHealth}";
+        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.health,CurrentBattle.battleStats.enemy.maxHealth);
+        player.ReelCanvaManager.BuffTimer.localScale = new Vector3(0,1,1);
     }
 
     public void NewBattle(BattleType battleType, IEnemy enemyBehavior)
@@ -73,6 +81,7 @@ public class GameManager : MonoBehaviour
     {
         fishing = true;
         CurrentBattle.Start();
+        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.maxHealth,CurrentBattle.battleStats.enemy.maxHealth);
     }
 
     public void EndBattle()
@@ -86,11 +95,13 @@ public class GameManager : MonoBehaviour
                 if (CurrentBattle.battleStats.enemy.IsDead())
                 {
                     FishCatched();
+                    player.ReelCanvaManager.UpdateFishHealth(0,CurrentBattle.battleStats.enemy.maxHealth);
                 }
                 else
                 {
                     player.ID.playerEvents.OnFishFailed?.Invoke();
                     FishEnemy = null;
+                    player.ReelCanvaManager.UpdateFishHealth(0,CurrentBattle.battleStats.enemy.maxHealth);
                 };
                 break;
             case BattleType.Boss:
@@ -105,7 +116,6 @@ public class GameManager : MonoBehaviour
         var rolledBaseFish = RollBaseFish();
         var rolledBaseMutation = RollBaseMutation();
         var fish = new Fish(rolledBaseFish, rolledBaseMutation);
-        fishHealthBar.fillAmount = 1f;
         return fish;
     }
 
@@ -144,8 +154,9 @@ public class GameManager : MonoBehaviour
     public void FishCatched()
     {
         Debug.Log("Fish Catched");
-        player.hudController.StartLootTag(FishEnemy.fish.fishType.Art, FishEnemy.fish.fishType.name,
-            "Mutation:" + FishEnemy.fish.mutation.name, FishEnemy.fish.weight + "Kg");
+        AwardViewManager.Instance.ShowFishAward(FishEnemy.fish);
+        //player.hudController.StartLootTag(FishEnemy.fish.fishType.Art, FishEnemy.fish.fishType.name,
+        //    "Mutation:" + FishEnemy.fish.mutation.name, FishEnemy.fish.weight + "Kg");
         battleTimer.Pause();
         ProcessFish();
         player.ID.playerEvents.OnFishCatched?.Invoke(FishEnemy.fish);
@@ -286,6 +297,7 @@ public class Battle
     public BattleType battleType;
     public BattleStats battleStats = new();
     public IEnemy enemyBehavior;
+    public float timeLimit;
     public bool battleStarted = false;
 
     public Battle(BattleType battleType, IEnemy enemyBehavior)
@@ -302,11 +314,12 @@ public class Battle
                 GameManager.Instance.battleTimer.Reset(seconds);
                 break;
             case BattleType.Fish:
-                GameManager.Instance.battleTimer.Reset(15f);
+                GameManager.Instance.battleTimer.Reset(seconds);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        timeLimit = seconds;
     }
 
     public void Attack(DamageInfo info)

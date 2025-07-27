@@ -17,6 +17,7 @@ public class FishipediaIconDisplayer : MonoBehaviour
     }
     public void Init()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         GetComponent<Image>().sprite = fish.Ring;
         Icon.sprite = fish.Art;
         if (!player.discoveredFish.ContainsKey(fish.id))

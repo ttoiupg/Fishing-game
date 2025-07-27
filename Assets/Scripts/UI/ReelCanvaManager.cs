@@ -3,24 +3,32 @@ using DG.Tweening;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class ReelCanvaManager : PlayerSystem
+public class ReelCanvaManager : MonoBehaviour
 {
+    [Header("UI")]
+    public Animator ReelCanvasAnimator;
     public RectTransform pullCanva;
-    public RectTransform controlCanva;
+    public RectTransform controllCanva;
+    [FormerlySerializedAs("controlCanva")] public RectTransform topBarCanva;
     public RectTransform controlBar;
     public RectTransform fishNeedle;
-    public RectTransform fishPedal;
-    public RectTransform fishPedalL1;
-    public RectTransform fishPedalL2;
-    public RectTransform fishPedalR1;
-    public RectTransform fishPedalR2;
-    public Slider timer;
-    private Image _controlBarImage;
-    private Outline _controlBarOutline;
+    public RectTransform timer;
+    public RectTransform BuffTimer;
+    public Image FishBar;
+    public RectTransform flash;
+    public Image flashImage;
+    public Image buffTimerImage;
+    public Image buffTimerImageBackground;
+    public RectTransform fishHealthBar;
+    public TextMeshProUGUI fishHealthText;
+    public Image seaBackground;
     
+    [Header("Valus")]
     public float pullCanvaRotation = 0f;
     public float controlBarPosition = 0f;
     public float controlBarGravity = 0f;
@@ -29,13 +37,22 @@ public class ReelCanvaManager : PlayerSystem
     public float fishNeedlePosition = 0f;
     public float fishNeedleSpeed = 6f;
 
-
-    public float rawLeftBound = -286;
-    public float rawRightBound = 286f;
+    [Header("Crank ")] 
+    public RectTransform crank;
+    public RectTransform gearCover;
+    public RectTransform gear;
+    public float crankRotation;
+    public float crankDirection;
+    public float crankSpeed;
+    
+    public float rawLeftBound = -375;
+    public float rawRightBound = 375;
+    private Player player;
 
     private bool _fishBarMoved = true;
     private static readonly Color32 Red = new Color32(217, 77, 88, 255);
     private static readonly Color32 Blue = new Color32(0, 135, 164, 255);
+    
     private Animator animator;
 
     private float Lerpfloat(float a, float b, float t)
@@ -45,21 +62,14 @@ public class ReelCanvaManager : PlayerSystem
 
     public void SwitchReelingBarColor(bool on)
     {
-        _controlBarImage.color = on ? Red : Blue;
-        _controlBarOutline.effectColor = on ? Blue : Red;
+        //_controlBarImage.color = on ? Red : Blue;
+        //_controlBarOutline.effectColor = on ? Blue : Red;
     }
     public void Init()
     {
-        _controlBarImage = controlBar.GetComponent<Image>();
-        _controlBarOutline = controlBar.GetComponent<Outline>();
-        controlBar.sizeDelta = new Vector2(player.ID.pullBarSize, 94.7651f);
+        //controlBar.sizeDelta = new Vector2(player.ID.pullBarSize, 94.7651f);
         controlBar.anchoredPosition = new Vector2(0, -338.718f);
         fishNeedle.anchoredPosition = new Vector2(0, -403.5762f);
-        fishPedal.localScale = new Vector3(1, 0, 1);
-        fishPedalL1.localScale = new Vector3(1, 0, 1);
-        fishPedalR1.localScale = new Vector3(1, 0, 1);
-        fishPedalL2.localScale = new Vector3(1, 0, 1);
-        fishPedalR2.localScale = new Vector3(1, 0, 1);
         controlBarGravity = -1500f;
         controlBarPosition = 0f;
         fishNeedlePosition = 0f;
@@ -69,17 +79,36 @@ public class ReelCanvaManager : PlayerSystem
 
     public void ResetTimer()
     {
-        timer.value = 100f;
+        timer.localScale = new Vector3(1f, 1f, 1f);
     }
     public void StartTimer(float length)
     {
-        timer.DOValue(0,length);
+        timer.localScale = new Vector3(1f, 1f, 1f);
+        controllCanva.DOShakePosition(length,10f,6,30f,false,false,ShakeRandomnessMode.Full);
+        timer.DOKill();
+        timer.DOScaleX(0,length);
+    }
+
+    public void SetSeaHeight(float height)
+    {
+        seaBackground.material.SetFloat("_Height",height);
+    }
+
+    public void UpdateFishHealth(float health, float maxHealth)
+    {
+        seaBackground.material.DOFloat(health / maxHealth,"_Height",0.25f).SetEase(Ease.OutBack);
+        fishHealthBar
+            .DOScaleX(health / maxHealth, 0.25f)
+            .SetEase(Ease.OutBack);
+        fishHealthText.text = $"{health}/{maxHealth}";
     }
     public void UpdatePosition()
     {
-        var leftBound = rawLeftBound + controlBar.sizeDelta.x / 2;
-        var rightBound = rawRightBound - controlBar.sizeDelta.x / 2;
+        var leftBound = -338.4f;
+        var rightBound = 338.4f;
         controlBarVelocity += controlBarGravity * Time.deltaTime;
+        //crankVelocity = Mathf.Abs((crankVelocity + crankDirection * Time.deltaTime)) > crankMaxSpeed ? crankMaxSpeed : crankVelocity + crankDirection * Time.deltaTime;
+        crankRotation += crankDirection * Time.deltaTime;
         var nextPosition = controlBarPosition + controlBarVelocity * Time.deltaTime;
         if (nextPosition < leftBound)
         {
@@ -93,43 +122,46 @@ public class ReelCanvaManager : PlayerSystem
         }
 
         controlBarPosition = nextPosition;
-        controlBar.anchoredPosition = new Vector2(controlBarPosition, -338.718f);
+        controlBar.anchoredPosition = new Vector2(controlBarPosition, 118.3823f);
 
         fishNeedlePosition = Lerpfloat(fishNeedlePosition, fishNeedleTargetPosition, fishNeedleSpeed * Time.deltaTime);
         pullCanvaRotation = Lerpfloat(pullCanvaRotation, controlBarGravity / -250f, 5.5f * Time.deltaTime);
-        controlCanva.rotation = Quaternion.Euler(0, 0, pullCanvaRotation);
-        fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, -403.5762f);
+        topBarCanva.rotation = Quaternion.Euler(0, 0, pullCanvaRotation);
+        gearCover.rotation = Quaternion.Euler(0, 0, crankRotation*0.07f);
+        gear.rotation = Quaternion.Euler(0, 0, -crankRotation* 0.14f);
+        crank.rotation = Quaternion.Euler(0, 0, crankRotation);
+        fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, 137.1f);
     }
-
-    public void FlipFirst()
+    
+    public void Flash()
     {
-        fishPedal.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+        flash.localScale = Vector3.one;
+        flash.DOScale(Vector3.one * 2, 0.3f);
+        flashImage.color = Color.white;
+        flashImage.DOColor(new Color(1, 1, 1, 0f), 0.3f);
     }
 
-    public void FlipSecond()
+    public void SetTimerFlowIntensity(float intensity)
     {
-        fishPedalL1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalR1.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+        buffTimerImage.material.SetFloat("_Speed",intensity);
+        buffTimerImageBackground.material.SetFloat("_Speed",intensity);
     }
-
-    public void FlipThird()
+    public void TweenBuffTimer(float time)
     {
-        fishPedalL2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalR2.DOScaleY(1, 0.25f).SetEase(Ease.OutBounce);
+        BuffTimer.localScale = new Vector3(0,1,1);
+        BuffTimer.DOKill();
+        BuffTimer.DOScaleX(1, time);
     }
 
-    public void FlipDownAll()
+    public void ShakeUI()
     {
-        fishPedal.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalL1.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalR1.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalL2.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
-        fishPedalR2.DOScaleY(0, 0.25f).SetEase(Ease.OutBounce);
+        pullCanva.DOShakePosition(0.3f,50f,10,90f,false,true,ShakeRandomnessMode.Full);
     }
-
     public async UniTask RandomFishBarPosition()
     {
         if (!_fishBarMoved) return;
+        var leftBound = rawLeftBound + controlBar.sizeDelta.x;
+        var rightBound = rawRightBound - controlBar.sizeDelta.x;
         _fishBarMoved = false;
         Debug.Log("RandomFishBarPosition");
         var battle = GameManager.Instance.CurrentBattle;
@@ -139,11 +171,11 @@ public class ReelCanvaManager : PlayerSystem
         var RandSecond = Random.Range(
             fish.fish.fishType.MinFishBarChangeTime,
             fish.fish.fishType.MaxFishBarChangeTime);
-        var RandPosition = Random.Range(-283.5f, 283.5f);
+        var RandPosition = Random.Range(leftBound, rightBound);
         while (Mathf.Abs(RandPosition - fishNeedleTargetPosition) >
                fish.fish.fishType.MaxFishBarChangeDistance)
         {
-            RandPosition = UnityEngine.Random.Range(-283.5f, 283.5f);
+            RandPosition = UnityEngine.Random.Range(leftBound, rightBound);
         }
         fishNeedleTargetPosition = RandPosition;
         fishNeedleSpeed = UnityEngine.Random.Range(0.05f, 6f);
@@ -169,19 +201,44 @@ public class ReelCanvaManager : PlayerSystem
             }
         }
     }
-
+    private async UniTask PlayAnimation()
+    {
+        //ReelCanvasAnimator.Play();
+        ReelCanvasAnimator.enabled = true;
+        ReelCanvasAnimator.Play("ReelCanvaPopUp",0,0);
+        await UniTask.WaitForSeconds(2.1f);
+        ReelCanvasAnimator.enabled = false;
+    }
     public void ShowUI()
     {
-        pullCanva.DOScale(new Vector3(0.79f, 0.79f, 0.79f), 0.35f).SetEase(Ease.OutBack);
+        DofController.instance.SetBlur(true);
+        SetSeaHeight(1f);
+        PlayAnimation();
     }
 
     public void CloseUI()
     {
+        DofController.instance.SetBlur(false);
         pullCanva.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+        buffTimerImage.material.SetFloat("_Speed",0f);
+        buffTimerImageBackground.material.SetFloat("_Speed",0f);
+        timer.DOKill();
+        controllCanva.DOKill();
+        timer.localScale = Vector3.one;
     }
 
     private void Start()
     {
+        // animator = GameManager.Instance.player.GetComponent<Animator>();
+        // Material seaMat = seaBackground.material;
+        // seaBackground.material = new Material(seaMat);
+    }
+
+    public void Setup()
+    {
+        player = GameManager.Instance.player;
         animator = player.GetComponent<Animator>();
+        Material seaMat = seaBackground.material;
+        seaBackground.material = new Material(seaMat);
     }
 }

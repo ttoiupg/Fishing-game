@@ -773,6 +773,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""1280621f-1949-4141-ad3f-932a82c4465e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1171,6 +1180,28 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""RightSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce44f3f8-5f43-4b93-9823-20454e58e66e"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d7a9031-1c0b-4064-9ca4-a1984f880616"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1268,6 +1299,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_UI_Navigations = m_UI.FindAction("Navigations", throwIfNotFound: true);
         m_UI_LeftSwitch = m_UI.FindAction("LeftSwitch", throwIfNotFound: true);
         m_UI_RightSwitch = m_UI.FindAction("RightSwitch", throwIfNotFound: true);
+        m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
     }
 
     ~@DefaultInputActions()
@@ -1654,6 +1686,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Navigations;
     private readonly InputAction m_UI_LeftSwitch;
     private readonly InputAction m_UI_RightSwitch;
+    private readonly InputAction m_UI_Inventory;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1717,6 +1750,10 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/RightSwitch".
         /// </summary>
         public InputAction @RightSwitch => m_Wrapper.m_UI_RightSwitch;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/Inventory".
+        /// </summary>
+        public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1782,6 +1819,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @RightSwitch.started += instance.OnRightSwitch;
             @RightSwitch.performed += instance.OnRightSwitch;
             @RightSwitch.canceled += instance.OnRightSwitch;
+            @Inventory.started += instance.OnInventory;
+            @Inventory.performed += instance.OnInventory;
+            @Inventory.canceled += instance.OnInventory;
         }
 
         /// <summary>
@@ -1832,6 +1872,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @RightSwitch.started -= instance.OnRightSwitch;
             @RightSwitch.performed -= instance.OnRightSwitch;
             @RightSwitch.canceled -= instance.OnRightSwitch;
+            @Inventory.started -= instance.OnInventory;
+            @Inventory.performed -= instance.OnInventory;
+            @Inventory.canceled -= instance.OnInventory;
         }
 
         /// <summary>
@@ -2121,5 +2164,12 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightSwitch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Inventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

@@ -46,36 +46,42 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Ambient: 1
     - _Amplitude: 1
     - _Count: 10
     - _Displace: 0.1
-    - _Fade_Distance: 2.52
-    - _Fade_strength: 1
+    - _Fade_Distance: 5.53
+    - _Fade_strength: 2.7
+    - _Foam_distance: 0
     - _LightStrength: 1
-    - _Max_steep: 0.166
+    - _Max_steep: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Randomness: 0.53
+    - _Randomness: -2.3
     - _Reflection_strength: -0.5
-    - _Smoothness: 1
-    - _Specular_amount: 1.88
+    - _Smoothness: 0
+    - _Specular_amount: 1.3
     - _Specular_clamp: 0
+    - _Specular_smoothness: 205.87
     - _Steepness: 0.22
-    - _ThinStrength: 73.4
-    - _Wave_Direction: 46
+    - _ThinStrength: 0.04
+    - _Wave_Direction: 37
     - _Wave_Length: 6.21
-    - _Wave_Speed: 2
+    - _Wave_Speed: 0.61
     - _Wave_length: 10.81
     - _Wave_steepness: 0.69
-    - _amp: 4.38
-    - _max_length: 4.06
+    - _amp: 0.3
+    - _max_length: 4.7
     - _min_length: 0
-    - _min_steep: 0
+    - _min_steep: 0.059
     m_Colors:
-    - _DeepWater: {r: 0, g: 0.07450981, b: 0.069741756, a: 1}
+    - _DeepWater: {r: 0, g: 0.11372549, b: 0.07450981, a: 1}
+    - _Dir: {r: 1.79, g: 7.5, b: 0, a: 0}
+    - _Foam_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Range: {r: 0, g: 0, b: 0, a: 0}
-    - _ShallowColor: {r: 0, g: 0.11372549, b: 0.07058824, a: 1}
-    - _ThinColor: {r: 0, g: 0.44705883, b: 0.22210157, a: 1}
+    - _ShallowColor: {r: 0, g: 0.20784314, b: 0.17738122, a: 1}
+    - _Sun_direction: {r: 0.41, g: -0.64, b: -1.64, a: 0}
+    - _ThinColor: {r: 0, g: 0.39215687, b: 0.33926758, a: 1}
     - _Wave_amplitude: {r: 0, g: 0, b: 0, a: 0}
     - _Wave_length: {r: -8.97, g: 0, b: 0, a: 0}
     - _Wave_steepness: {r: 0.5, g: 0, b: 0, a: 0}

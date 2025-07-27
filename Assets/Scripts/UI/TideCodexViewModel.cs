@@ -89,11 +89,13 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
         nav.selectOnUp = categories[0].icons[^1];
         closeButton.navigation = nav;
     }
-    private void Start()
+    public void Initialize()
     {
         _eventSystem = EventSystem.current;
         dofController = FindAnyObjectByType<DofController>();
-        _player = GameManager.Instance.player;
+        cardHandler = FindAnyObjectByType<FishCardHandler>();
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = _player;
         SetupIcons(categories[0]);
         Setup();
     }
@@ -176,7 +178,7 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
         mainFrame.gameObject.SetActive(true);
         SoundFXManger.Instance.PlaySoundFXClip(openSound, player.characterTransform, 1f);
         codex.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-        dofController.SetFocusDistance(0.1f);
+        dofController.SetFocusDistance(0f);
     }
 
     public async UniTask CloseUI()
@@ -184,7 +186,7 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
         FishCardHandler.instance.CloseCard();
         SoundFXManger.Instance.PlaySoundFXClip(closeSound, player.characterTransform, 1f);
         codex.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuint);
-        dofController.SetFocusDistance(4.05f);
+        dofController.SetFocusDistance(100f);
         await UniTask.WaitForSeconds(0.15f);
         mainFrame.gameObject.SetActive(false);
     }

@@ -1,17 +1,19 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class FishIconDisplayer : MonoBehaviour
 {
     public Fish fish;
     public Image Icon;
+    public Image background;
+    public TextMeshProUGUI weightText;
+    public TextMeshProUGUI mutationText;
     public void Init()
     {
-        GetComponent<Image>().sprite = fish.fishType.Ring;
         Icon.sprite = fish.fishType.Art;
-    }
-    public void Clicked()
-    {
-        FishCardHandler.instance.toggleCard(fish,gameObject);
+        background.color = fish.fishType.Rarity.InventoryColor;
+        weightText.text = $"{fish.weight}kg";
+        mutationText.text = (fish.mutation.id == "mut_none") ? "": $"{fish.mutation}";
     }
 }

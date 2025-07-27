@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Threading.Tasks;
 using UnityEngine.Serialization;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Random = UnityEngine.Random;
 using Timer = Halfmoon.Utilities.Timer;
 
@@ -186,9 +187,10 @@ public class FishingController : PlayerSystem
     {
         playerInput.Fishing.Disable();
     }
-
-    private void Start()
+    
+    public void Setup()
     {
+        zoneContainer = GameObject.Find("Zones");
         _animator = player.GetComponent<Animator>();
         _reelSoundSource = GetComponent<AudioSource>();
         zones = zoneContainer.GetComponentsInChildren<ZoneDisplayer>();
@@ -275,10 +277,15 @@ public class FishingController : PlayerSystem
 
     private void AttackFish()
     {
+        player.ReelCanvaManager.BuffTimer.localScale = new Vector3(0, 1, 1);
+        if (GameManager.Instance.CurrentBattle.battleStats.currentDamageStage <= DamageStage.Stage1) return;
         player.canDamage = false;
         _damageCooldownTimer.Start();
         PlayAttackSound();
         DoDamage();
+        player.ReelCanvaManager.BuffTimer.DOKill();
+        player.ReelCanvaManager.SetTimerFlowIntensity(0f);
+        player.ReelCanvaManager.ShakeUI();
     }
 
     private async UniTask FishCatchedEffects()
@@ -333,6 +340,7 @@ public class FishingController : PlayerSystem
             _reelSoundSource.pitch = 0.7f + Value * 0.35f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
             player.ReelCanvaManager.controlBarGravity = 1500f * Value;
+            player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * Value;
             ConfigureCamera(8f - 2f * Value);
         }
         else
@@ -341,6 +349,7 @@ public class FishingController : PlayerSystem
             _reelSoundSource.pitch = 0.7f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
             player.ReelCanvaManager.controlBarGravity = -1500;
+            player.ReelCanvaManager.crankDirection = -player.ReelCanvaManager.crankSpeed * 0.4f;
             ConfigureCamera(player.defaultCameraDistance);
         }
     }
@@ -380,9 +389,9 @@ public class FishingController : PlayerSystem
         GameManager.Instance.FishEnemy = new FishEnemy();
         GameManager.Instance.NewBattle(BattleType.Fish,GameManager.Instance.FishEnemy);
         PrepareReelUI();
-        await UniTask.WaitForSeconds(1.38f);
+        await UniTask.WaitForSeconds(2.5f);
         GameManager.Instance.StartBattle();
-        player.ReelCanvaManager.StartTimer(15f);
+        player.ReelCanvaManager.StartTimer(GameManager.Instance.CurrentBattle.timeLimit);
     }
 
     #endregion
@@ -407,6 +416,7 @@ public class FishingController : PlayerSystem
             default:
                 player.pullProgressBuff = 10f;
                 SoundFXManger.Instance.PlaySoundFXClip(landOnRedSoundFX, _playerTransform, 1.2f);
+                player.ReelCanvaManager.ShakeUI();
                 break;
         }
 
@@ -469,19 +479,25 @@ public class FishingController : PlayerSystem
         switch (index)
         {
             case 0:
-                player.ReelCanvaManager.FlipFirst();
+                player.ReelCanvaManager.Flash();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage1);
+                player.ReelCanvaManager.SetTimerFlowIntensity(0.1f);
+                player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[1].Time);
                 break;
             case 1:
-                player.ReelCanvaManager.FlipSecond();
+                player.ReelCanvaManager.Flash();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage2);
+                player.ReelCanvaManager.SetTimerFlowIntensity(0.5f);
+                player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[2].Time - damageBoostTimer.Sections[1].Time);
                 break;
             case 2:
-                player.ReelCanvaManager.FlipThird();
+                player.ReelCanvaManager.Flash();
                 SoundFXManger.Instance.PlaySoundFXClip(pedalFlip, _playerTransform, 0.7f);
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage3);
+                player.ReelCanvaManager.SetTimerFlowIntensity(1f);
+                player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[3].Time - damageBoostTimer.Sections[2].Time);
                 break;
             case 3:
                 //AttackFish();

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ocean
+  m_Shader: {fileID: 4800000, guid: b825bce513c25144e909064c2b2f37be, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _EnviromentMap:
+        m_Texture: {fileID: 2800000, guid: 753497ce9f3fdc44ca59e0765bc7fe31, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints:
+    - _TopFactor: 4
+    - _WaveCount: 20
+    m_Floats:
+    - _Amplitude: 0.51
+    - _Displace: 0
+    - _DisplacementDepthAttenuation: 1
+    - _EnvironmentLightStrength: 1
+    - _FresnelNormalStrength: 0
+    - _MaxTessDistance: 2.2
+    - _Randomness: 0.6
+    - _Roughness: 1
+    - _ScatterShadowStrength: 1
+    - _ScatterStrength: 1
+    - _SpecularShininess: 0
+    - _SpecularSize: 1.31
+    - _Steepness: 0.205
+    - _TessellationEdgeLength: 0.425
+    - _WaveLength: 6.26
+    - _WaveSpeed: 1
+    - _ZWrite: 1
+    m_Colors:
+    - _Ambient: {r: 1, g: 1, b: 1, a: 1}
+    - _BottomColor: {r: 0, g: 0.11372549, b: 0.07450981, a: 1}
+    - _Direction: {r: 1.18, g: 9.36, b: 0, a: 0}
+    - _LightDirection: {r: 0, g: 0.78, b: 0, a: 1}
+    - _ScatterColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SunDirection: {r: 0, g: -3.95, b: 1.63, a: 1}
+    - _SunIrradiance: {r: 0, g: 0.6886792, b: 0.55258775, a: 1}
+    - _TopColor: {r: 0, g: 0.39215687, b: 0.11764706, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

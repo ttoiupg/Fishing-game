@@ -7,12 +7,13 @@ public class ItemIconDisplayer : MonoBehaviour
 {
     public GameItem item;
     [FormerlySerializedAs("Icon")] public Image icon;
+    public Image background;
     public TextMeshProUGUI amountText;
     
     public void Init()
     {
-        GetComponent<Image>().sprite = item.item.Ring;
+        background.color = item.item.rarity.InventoryColor;
         icon.sprite = item.item.icon;
-        amountText.text = item.amount.ToString();
+        amountText.text = $"x{item.amount.ToString()}";
     }
 }

@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BoostCanvaManager : PlayerSystem
+public class BoostCanvaManager : MonoBehaviour
 {
     public AudioClip openSound;
     public RectTransform boostState;
@@ -18,6 +18,7 @@ public class BoostCanvaManager : PlayerSystem
 
     private float currentRotation;
     private Tween pointerTween;
+    private Player player;
 
     public float moveRange = 17.5f;
     public float greenRange = 12.2f;
@@ -87,5 +88,9 @@ public class BoostCanvaManager : PlayerSystem
         orangeImage.DOFillAmount(0, 0.7f).SetEase(Ease.OutQuint);
         greenImage.DOFillAmount(0, 0.7f).SetEase(Ease.OutQuint);
         boostState.DOScale(Vector3.zero, 0.3f).SetEase(Ease.OutBack).SetDelay(0.2f);
+    }
+    public void Setup()
+    {
+        player = GameManager.Instance.player;
     }
 }

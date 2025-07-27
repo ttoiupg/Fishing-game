@@ -13,8 +13,9 @@ public class BucketGoddessController : MonoBehaviour
     public AudioClip appearAudio;
     public AudioClip submergeAudio;
     public GameObject leaveButton;
+    
 
-    private void Start()
+    public void Setup()
     {
         animator = GetComponent<Animator>();
         _eventSystem = EventSystem.current;

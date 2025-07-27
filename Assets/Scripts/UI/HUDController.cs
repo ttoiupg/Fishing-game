@@ -12,7 +12,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using DepthOfField = UnityEngine.Rendering.Universal.DepthOfField;
 
-public class HUDController : PlayerSystem
+public class HUDController : MonoBehaviour
 {
     int prevLevel = 0;
     float prevProgress = 0.0f;
@@ -51,10 +51,10 @@ public class HUDController : PlayerSystem
     [SerializeField] private AudioClip hideSound;
     private EventSystem _eventSystem;
     public static HUDController instance;
+    private Player player;
 
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
         if (instance == null)
         {
             instance = this;
@@ -63,7 +63,13 @@ public class HUDController : PlayerSystem
 
     private void Start()
     {
+        
+    }
+
+    public void Setup()
+    {
         _eventSystem = EventSystem.current;
+        player = GameManager.Instance.player;
     }
 
     float BackLerp(float x)
@@ -149,7 +155,7 @@ public class HUDController : PlayerSystem
     }
     private void Update()
     {
-        UpdateRadialProgress();
+        //UpdateRadialProgress();
         //TrackNeedlePosition();
     }
 }

@@ -20,6 +20,8 @@ public class BaseFish : ScriptableObject, IComparable<BaseFish>
     public String DiscoverDate;
     [Header("Display")]
     public Sprite Ring;
+
+    public Sprite Tag;
     public Sprite Card;
 
     public int CompareTo(BaseFish compareFish)

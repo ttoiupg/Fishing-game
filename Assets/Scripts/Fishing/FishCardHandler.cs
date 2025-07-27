@@ -39,6 +39,7 @@ public class FishCardHandler : MonoBehaviour
     private EventSystem _eventSystem;
     private GameObject _triggerObject;
     [SerializeField]private bool _debounce = false;
+    private bool loaded = false;
 
     private void Awake()
     {
@@ -51,6 +52,21 @@ public class FishCardHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // _eventSystem = EventSystem.current;
+        // cardTransform = GetComponent<Transform>();
+        // Debug.Log("started");
+    }
+
+    public void Setup()
+    {
+        loaded = true;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        cardOverlay = GameObject.Find("FishCardOverlay");
+        closeButton = GameObject.Find("FishCardClose");
+        closeButton.GetComponent<Button>().onClick.AddListener(() => CloseCard());
+        shadow = GameObject.Find("FishCardShadow");
+        cardOverlay.gameObject.SetActive(false);
+        shadow.SetActive(false);
         _eventSystem = EventSystem.current;
         cardTransform = GetComponent<Transform>();
         Debug.Log("started");
@@ -175,6 +191,7 @@ public class FishCardHandler : MonoBehaviour
     }
     void Update()
     {
+        if (!loaded) return;
         if (isOpen == true && Gamepad.all.Count == 0)
         {
             int screenWidth = Screen.width;

@@ -10,12 +10,14 @@ using UnityEngine.UI;
 public class PauseViewModel : MonoBehaviour, IViewFrame
 {
     public static PauseViewModel Instance { get; private set; }
+    
     public GameObject menuContainer;
     public AudioClip OpenSound;
     public AudioClip CloseSound;
     public AudioClip FrameOpenSound;
     public AudioClip FrameCloseSound;
     public RectTransform currentPage;
+    public RectTransform background;
     public RectTransform resumeButton;
     public RectTransform fishipediaButton;
     public RectTransform settingButton;
@@ -24,6 +26,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     public bool isPageOpen = false;
     public bool isDpadCurrentInputing = false;
     public bool MenuDebounce = false;
+    public bool PauseLock = false;
     private Player _player;
     private EventSystem _eventSystem;
 
@@ -44,7 +47,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
 
     public void Trigger(InputAction.CallbackContext context)
     {
-        if (MenuDebounce) return;
+        if (MenuDebounce || PauseLock) return;
         MenuDebounce = true;
         ViewManager.instance.OpenView(this);
         HandleDebounce();
@@ -56,6 +59,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     }
     public void MenuOpenAnimation()
     {
+        background.gameObject.SetActive(true);
         resumeButton.GetComponent<Button>().interactable = true;
         fishipediaButton.GetComponent<Button>().interactable = true;
         settingButton.GetComponent<Button>().interactable = true;
@@ -69,10 +73,11 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         fishipediaButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.06f);
         settingButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.12f);
         quitButton.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetDelay(0.18f);
-        dofController.SetFocusDistance(0.1f);
+        dofController.SetFocusDistance(0f);
     }
     public void MenuCloseAnimation()
     {
+        background.gameObject.SetActive(false);
         _eventSystem.SetSelectedGameObject(null);
         SoundFXManger.Instance.PlaySoundFXClip(CloseSound, _player.transform, 0.5f);
         resumeButton.GetComponent<Image>().raycastTarget = false;
@@ -87,7 +92,7 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         fishipediaButton.GetComponent<Button>().interactable = false;
         settingButton.GetComponent<Button>().interactable = false;
         quitButton.GetComponent<Button>().interactable = false;
-        dofController.SetFocusDistance(4.05f);
+        dofController.SetFocusDistance(100f);
     }
     public void Begin()
     {
