@@ -27,8 +27,10 @@ public class ReelCanvaManager : MonoBehaviour
     public RectTransform fishHealthBar;
     public TextMeshProUGUI fishHealthText;
     public Image seaBackground;
-    public RectTransform goldBar;
-    public Image goldBarEffect;
+    public RectTransform bonusBar;
+    public Image bonusBarEffect;
+    public RectTransform bonusTimer;
+    public bool haveBonusBar;
     
     [Header("Valus")]
     public float pullCanvaRotation = 0f;
@@ -38,6 +40,7 @@ public class ReelCanvaManager : MonoBehaviour
     public float fishNeedleTargetPosition = 0f;
     public float fishNeedlePosition = 0f;
     public float fishNeedleSpeed = 6f;
+    public float bonusBarPosition = 0f;
 
     [Header("Crank ")] 
     public RectTransform crank;
@@ -104,6 +107,24 @@ public class ReelCanvaManager : MonoBehaviour
             .SetEase(Ease.OutBack);
         fishHealthText.text = $"{health}/{maxHealth}";
     }
+    private void SpawnBonusBar()
+    {
+        if (haveBonusBar) return;
+        haveBonusBar = true;
+        bonusBar.gameObject.SetActive(true);
+        var leftBound = rawLeftBound + bonusBar.sizeDelta.x;
+        var rightBound = rawRightBound - bonusBar.sizeDelta.x;
+        var RandPosition = Random.Range(leftBound, rightBound);
+        bonusBarPosition = RandPosition;
+        var pos = bonusBar.localPosition;
+        pos.x = RandPosition;
+        bonusBar.localPosition = pos;
+    }
+    private void DestroyBonusBar()
+    {
+        haveBonusBar = false;
+        bonusBar.gameObject.SetActive(false);
+    }
     public void UpdatePosition()
     {
         var leftBound = -338.4f;
@@ -154,7 +175,26 @@ public class ReelCanvaManager : MonoBehaviour
         BuffTimer.DOKill();
         BuffTimer.DOScaleX(1, time);
     }
-
+    public void StopBuffTimerTween()
+    {
+        BuffTimer.DOKill();
+        BuffTimer.localScale = new Vector3(0, 1, 1);
+    }
+    public void TweenBonusTimer(float time)
+    {
+        bonusTimer.localScale = new Vector3(0, 1, 1);
+        bonusTimer.DOKill();
+        bonusTimer.DOScaleX(1, time);
+    }
+    public void StopBonusTimerTween(bool isFinished)
+    {
+        bonusTimer.DOKill();
+        bonusTimer.localScale = new Vector3(0, 1, 1);
+        if (isFinished)
+        {
+            DestroyBonusBar();
+        }
+    }
     public void ShakeUI()
     {
         pullCanva.DOShakePosition(0.3f,50f,10,90f,false,true,ShakeRandomnessMode.Full);
@@ -162,8 +202,8 @@ public class ReelCanvaManager : MonoBehaviour
     public async UniTask RandomFishBarPosition()
     {
         if (!_fishBarMoved) return;
-        var leftBound = rawLeftBound + controlBar.sizeDelta.x;
-        var rightBound = rawRightBound - controlBar.sizeDelta.x;
+        var leftBound = rawLeftBound + fishNeedle.sizeDelta.x;
+        var rightBound = rawRightBound - fishNeedle.sizeDelta.x;
         _fishBarMoved = false;
         Debug.Log("RandomFishBarPosition");
         var battle = GameManager.Instance.CurrentBattle;
@@ -182,6 +222,11 @@ public class ReelCanvaManager : MonoBehaviour
         fishNeedleTargetPosition = RandPosition;
         fishNeedleSpeed = UnityEngine.Random.Range(0.05f, 6f);
         await UniTask.WaitForSeconds(RandSecond);
+        var chance = Random.Range(0, 100);
+        if (chance < 20)
+        {
+            SpawnBonusBar();
+        }
         Debug.Log("RandomFishBarPosition finished");
         _fishBarMoved = true;
     }
@@ -214,6 +259,7 @@ public class ReelCanvaManager : MonoBehaviour
     public void ShowUI()
     {
         DofController.instance.SetBlur(true);
+        DestroyBonusBar();
         SetSeaHeight(1f);
         PlayAnimation();
     }

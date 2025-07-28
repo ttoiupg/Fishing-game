@@ -17,12 +17,6 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     {
         _eventSystem = EventSystem.current;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void SelectIcon(FishIconDisplayer icon)
     {
         var index = selectedIconDisplayer.IndexOf(icon);
@@ -105,6 +99,16 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     public void CloseFishBuyer()
     {
         ViewManager.instance.CloseView();
+    }
+    public void Sell()
+    {
+        foreach(var icon in selectedIconDisplayer)
+        {
+            var inventoryIndex = InventoryManager.Instance.fishes.IndexOf(icon.fish);
+            InventoryManager.Instance.fishes.RemoveAt(inventoryIndex);
+        }
+        CleanItems();
+        PrepareItems();
     }
     public void Begin()
     {

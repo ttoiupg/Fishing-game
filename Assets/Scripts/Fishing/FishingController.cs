@@ -32,6 +32,7 @@ public class FishingController : PlayerSystem
 
     [FormerlySerializedAs("controlBarOverlaping")]
     public bool ReelingBarOverlaping;
+    public bool BonusBarOverlaping;
 
     public Vector3 bobberOffset = new(0, 2f, 0);
     [FormerlySerializedAs("Zones")] public ZoneDisplayer[] zones;
@@ -79,6 +80,7 @@ public class FishingController : PlayerSystem
     private Countdowntimer _retractDebounceTimer;
     private Countdowntimer _damageCooldownTimer;
     public SectionTimer damageBoostTimer;
+    public Countdowntimer bonusTimer;
     private CancellationTokenSource _castRodCancellationTokenSource;
     private List<Timer> _timers;
     private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
@@ -96,10 +98,24 @@ public class FishingController : PlayerSystem
 
     private bool _isReelingBarOverlap()
     {
-        var a1 = player.ReelCanvaManager.controlBarPosition - player.ID.pullBarSize / 2;
-        var a2 = player.ReelCanvaManager.controlBarPosition + player.ID.pullBarSize / 2;
-        var b1 = player.ReelCanvaManager.fishNeedlePosition - 14;
-        var b2 = player.ReelCanvaManager.fishNeedlePosition + 14f;
+        var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
+        var bSizeDelta = player.ReelCanvaManager.fishNeedle.sizeDelta.x / 2;
+        var a1 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
+        var a2 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
+        var b1 = player.ReelCanvaManager.fishNeedlePosition - bSizeDelta;
+        var b2 = player.ReelCanvaManager.fishNeedlePosition + bSizeDelta;
+        if (b2 > a2) return a2 >= b1;
+        if (b2 < a1) return a1 <= b2;
+        return true;
+    }
+    private bool _isBonusBarOverlap()
+    {
+        var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
+        var bSizeDelta = player.ReelCanvaManager.bonusBar.sizeDelta.x / 2;
+        var a1 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
+        var a2 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
+        var b1 = player.ReelCanvaManager.bonusBarPosition - bSizeDelta;
+        var b2 = player.ReelCanvaManager.bonusBarPosition + bSizeDelta;
         if (b2 > a2) return a2 >= b1;
         if (b2 < a1) return a1 <= b2;
         return true;
@@ -163,14 +179,17 @@ public class FishingController : PlayerSystem
         _retractDebounceTimer = new Countdowntimer(retractDebounceLength);
         damageBoostTimer = new SectionTimer(sections);
         _damageCooldownTimer = new Countdowntimer(0.5f);
+        bonusTimer = new Countdowntimer(2f);
+        bonusTimer.OnTimerStart += () => player.ReelCanvaManager.TweenBonusTimer(2f);
+        bonusTimer.OnTimerStop += () => player.ReelCanvaManager.StopBonusTimerTween(bonusTimer.IsFinished);
         _timers = new List<Timer>(5)
-            { _castRodCooldownTimer, _retractDebounceTimer, damageBoostTimer, _damageCooldownTimer };
+            { _castRodCooldownTimer, _retractDebounceTimer, damageBoostTimer, _damageCooldownTimer ,bonusTimer};
         damageBoostTimer.OnSectionMeet += DamageSectionMet;
         damageBoostTimer.OnTimerStop += AttackFish;
         _castRodCooldownTimer.OnTimerStop += () => castDebounce = false;
         _retractDebounceTimer.OnTimerStop += () => castDebounce = false;
         _damageCooldownTimer.OnTimerStop += () => player.canDamage = true;
-    }
+     }
 
     public override void Awake()
     {
@@ -278,13 +297,12 @@ public class FishingController : PlayerSystem
 
     private void AttackFish()
     {
-        player.ReelCanvaManager.BuffTimer.localScale = new Vector3(0, 1, 1);
+        player.ReelCanvaManager.StopBuffTimerTween();
         if (GameManager.Instance.CurrentBattle.battleStats.currentDamageStage <= DamageStage.Stage1) return;
         player.canDamage = false;
         _damageCooldownTimer.Start();
         PlayAttackSound();
         DoDamage();
-        player.ReelCanvaManager.BuffTimer.DOKill();
         player.ReelCanvaManager.SetTimerFlowIntensity(0f);
         player.ReelCanvaManager.ShakeUI();
     }
@@ -357,10 +375,10 @@ public class FishingController : PlayerSystem
 
     public void ReelStateUpdateFunction()
     {
-        var overlap = _isReelingBarOverlap();
-        GameManager.Instance.CurrentBattle.SetOverlapping(overlap);
+        var isFishTagOverlap = _isReelingBarOverlap();
+        GameManager.Instance.CurrentBattle.SetOverlapping(isFishTagOverlap);
         if (!player.canDamage) return;
-        switch (overlap)
+        switch (isFishTagOverlap)
         {
             case true when !damageBoostTimer.IsRunning:
                 damageBoostTimer.Reset();
@@ -371,8 +389,29 @@ public class FishingController : PlayerSystem
                 damageBoostTimer.Stop();
                 break;
         }
+        if (player.ReelCanvaManager.haveBonusBar)
+        {
+            var isBonusBarOverlap = _isBonusBarOverlap();
+            switch (isBonusBarOverlap)
+            {
+                case true when !bonusTimer.IsRunning:
+                    Debug.Log("Bonus overlap");
+                    bonusTimer.Reset();
+                    bonusTimer.Start();
+                    break;
+                case false when BonusBarOverlaping:
+                    //AttackFish();
+                    Debug.Log("Bonux overlap stop");
+                    bonusTimer.Stop();
+                    break;
+            }
+            BonusBarOverlaping = isBonusBarOverlap;
+        }
+        else {
+            BonusBarOverlaping = false;
+        }
 
-        ReelingBarOverlaping = overlap;
+        ReelingBarOverlaping = isFishTagOverlap;
         player.ReelCanvaManager.SwitchReelingBarColor(ReelingBarOverlaping);
         player.ReelCanvaManager.RandomFishBarPosition();
     }
