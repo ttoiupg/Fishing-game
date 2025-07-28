@@ -20,6 +20,8 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public RectTransform baitBoxContent;
     public RectTransform itemContent;
     public RectTransform fishContent;
+    public List<GameObject> scrollViews;
+    public List<CanvasGroup> categoryButtons;
     [SerializeField]private List<ItemIconDisplayer> _itemIconDisplayers = new List<ItemIconDisplayer>();
     [SerializeField]private List<FishIconDisplayer> _fishIconDisplayers = new List<FishIconDisplayer>();
     [Header("Detail")] 
@@ -45,7 +47,14 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     {
         _eventSystem = EventSystem.current;
     }
-
+    public void ChangeCategory(int index)
+    {
+        for(int i = 0; i < scrollViews.Count; i++)
+        {
+            categoryButtons[i].alpha = (i==index)?1:0.5f;
+            scrollViews[i].SetActive(i == index);
+        }
+    }
     public void PrepareItems()
     {
         //filter out other item, for this, we're filtering out non bait item
@@ -74,53 +83,55 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         if (!_cacheFishList.Equals(InventoryManager.Instance.fishes))
         {
             Debug.Log("different clear cached");
-            CleanItems();
-            _cacheFishList = InventoryManager.Instance.fishes;
-            var FishList = _cacheFishList.ToList().OrderBy(item => 1/item.fishType.Rarity.OneIn);
-        
-            foreach (var fish in FishList)
-            {
-                var icon = Instantiate(fishIconDisplayer.gameObject, fishContent);
-                var iconDisplayer = icon.GetComponent<FishIconDisplayer>();
-                var button = icon.GetComponent<Button>();
-                iconDisplayer.fish = fish;
-                iconDisplayer.Init();
-                button.onClick.AddListener(() => SetDetailView(icon.gameObject,fish.fishType.Art,fish.fishType.Tag,
-                    fish.fishType.name,
-                    $"Weight:{fish.weight}kg\nRarity:{fish.fishType.Rarity.name}\nMutation:{fish.mutation.name}"));
-                _fishIconDisplayers.Add(iconDisplayer);
-            }
-            Debug.Log("Order");
-            for (int i = 0; i < _fishIconDisplayers.Count; i++)
-            {
-                var icon = _fishIconDisplayers[i].GetComponent<Button>();
-                var nav = new Navigation
-                {
-                    mode = Navigation.Mode.Explicit
-                };
-                var up = (i - 6 < 0) ? null : _fishIconDisplayers[i - 6].GetComponent<Button>();
-                var down = (i + 6 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 6].GetComponent<Button>();
-                var left = (i - 1 < 0) ? null : _fishIconDisplayers[i - 1].GetComponent<Button>();
-                var right = (i + 1 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 1].GetComponent<Button>();
-                nav.selectOnUp = up;
-                nav.selectOnDown = down;
-                nav.selectOnLeft = left;
-                nav.selectOnRight = right;
-                if ((i+1) % 6== 0)
-                {
-                    nav.selectOnRight = null;
-                }else if ((i + 1) % 6 == 1)
-                {
-                    nav.selectOnLeft = null;
-                }
-                icon.navigation = nav;
-            }
-            Debug.Log("Order finished");
+            
         }
         else
         {
             Debug.Log("Same");
         }
+        CleanItems();
+        _cacheFishList = InventoryManager.Instance.fishes;
+        var FishList = _cacheFishList.ToList().OrderBy(item => 1 / item.fishType.Rarity.OneIn);
+
+        foreach (var fish in FishList)
+        {
+            var icon = Instantiate(fishIconDisplayer.gameObject, fishContent);
+            var iconDisplayer = icon.GetComponent<FishIconDisplayer>();
+            var button = icon.GetComponent<Button>();
+            iconDisplayer.fish = fish;
+            iconDisplayer.Init();
+            button.onClick.AddListener(() => SetDetailView(icon.gameObject, fish.fishType.Art, fish.fishType.Tag,
+                fish.fishType.name,
+                $"Weight:{fish.weight}kg\nRarity:{fish.fishType.Rarity.name}\nMutation:{fish.mutation.name}"));
+            _fishIconDisplayers.Add(iconDisplayer);
+        }
+        Debug.Log("Order");
+        for (int i = 0; i < _fishIconDisplayers.Count; i++)
+        {
+            var icon = _fishIconDisplayers[i].GetComponent<Button>();
+            var nav = new Navigation
+            {
+                mode = Navigation.Mode.Explicit
+            };
+            var up = (i - 6 < 0) ? null : _fishIconDisplayers[i - 6].GetComponent<Button>();
+            var down = (i + 6 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 6].GetComponent<Button>();
+            var left = (i - 1 < 0) ? null : _fishIconDisplayers[i - 1].GetComponent<Button>();
+            var right = (i + 1 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 1].GetComponent<Button>();
+            nav.selectOnUp = up;
+            nav.selectOnDown = down;
+            nav.selectOnLeft = left;
+            nav.selectOnRight = right;
+            if ((i + 1) % 6 == 0)
+            {
+                nav.selectOnRight = null;
+            }
+            else if ((i + 1) % 6 == 1)
+            {
+                nav.selectOnLeft = null;
+            }
+            icon.navigation = nav;
+        }
+        Debug.Log("Order finished");
         _eventSystem.SetSelectedGameObject(_fishIconDisplayers[0].gameObject, null);
     }
 
@@ -142,16 +153,24 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     {
         if (item == currentInspecting)
         {
-            detailContent.GetComponent<CanvasGroup>().DOFade(0,0.5f);
+            currentInspecting = null;
+            detailContent.GetComponent<CanvasGroup>().DOFade(0,0.2f);
             item.transform.Find("Hover").gameObject.SetActive(false);
             inventoryContext.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutBack);
             detailContent.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutBack);
         }
         else
         {
+            detailContent.GetComponent<CanvasGroup>().alpha = 0;
             detailContent.GetComponent<CanvasGroup>().DOFade(1,0.5f);
             item.transform.Find("Hover").gameObject.SetActive(false);
             currentInspecting = item;
+            var inventoryStartPos = inventoryContext.localPosition;
+            inventoryStartPos.x = 0f;
+            var detailStartPos = detailContent.localPosition;
+            detailStartPos.x = 0f;
+            //inventoryContext.localPosition = inventoryStartPos;
+            detailContent.localPosition = detailStartPos;
             inventoryContext.DOLocalMoveX(-351, 0.5f).SetEase(Ease.OutBack);
             detailContent.DOLocalMoveX(598, 0.5f).SetEase(Ease.OutBack);
             itemImage.sprite = sprite;

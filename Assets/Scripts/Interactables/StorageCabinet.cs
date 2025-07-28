@@ -18,6 +18,10 @@ public class StorageCabinet : MonoBehaviour, IInteractable
 
     public float length => _length;
 
+    public void Setup()
+    {
+
+    }
     public bool checkInteractable(Player player)
     {
         return player.CanInteract;

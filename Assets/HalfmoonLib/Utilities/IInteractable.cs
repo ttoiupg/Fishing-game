@@ -8,6 +8,7 @@ namespace Halfmoon.Utilities
         public string InteractionPrompt { get; }
         public bool IsInstant { get; }
         public float length { get; }
+        public void Setup();
         bool checkInteractable(Player player);
         public void PromptShow(Player player);
         public void PromptHide(Player player);

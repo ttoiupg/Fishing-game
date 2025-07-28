@@ -43,6 +43,7 @@ public class AwardViewManager : MonoBehaviour
         animator.enabled = true;
         animator.Play("AwardViewPopUP",0,0);
         await UniTask.WaitForSeconds(4f);
+        TipButton.SetActive(true);
         _eventSystem.SetSelectedGameObject(TipButton);
         animator.enabled = false;
     }
@@ -51,6 +52,7 @@ public class AwardViewManager : MonoBehaviour
     {
         animator.enabled = true;
         _eventSystem.SetSelectedGameObject(null);
+        TipButton.SetActive(false);
         animator.Play("AwardViewClose",0,0);
         await UniTask.WaitForSeconds(1.2f);
         animator.enabled = false;

@@ -13,7 +13,17 @@ public class BuckectInteract : MonoBehaviour, IInteractable
     public bool IsInstant => _isInstant;
 
     public float length => _length;
-
+    public void Setup()
+    {
+        Debug.Log("bucket interact setup finished");
+        var goddess = GameObject.Find("BucketGoddess(Clone)").GetComponent<BucketGoddessController>();
+        Debug.Log(goddess);
+        triggered.AddListener(goddess.TriggerGoddess);
+    }
+    public void test()
+    {
+        Debug.Log("Triggered");
+    }
     public bool checkInteractable(Player player)
     {
         return player.CanInteract;

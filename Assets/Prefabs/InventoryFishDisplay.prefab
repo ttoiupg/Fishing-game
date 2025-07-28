@@ -381,8 +381,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2022984860608537247}
   - {fileID: 2812492849278407277}
+  - {fileID: 2022984860608537247}
   - {fileID: 1182521776111496547}
   - {fileID: 4171009618374313443}
   m_Father: {fileID: 0}
@@ -518,6 +518,7 @@ MonoBehaviour:
     weight: 0
   Icon: {fileID: 6719835649046897542}
   background: {fileID: 7183283853865096898}
+  hover: {fileID: 7090474298493491541}
   weightText: {fileID: 3008579067364810710}
   mutationText: {fileID: 8014956633338042318}
 --- !u!1 &6136558642269340466

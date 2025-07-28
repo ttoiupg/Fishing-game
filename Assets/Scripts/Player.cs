@@ -103,6 +103,9 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public void Setup()
     {
+        var fishingCanva = GameObject.Find("FishingCanva(Clone)");
+        ReelCanvaManager = fishingCanva.GetComponent<ReelCanvaManager>();
+        boostCanvaManager = fishingCanva.GetComponent<BoostCanvaManager>();
         fishingController.Setup();
         hudController = GameObject.Find("View(Clone)").GetComponent<HUDController>();
         cinemachineCamera = GameObject.Find("CinemachineCamera").GetComponent<CinemachinePositionComposer>();

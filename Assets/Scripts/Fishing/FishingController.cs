@@ -86,6 +86,7 @@ public class FishingController : PlayerSystem
     [FormerlySerializedAs("RumbleLowFreq")] [Header("Gamepad")]
     public float rumbleLowFreq = 0.25f;
 
+
     private static bool _isInside(Vector2 a, Vector2 sizeA, Vector2 b)
     {
         var result = a.x - sizeA.x / 2f <= b.x && a.x + sizeA.x / 2f >= b.x && a.y - sizeA.y / 2f <= b.y &&
@@ -435,7 +436,7 @@ public class FishingController : PlayerSystem
     private async UniTask SetHook()
     {
         castDebounce = true;
-        biteNoticeUIManager.StartAnimation();
+        //biteNoticeUIManager.StartAnimation();
         SoundFXManger.Instance.PlaySoundFXClip(biteNotifySound, _playerTransform, 1f);
         ConfigureCamera(2.15f, _biteNoticeScreenPosition);
         await UniTask.WaitForSeconds(2);

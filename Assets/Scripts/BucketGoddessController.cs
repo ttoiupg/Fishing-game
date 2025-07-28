@@ -1,7 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class BucketGoddessController : MonoBehaviour
 {
@@ -17,38 +19,42 @@ public class BucketGoddessController : MonoBehaviour
 
     public void Setup()
     {
+        leaveButton = GameObject.Find("BucketGoddessLeaveButton");
+        leaveButton.transform.localPosition = new Vector3(leaveButton.transform.localPosition.x,-1000f, leaveButton.transform.localPosition.z);
+        leaveButton.gameObject.GetComponent<Button>().onClick.AddListener(LeaveGoddess);
+        goddessRenderObject = GameObject.Find("BucketGoddessRenderTexture");
         animator = GetComponent<Animator>();
         _eventSystem = EventSystem.current;
     }
 
     private void StartEffect()
     {
-        goddessRenderObject.SetActive(true);
         animator.enabled = true;
         SoundFXManger.Instance.PlaySoundFXClip(appearAudio,GameManager.Instance.player.transform,0.7f);
     }
 
     private void LeaveEffect()
     {
-        leaveButton.SetActive(false);
+        leaveButton.transform.DOLocalMoveY(-1000f,0.3f).SetEase(Ease.OutBack);
         SoundFXManger.Instance.PlaySoundFXClip(submergeAudio,GameManager.Instance.player.transform,0.7f);
     }
     private async UniTask DelayUI()
     {
         await UniTask.WaitForSeconds(10f);
-        leaveButton.SetActive(true);
+        leaveButton.transform.DOLocalMoveY(-404.56f, 0.3f).SetEase(Ease.OutBack);
         _eventSystem.SetSelectedGameObject(leaveButton);
     }
 
     private async UniTask DelayLeave()
     {
         await UniTask.WaitForSeconds(3.5f);
-        goddessRenderObject.SetActive(false);
+        //goddessRenderObject.SetActive(false);
         animator.enabled = false;
     }
     public void TriggerGoddess()
     {
         _eventSystem.SetSelectedGameObject(null);
+        PauseViewModel.Instance.PauseLock = true;
         GameManager.Instance.player.isActive = false;
         animator.SetTrigger(Appear);
         StartEffect();
@@ -58,6 +64,7 @@ public class BucketGoddessController : MonoBehaviour
     public void LeaveGoddess()
     {
         _eventSystem.SetSelectedGameObject(null);
+        PauseViewModel.Instance.PauseLock = false;
         GameManager.Instance.player.isActive = true;
         animator.SetTrigger(Exit);
         LeaveEffect();

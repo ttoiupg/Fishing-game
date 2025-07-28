@@ -7,7 +7,7 @@ public class VisualFXManager : MonoBehaviour
 
     [Header("Bobber")]
     public Object BobberObject;
-    public FishLineManager FishLineManager;
+    public FishLineManager fishLineManager;
     public float ThrowStrength;
     private void Awake()
     {
@@ -18,12 +18,13 @@ public class VisualFXManager : MonoBehaviour
     }
     private IEnumerator BobberNumerator(Vector3 position, int direction)
     {
+        fishLineManager = GameObject.Find("LineStart").GetComponent<FishLineManager>();
         yield return new WaitForSeconds(0.65f);
         GameObject bobber = Instantiate(BobberObject, position, new Quaternion(0, 0, 0, 0)) as GameObject;
         Rigidbody rigidbody = bobber.GetComponent<Rigidbody>();
         Vector3 force = new Vector3(15 * direction * ThrowStrength, 30, 0);
         rigidbody.AddRelativeForce(force, ForceMode.Impulse);
-        FishLineManager.LineEnd = bobber.transform;
+        fishLineManager.LineEnd = bobber.transform;
     }
     public void SpawnBobber(Vector3 position,int direction)
     {

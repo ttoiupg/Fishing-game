@@ -56,5 +56,6 @@ public class GameLoadManager : MonoBehaviour
         //sea = Instantiate(sea);
         bucketGoddessController.Setup();
         player.Setup();
+        map.GetComponent<InteractionLoader>().Setup();
     }
 }

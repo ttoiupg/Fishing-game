@@ -7,6 +7,7 @@ public class FishIconDisplayer : MonoBehaviour
     public Fish fish;
     public Image Icon;
     public Image background;
+    public Image hover;
     public TextMeshProUGUI weightText;
     public TextMeshProUGUI mutationText;
     public void Init()

@@ -27,6 +27,8 @@ public class ReelCanvaManager : MonoBehaviour
     public RectTransform fishHealthBar;
     public TextMeshProUGUI fishHealthText;
     public Image seaBackground;
+    public RectTransform goldBar;
+    public Image goldBarEffect;
     
     [Header("Valus")]
     public float pullCanvaRotation = 0f;
