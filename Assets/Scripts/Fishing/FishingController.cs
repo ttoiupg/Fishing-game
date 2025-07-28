@@ -100,24 +100,24 @@ public class FishingController : PlayerSystem
     {
         var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
         var bSizeDelta = player.ReelCanvaManager.fishNeedle.sizeDelta.x / 2;
-        var a1 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
-        var a2 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
-        var b1 = player.ReelCanvaManager.fishNeedlePosition - bSizeDelta;
-        var b2 = player.ReelCanvaManager.fishNeedlePosition + bSizeDelta;
-        if (b2 > a2) return a2 >= b1;
-        if (b2 < a1) return a1 <= b2;
+        var a2 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
+        var a1 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
+        var b2 = player.ReelCanvaManager.fishNeedlePosition - bSizeDelta;
+        var b1 = player.ReelCanvaManager.fishNeedlePosition + bSizeDelta;
+        if (b2 > a2) return a1 >= b2;
+        if (b2 < a1) return a2 <= b1;
         return true;
     }
     private bool _isBonusBarOverlap()
     {
         var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
         var bSizeDelta = player.ReelCanvaManager.bonusBar.sizeDelta.x / 2;
-        var a1 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
-        var a2 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
-        var b1 = player.ReelCanvaManager.bonusBarPosition - bSizeDelta;
-        var b2 = player.ReelCanvaManager.bonusBarPosition + bSizeDelta;
-        if (b2 > a2) return a2 >= b1;
-        if (b2 < a1) return a1 <= b2;
+        var a2 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
+        var a1 = player.ReelCanvaManager.controlBarPosition + aSizeDelta;
+        var b2 = player.ReelCanvaManager.bonusBarPosition - bSizeDelta;
+        var b1 = player.ReelCanvaManager.bonusBarPosition + bSizeDelta;
+        if (b2 > a2) return a1 >= b2;
+        if (b2 < a1) return a2 <= b1;
         return true;
     }
 
@@ -358,7 +358,7 @@ public class FishingController : PlayerSystem
             _animator.SetFloat("PullingSpeed", 1f + Value);
             _reelSoundSource.pitch = 0.7f + Value * 0.35f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-            player.ReelCanvaManager.controlBarGravity = 1500f * Value;
+            player.ReelCanvaManager.controlBarDirection = Value;
             player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * Value;
             ConfigureCamera(8f - 2f * Value);
         }
@@ -367,7 +367,7 @@ public class FishingController : PlayerSystem
             _animator.SetFloat("PullingSpeed", 0.6f);
             _reelSoundSource.pitch = 0.7f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-            player.ReelCanvaManager.controlBarGravity = -1500;
+            player.ReelCanvaManager.controlBarDirection = -1;
             player.ReelCanvaManager.crankDirection = -player.ReelCanvaManager.crankSpeed * 0.4f;
             ConfigureCamera(player.defaultCameraDistance);
         }

@@ -17,6 +17,7 @@ public class AwardViewManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI WeightLabel;
     [SerializeField] private TextMeshProUGUI MutationLabel;
     [SerializeField] private GameObject TipButton;
+    private bool _debounce = false;
     private void Awake()
     {
         if (Instance == null)
@@ -46,6 +47,7 @@ public class AwardViewManager : MonoBehaviour
         TipButton.SetActive(true);
         _eventSystem.SetSelectedGameObject(TipButton);
         animator.enabled = false;
+        _debounce = false;
     }
 
     private async UniTask Off()
@@ -59,16 +61,19 @@ public class AwardViewManager : MonoBehaviour
         GameManager.Instance.player.isActive = true;
         DofController.instance.SetBlur(false);
         PauseViewModel.Instance.PauseLock = false;
+        _debounce = false;
     }
     public void SetAwardView(bool isOn)
     {
+        if (_debounce) return;
+        _debounce = true;
         if (isOn)
         {
             On();
         }
         else
         {
-            Off(); 
+            Off();
         }
     }
 

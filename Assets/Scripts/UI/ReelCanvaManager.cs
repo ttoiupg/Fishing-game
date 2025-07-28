@@ -34,8 +34,13 @@ public class ReelCanvaManager : MonoBehaviour
     
     [Header("Valus")]
     public float pullCanvaRotation = 0f;
+
+    public float controlForwardGravity = 3500f;
+    public float controlBackwardGravity = -3500f;
+    public float controlBarMaxSpeed = 1000f;
     public float controlBarPosition = 0f;
     public float controlBarGravity = 0f;
+    public float controlBarDirection = 0f;
     public float controlBarVelocity = 0f;
     public float fishNeedleTargetPosition = 0f;
     public float fishNeedlePosition = 0f;
@@ -75,7 +80,8 @@ public class ReelCanvaManager : MonoBehaviour
         //controlBar.sizeDelta = new Vector2(player.ID.pullBarSize, 94.7651f);
         controlBar.anchoredPosition = new Vector2(0, -338.718f);
         fishNeedle.anchoredPosition = new Vector2(0, -403.5762f);
-        controlBarGravity = -1500f;
+        controlBarGravity = controlBarDirection;
+        controlBarDirection = 0f;
         controlBarPosition = 0f;
         fishNeedlePosition = 0f;
         fishNeedlePosition = 0f;
@@ -129,18 +135,20 @@ public class ReelCanvaManager : MonoBehaviour
     {
         var leftBound = -338.4f;
         var rightBound = 338.4f;
+        controlBarGravity = (controlBarDirection<0)? controlBackwardGravity : controlForwardGravity * controlBarDirection;
         controlBarVelocity += controlBarGravity * Time.deltaTime;
+        controlBarVelocity = (Mathf.Abs(controlBarVelocity)>controlBarMaxSpeed) ?  Mathf.Sign(controlBarVelocity) * controlBarMaxSpeed : controlBarVelocity;
         //crankVelocity = Mathf.Abs((crankVelocity + crankDirection * Time.deltaTime)) > crankMaxSpeed ? crankMaxSpeed : crankVelocity + crankDirection * Time.deltaTime;
         crankRotation += crankDirection * Time.deltaTime;
         var nextPosition = controlBarPosition + controlBarVelocity * Time.deltaTime;
         if (nextPosition < leftBound)
         {
-            controlBarVelocity *= -0.4f;
+            controlBarVelocity *= -0.1f;
             nextPosition = leftBound;
         }
         else if (nextPosition > rightBound)
         {
-            controlBarVelocity *= -0.4f;
+            controlBarVelocity *= -0.1f;
             nextPosition = rightBound;
         }
 
@@ -148,7 +156,7 @@ public class ReelCanvaManager : MonoBehaviour
         controlBar.anchoredPosition = new Vector2(controlBarPosition, 118.3823f);
 
         fishNeedlePosition = Lerpfloat(fishNeedlePosition, fishNeedleTargetPosition, fishNeedleSpeed * Time.deltaTime);
-        pullCanvaRotation = Lerpfloat(pullCanvaRotation, controlBarGravity / -250f, 5.5f * Time.deltaTime);
+        pullCanvaRotation = Lerpfloat(pullCanvaRotation, controlBarVelocity / (-controlBarMaxSpeed / 10), 5.5f * Time.deltaTime);
         topBarCanva.rotation = Quaternion.Euler(0, 0, pullCanvaRotation);
         gearCover.rotation = Quaternion.Euler(0, 0, crankRotation*0.07f);
         gear.rotation = Quaternion.Euler(0, 0, -crankRotation* 0.14f);

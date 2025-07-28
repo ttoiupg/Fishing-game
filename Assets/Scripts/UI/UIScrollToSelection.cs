@@ -165,7 +165,7 @@ namespace UnityEngine.UI.Extensions
         private void UpdateVerticalScrollPosition(RectTransform selection)
         {
             // move the current scroll rect to correct position
-            float selectionPosition = -selection.anchoredPosition.y - (selection.rect.height * (1 - selection.pivot.y) - YPadding);
+            float selectionPosition = -selection.anchoredPosition.y - (selection.rect.height * (1 - selection.pivot.y)-YPadding);
 
             float elementHeight = selection.rect.height;
             float maskHeight = ScrollWindow.rect.height;
@@ -173,19 +173,9 @@ namespace UnityEngine.UI.Extensions
 
             // get the element offset value depending on the cursor move direction
             float offlimitsValue = GetScrollOffset(selectionPosition, listAnchorPosition, elementHeight, maskHeight);
-
-            float normalizedPosition = TargetScrollRect.verticalNormalizedPosition + (offlimitsValue / LayoutListGroup.rect.height);
-            // move the target scroll rect
-            if (offlimitsValue < 0)
-            {
-                normalizedPosition -= (Mathf.Abs(offlimitsValue) / LayoutListGroup.rect.height);
-            }else if (offlimitsValue > 0)
-            {
-                normalizedPosition += (offlimitsValue / LayoutListGroup.rect.height);
-            }
-
-            normalizedPosition = Mathf.Clamp01(normalizedPosition);
-            TargetScrollRect.verticalNormalizedPosition += Mathf.SmoothStep(TargetScrollRect.verticalNormalizedPosition, normalizedPosition, Time.unscaledDeltaTime * scrollSpeed);
+            
+            TargetScrollRect.verticalNormalizedPosition +=
+                (offlimitsValue / LayoutListGroup.rect.height) * Time.unscaledDeltaTime * scrollSpeed;
         }
 
         private void UpdateHorizontalScrollPosition(RectTransform selection)

@@ -1551,8 +1551,12 @@ MonoBehaviour:
   bonusTimer: {fileID: 5974365192353669694}
   haveBonusBar: 0
   pullCanvaRotation: 0
+  controlForwardGravity: 3500
+  controlBackwardGravity: -3500
+  controlBarMaxSpeed: 350
   controlBarPosition: 50
   controlBarGravity: 0
+  controlBarDirection: 0
   controlBarVelocity: 0
   fishNeedleTargetPosition: 0
   fishNeedlePosition: 0

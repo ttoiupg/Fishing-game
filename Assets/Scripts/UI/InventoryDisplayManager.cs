@@ -161,15 +161,15 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         }
         else
         {
+            detailContent.GetComponent<CanvasGroup>().DOKill();
             detailContent.GetComponent<CanvasGroup>().alpha = 0;
             detailContent.GetComponent<CanvasGroup>().DOFade(1,0.5f);
             item.transform.Find("Hover").gameObject.SetActive(false);
             currentInspecting = item;
-            var inventoryStartPos = inventoryContext.localPosition;
-            inventoryStartPos.x = 0f;
             var detailStartPos = detailContent.localPosition;
             detailStartPos.x = 0f;
             //inventoryContext.localPosition = inventoryStartPos;
+            detailContent.DOKill();
             detailContent.localPosition = detailStartPos;
             inventoryContext.DOLocalMoveX(-351, 0.5f).SetEase(Ease.OutBack);
             detailContent.DOLocalMoveX(598, 0.5f).SetEase(Ease.OutBack);
