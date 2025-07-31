@@ -11,6 +11,8 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     public FishIconDisplayer fishIconDisplayer;
     public RectTransform fishContent;
     public GameObject inventoryBody;
+    public Button sellButton;
+    public Button closeButton;
     private EventSystem _eventSystem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,7 +37,6 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     {
         CleanItems();
         var FishList = InventoryManager.Instance.fishes.ToList().OrderBy(item => 1 / item.fishType.Rarity.OneIn);
-
         foreach (var fish in FishList)
         {
             var icon = Instantiate(fishIconDisplayer.gameObject, fishContent);
@@ -53,10 +54,10 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
             {
                 mode = Navigation.Mode.Explicit
             };
-            var up = (i - 6 < 0) ? null : _fishIconDisplayers[i - 6].GetComponent<Button>();
-            var down = (i + 6 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 6].GetComponent<Button>();
-            var left = (i - 1 < 0) ? null : _fishIconDisplayers[i - 1].GetComponent<Button>();
-            var right = (i + 1 > _fishIconDisplayers.Count - 1) ? null : _fishIconDisplayers[i + 1].GetComponent<Button>();
+            var up = (i - 6 < 0) ? sellButton : _fishIconDisplayers[i - 6].GetComponent<Button>();
+            var down = (i + 6 > _fishIconDisplayers.Count - 1) ? sellButton : _fishIconDisplayers[i + 6].GetComponent<Button>();
+            var left = (i - 1 < 0) ? sellButton : _fishIconDisplayers[i - 1].GetComponent<Button>();
+            var right = (i + 1 > _fishIconDisplayers.Count - 1) ? sellButton : _fishIconDisplayers[i + 1].GetComponent<Button>();
             nav.selectOnUp = up;
             nav.selectOnDown = down;
             nav.selectOnLeft = left;
@@ -71,6 +72,19 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
             }
             icon.navigation = nav;
         }
+
+        var closeNav = new Navigation { mode = Navigation.Mode.Explicit };
+        var sellNav = new Navigation { mode = Navigation.Mode.Explicit };
+        closeNav.selectOnUp = _fishIconDisplayers[^1].GetComponent<Button>();
+        closeNav.selectOnDown = _fishIconDisplayers[0].GetComponent<Button>();
+        closeNav.selectOnLeft = sellButton;
+        closeNav.selectOnRight = sellButton;
+        sellNav.selectOnUp = _fishIconDisplayers[^1].GetComponent<Button>();
+        sellNav.selectOnDown = _fishIconDisplayers[0].GetComponent<Button>();
+        sellNav.selectOnLeft = closeButton;
+        sellNav.selectOnRight = closeButton;
+        closeButton.navigation = closeNav;
+        sellButton.navigation = sellNav;
         Debug.Log("Order finished");
         _eventSystem.SetSelectedGameObject(_fishIconDisplayers[0].gameObject, null);
     }

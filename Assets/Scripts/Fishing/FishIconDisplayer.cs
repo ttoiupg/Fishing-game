@@ -15,6 +15,6 @@ public class FishIconDisplayer : MonoBehaviour
         Icon.sprite = fish.fishType.Art;
         background.color = fish.fishType.Rarity.InventoryColor;
         weightText.text = $"{fish.weight}kg";
-        mutationText.text = (fish.mutation.id == "mut_none") ? "": $"{fish.mutation}";
+        mutationText.text = (fish.mutation.id == "mut_none") ? "": $"{fish.mutation.name}";
     }
 }

@@ -89,7 +89,6 @@ public class FishingRodGamepad : Gamepad
 {
     static FishingRodGamepad()
     {
-        Debug.Log("instancing...");
         // This is one way to match the Device.
          InputSystem.RegisterLayout<FishingRodGamepad>(
            matches: new InputDeviceMatcher()

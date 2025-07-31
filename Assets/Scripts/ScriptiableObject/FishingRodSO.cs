@@ -16,4 +16,5 @@ public class FishingRodSO : ScriptableObject
     public float critMultiplier;
     public float luck;
     public float resilience;
+    public float durability;
 }

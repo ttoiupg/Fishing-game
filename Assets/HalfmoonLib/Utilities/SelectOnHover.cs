@@ -10,6 +10,7 @@ namespace Halfmoon
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!gameObject.activeInHierarchy) return;
             eventSystem.SetSelectedGameObject(this.gameObject);
         }
 

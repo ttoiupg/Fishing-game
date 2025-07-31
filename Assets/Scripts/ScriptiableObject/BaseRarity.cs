@@ -8,4 +8,5 @@ public class BaseRarity : ScriptableObject
     public string id;
     public float OneIn;
     public Color InventoryColor;
+    public Sprite TagSprite;
 }

@@ -26,12 +26,16 @@ public class FishingRod
 {
     public FishingRodSO fishingRodSO;
     [FormerlySerializedAs("timeUsed")] public int fishCaught;
+    [Header("Modifiers")]
     [SerializeField] public List<ModifierBase> modifiers = new();
     public float tempDamage;
-    public float tempAccuracy;
+    [FormerlySerializedAs("tempAccuracy")] public float tempHandling;
     public float tempCritChance;
     public float tempCritMultiplier;
+    [Space]
     public float durability;
+    public float resilience;
+    public float luck;
     [FormerlySerializedAs("aquireDate")] public string acquireDate;
 
     public DamageInfo GetDamage()
@@ -39,7 +43,7 @@ public class FishingRod
         var crit = Random.value <= fishingRodSO.critChance + tempCritChance;
         var damage = (GameManager.Instance.player.attackBuff * fishingRodSO.damage) + tempDamage;
         var finalDamage = (crit) ?  damage * (fishingRodSO.critMultiplier + tempCritMultiplier) : damage;
-        var hit = Random.value <= fishingRodSO.accuracy + tempAccuracy;
+        var hit = Random.value <= fishingRodSO.accuracy + tempHandling;
         return new DamageInfo(finalDamage, crit, hit,this);
     }
 
