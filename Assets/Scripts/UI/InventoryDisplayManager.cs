@@ -34,6 +34,14 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public Image tagImage;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI detailText;
+    [Header("Fish detail")]
+    public GameObject fishDetail;
+
+    public TextMeshProUGUI fishNameText;
+    public TextMeshProUGUI weightText;
+    public RectTransform weightBar;
+    public TextMeshProUGUI rarityText;
+    public TextMeshProUGUI mutationText;
     [Header("Fishing rod detail")]
     public GameObject fishingRodDetail;
     public Image fishingRodImage;
@@ -52,6 +60,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public RectTransform rodResilienceBar;
     public TextMeshProUGUI rodDurabilityText;
     public RectTransform rodDurabilityBar;
+    public TextMeshProUGUI rodRarityText;
     [Space]
     public GameObject currentInspecting;
     public FishingRodCellDisplayer currentFishingRod;
@@ -83,14 +92,19 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         {
          case 0:
              SetupFishNavigation();
-             itemDetail.SetActive(true);
+             itemDetail.SetActive(false);
+             fishDetail.SetActive(true);
              fishingRodDetail.SetActive(false);
              break;
          case 1:
+             itemDetail.SetActive(true);
+             fishDetail.SetActive(false);
+             fishingRodDetail.SetActive(false);
              break;
          case 2:
              SetupFishingRodsNavigation();
              itemDetail.SetActive(false);
+             fishDetail.SetActive(false);
              fishingRodDetail.SetActive(true);
              break;
          default:
@@ -113,9 +127,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             var button = icon.GetComponent<Button>();
             iconDisplayer.fish = fish;
             iconDisplayer.Init();
-            button.onClick.AddListener(() => SetDetailView(icon.gameObject, fish.fishType.Art, fish.fishType.Tag,
-                fish.fishType.name,
-                $"Weight:{fish.weight}kg\nRarity:{fish.fishType.Rarity.name}\nMutation:{fish.mutation.name}"));
+            button.onClick.AddListener(() => SetFishDetailView(iconDisplayer));
             _fishIconDisplayers.Add(iconDisplayer);
         }
         for (int i = 0; i < _fishIconDisplayers.Count; i++)
@@ -321,10 +333,12 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             rodResilienceBar.localScale = new Vector3(resilience/100, 1f, 1f);
             rodDurabilityText.text = $"Durability: {durability}/{maxDurability}";
             rodDurabilityBar.localScale = new Vector3(durability/maxDurability, 1f, 1f);
+            rodRarityText.text = fishingRodSO.rarity.name;
+            rodRarityText.color = fishingRodSO.rarity.InventoryColor;
             tagImage.sprite = fishingRodSO.rarity.TagSprite;
         }
     }
-    public void SetDetailView(GameObject item,Sprite sprite,Sprite tag,string Name, string detail)
+    public void SetFishDetailView(FishIconDisplayer item)
     {
         itemImage.gameObject.SetActive(true);
         fishingRodImage.gameObject.SetActive(false);
@@ -346,7 +360,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             detailContent.GetComponent<CanvasGroup>().alpha = 0;
             detailContent.GetComponent<CanvasGroup>().DOFade(1,0.5f);
             item.transform.Find("Hover").gameObject.SetActive(true);
-            currentInspecting = item;
+            currentInspecting = item.gameObject;
             var detailStartPos = detailContent.localPosition;
             detailStartPos.x = 0f;
             //inventoryContext.localPosition = inventoryStartPos;
@@ -354,10 +368,14 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             detailContent.localPosition = detailStartPos;
             inventoryContext.DOLocalMoveX(-351, 0.5f).SetEase(Ease.OutBack);
             detailContent.DOLocalMoveX(598, 0.5f).SetEase(Ease.OutBack);
-            itemImage.sprite = sprite;
-            tagImage.sprite = tag;
-            nameText.text = Name;
-            detailText.text = detail;
+            itemImage.sprite = item.fish.fishType.Art;
+            tagImage.sprite = item.fish.fishType.Tag;
+            fishNameText.text = item.fish.fishType.name;
+            weightText.text = $"Weight: {item.fish.weight}";
+            weightBar.localScale = new Vector3(item.fish.weight/item.fish.fishType.MaxWeight, 1f, 1f);
+            rarityText.text = item.fish.fishType.Rarity.name;
+            rarityText.color = item.fish.fishType.Rarity.InventoryColor;
+            mutationText.text = item.fish.mutation.name;
         }
     }
 

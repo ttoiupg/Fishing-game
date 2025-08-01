@@ -103,6 +103,8 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public void Setup()
     {
+        UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
+        UnityEngine.Rendering.DebugManager.instance.displayRuntimeUI = true;
         var fishingCanva = GameObject.Find("FishingCanva(Clone)");
         ReelCanvaManager = fishingCanva.GetComponent<ReelCanvaManager>();
         boostCanvaManager = fishingCanva.GetComponent<BoostCanvaManager>();

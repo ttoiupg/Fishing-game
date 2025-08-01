@@ -7,7 +7,7 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 using UnityEditor;
 
-[StructLayout(LayoutKind.Explicit, Size = 32)]
+[StructLayout(LayoutKind.Explicit, Size = 224)]
 struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
 {
     // Because all HID input reports are tagged with the 'HID ' FourCC,
@@ -28,33 +28,33 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
     // Given that our layout is based on Gamepad, almost all the controls here are
     // inherited from Gamepad, and we just modify settings on them.
 
-    [InputControl(name = "leftStick", layout = "Stick", format = "VC2S")]
-    [InputControl(name = "leftStick/x", offset = 1, format = "SHRT",
-        parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
-    [InputControl(name = "leftStick/y", offset = 3, format = "SHRT",
-        parameters = "invert,normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
-    [FieldOffset(1)] public byte leftStickX;
-    [FieldOffset(2)] public byte leftStickY;
+     [InputControl(name = "leftStick", layout = "Stick", format = "VC2S")]
+     [InputControl(name = "leftStick/x", offset = 1, format = "SHRT",
+         parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+     [InputControl(name = "leftStick/y", offset = 3, format = "SHRT",
+         parameters = "invert,normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+     [FieldOffset(3)] public byte leftStickX;
+     [FieldOffset(4)] public byte leftStickY;
 
-    //[InputControl(name = "rightStick", layout = "Stick", format = "VC2S")]
-    //[InputControl(name = "rightStick/x", offset = 0, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
-    //[InputControl(name = "rightStick/left", offset = 0, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
-    //[InputControl(name = "rightStick/right", offset = 0, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
-    //[InputControl(name = "rightStick/y", offset = 1, format = "SHRT", parameters = "invert,normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
-    //[InputControl(name = "rightStick/up", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
-    //[InputControl(name = "rightStick/down", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
-    //[FieldOffset(3)] public byte rightStickX;
-    //[FieldOffset(4)] public byte rightStickY;
+    [InputControl(name = "rightStick", layout = "Stick", format = "VC2S")]
+    [InputControl(name = "rightStick/x", offset = 0, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+    [InputControl(name = "rightStick/left", offset = 0, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
+    [InputControl(name = "rightStick/right", offset = 0, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
+    [InputControl(name = "rightStick/y", offset = 1, format = "SHRT", parameters = "invert,normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+    [InputControl(name = "rightStick/up", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
+    [InputControl(name = "rightStick/down", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
+    [FieldOffset(5)] public byte rightStickX;
+    [FieldOffset(6)] public byte rightStickY;
 
     //[InputControl(name = "dpad", format = "BIT", layout = "Dpad", sizeInBits = 4, defaultState = 8)]
     //[InputControl(name = "dpad/up", format = "BIT", layout = "DiscreteButton", parameters = "minValue=7,maxValue=1,nullValue=8,wrapAtValue=7", bit = 0, sizeInBits = 4)]
     //[InputControl(name = "dpad/right", format = "BIT", layout = "DiscreteButton", parameters = "minValue=1,maxValue=3", bit = 0, sizeInBits = 4)]
     //[InputControl(name = "dpad/down", format = "BIT", layout = "DiscreteButton", parameters = "minValue=3,maxValue=5", bit = 0, sizeInBits = 4)]
     //[InputControl(name = "dpad/left", format = "BIT", layout = "DiscreteButton", parameters = "minValue=5, maxValue=7", bit = 0, sizeInBits = 4)]
-    //[InputControl(name = "buttonWest", displayName = "Square", bit = 4)]
+    [InputControl(name = "buttonWest", displayName = "Square", bit = 9)]
     [InputControl(name = "buttonSouth", displayName = "Cross", bit = 8)]
-    //[InputControl(name = "buttonEast", displayName = "Circle", bit = 6)]
-    //[InputControl(name = "buttonNorth", displayName = "Triangle", bit = 7)]
+    [InputControl(name = "buttonEast", displayName = "Circle", bit = 10)]
+    [InputControl(name = "buttonNorth", displayName = "Triangle", bit = 11)]
     [FieldOffset(0)] public byte buttons1;
 
     //[InputControl(name = "leftShoulder", bit = 0)]
