@@ -298,7 +298,6 @@ public class FishingController : PlayerSystem
     private void AttackFish()
     {
         player.ReelCanvaManager.StopBuffTimerTween();
-        if (GameManager.Instance.CurrentBattle.battleStats.currentDamageStage <= DamageStage.Stage1) return;
         player.canDamage = false;
         _damageCooldownTimer.Start();
         PlayAttackSound();
@@ -431,7 +430,7 @@ public class FishingController : PlayerSystem
         PrepareReelUI();
         await UniTask.WaitForSeconds(2.5f);
         GameManager.Instance.StartBattle();
-        player.ReelCanvaManager.StartTimer(GameManager.Instance.CurrentBattle.timeLimit);
+        player.ReelCanvaManager.StartTimer();
     }
 
     #endregion

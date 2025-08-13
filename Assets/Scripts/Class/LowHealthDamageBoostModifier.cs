@@ -16,26 +16,26 @@ public class LowHealthDamageBoostModifier : ModifierBase
     public override void OnBattleEvent(BattleEvent battleEvent)
     {
         var battleState = GameManager.Instance.CurrentBattle.battleStats;
-        var rod = InventoryManager.Instance.fishingRods[GameManager.Instance.player.currentFishingRod];
+        var player = GameManager.Instance.player;
         switch (battleEvent)
         {
             case BattleEvent.FishHealthChanged:
                 if (ShouldActivate(battleState) && !isActive)
                 {
                     Debug.Log("Low Health Damage Boost applied");
-                    rod.tempDamage += damageBonus;
+                    player.tempDamage += damageBonus;
                     isActive = true;
                 }else if (!ShouldActivate(battleState) && isActive)
                 {
                     Debug.Log("Low Health Damage Boost removed");
-                    rod.tempDamage -= damageBonus;
+                    player.tempDamage -= damageBonus;
                     isActive = false;
                 }
                 break;
             case BattleEvent.BattleEnd:
                 if (isActive)
                 {
-                    rod.tempDamage -= damageBonus;
+                    player.tempDamage -= damageBonus;
                     isActive = false;
                 }
                 break;

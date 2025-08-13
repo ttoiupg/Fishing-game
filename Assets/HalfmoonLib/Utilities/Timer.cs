@@ -33,6 +33,13 @@ namespace Halfmoon.Utilities
                 OnTimerStop.Invoke();
             }
         }
+
+        public void ChangeTime(float value)
+        {
+            Time = (Time + value >= initialTime)? initialTime : Time + value;
+        }
+        public float GetInitialTime() => initialTime;
+        public float GetTime() => Time;
         public void Resume() => IsRunning = true;
         public void Pause() => IsRunning = false;
         public abstract void Tick(float deltaTime);

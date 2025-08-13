@@ -46,7 +46,8 @@ float2 Lerp2(float2 A, float2 B, float t)
 {
     return A + (B - A) * t;
 }
-void GersnerWave_float(int count,float displace, float randomness, float3 position,float amplitude,float MinSteep,float MaxSteep,float MinLength,float MaxLength,float2 waveDirection, float waveSpeed,float time, out float3 Result,out float3 normal, out float height,out float3 color){
+void GersnerWave_float(int count,float displace, float randomness, float3 position,float amplitude,float MinSteep,float MaxSteep,float MinLength,float MaxLength
+    ,float2 waveDirection, float waveSpeed,float time, out float3 Result,out float3 normal, out float height,out float3 color){
     float3 tangent = float3(1, 0, 0);
     float3 binormal = float3(0, 0, 1);
     float3 gridPoint = position;

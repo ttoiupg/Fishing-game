@@ -1549,7 +1549,12 @@ MonoBehaviour:
   bonusBar: {fileID: 7792188495245623042}
   bonusBarEffect: {fileID: 1307386130105657258}
   bonusTimer: {fileID: 5974365192353669694}
+  healthContainer: {fileID: 158608427763422219}
+  attackEffectText: {fileID: 3585924851319606901, guid: 99c00d517b947f84eaa7ed27b916a822, type: 3}
   haveBonusBar: 0
+  normalAttackColor: {r: 1, g: 1, b: 1, a: 1}
+  missColor: {r: 1, g: 0.53333336, b: 0.53333336, a: 1}
+  criticalColor: {r: 1, g: 0.8862745, b: 0.4392157, a: 1}
   pullCanvaRotation: 0
   controlForwardGravity: 3500
   controlBackwardGravity: -3500

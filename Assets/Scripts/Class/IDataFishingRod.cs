@@ -16,6 +16,5 @@ public class IDataFishingRod
         durability = fishingRod.durability;
         acquireDate = fishingRod.acquireDate;
         modifiers = new List<string>();
-        fishingRod.modifiers.ForEach(modifier => modifiers.Add(modifier.id));
     }
 }

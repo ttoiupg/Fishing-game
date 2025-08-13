@@ -61,6 +61,8 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public TextMeshProUGUI rodDurabilityText;
     public RectTransform rodDurabilityBar;
     public TextMeshProUGUI rodRarityText;
+    [Header("money")]
+    public TextMeshProUGUI moneyText;
     [Space]
     public GameObject currentInspecting;
     public FishingRodCellDisplayer currentFishingRod;
@@ -321,7 +323,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             var maxDurability = fishingRodSO.durability;
             rodDamageText.text = $"Damage: {damage}";
             rodDamageBar.localScale = new Vector3(damage/100, 1f, 1f);
-            rodHandlingText.text = $"Handling: {handling}";
+            rodHandlingText.text = $"Accuracy: {handling}";
             rodHandlingBar.localScale = new Vector3(handling/100, 1f, 1f);
             rodCriticalChanceText.text = $"Critical Chance: {critChance}%";
             rodCriticalChanceBar.localScale = new Vector3(critChance/100, 1f, 1f);
@@ -393,6 +395,11 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         inventoryContext.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutBack);
         detailContent.DOLocalMoveX(0, 0.5f).SetEase(Ease.OutBack);
     }
+
+    public void SetupMoney()
+    {
+        moneyText.text = $"Gold: {GameManager.Instance.player.gold}";
+    }
     public void ShowInventory()
     {
         InventoryBody.gameObject.SetActive(true);
@@ -415,6 +422,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     {
         ShowInventory();
         PrepareIcons();
+        SetupMoney();
     }
 
     public void End()

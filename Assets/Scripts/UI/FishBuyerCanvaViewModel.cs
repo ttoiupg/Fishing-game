@@ -118,6 +118,7 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     {
         foreach(var icon in selectedIconDisplayer)
         {
+            GameManager.Instance.SellFish(icon.fish);
             var inventoryIndex = InventoryManager.Instance.fishes.IndexOf(icon.fish);
             InventoryManager.Instance.fishes.RemoveAt(inventoryIndex);
         }

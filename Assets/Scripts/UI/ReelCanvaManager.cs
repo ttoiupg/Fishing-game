@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem;
@@ -7,6 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class ReelCanvaManager : MonoBehaviour
 {
@@ -30,11 +32,14 @@ public class ReelCanvaManager : MonoBehaviour
     public RectTransform bonusBar;
     public Image bonusBarEffect;
     public RectTransform bonusTimer;
+    public GameObject healthContainer;
+    public GameObject attackEffectText;
     public bool haveBonusBar;
-    
-    [Header("Valus")]
-    public float pullCanvaRotation = 0f;
 
+    [Header("Valus")] public Color normalAttackColor;
+    public Color missColor;
+    public Color criticalColor;
+    public float pullCanvaRotation = 0f;
     public float controlForwardGravity = 3500f;
     public float controlBackwardGravity = -3500f;
     public float controlBarMaxSpeed = 1000f;
@@ -60,6 +65,7 @@ public class ReelCanvaManager : MonoBehaviour
     private Player player;
 
     private bool _fishBarMoved = true;
+    private bool _timerStarted = false;
     private static readonly Color32 Red = new Color32(217, 77, 88, 255);
     private static readonly Color32 Blue = new Color32(0, 135, 164, 255);
     
@@ -92,12 +98,10 @@ public class ReelCanvaManager : MonoBehaviour
     {
         timer.localScale = new Vector3(1f, 1f, 1f);
     }
-    public void StartTimer(float length)
+    public void StartTimer()
     {
-        timer.localScale = new Vector3(1f, 1f, 1f);
-        controllCanva.DOShakePosition(length,10f,6,30f,false,false,ShakeRandomnessMode.Full);
-        timer.DOKill();
-        timer.DOScaleX(0,length);
+        _timerStarted = true;
+        controllCanva.DOShakePosition(120,10f,6,30f,false,false,ShakeRandomnessMode.Full);
     }
 
     public void SetSeaHeight(float height)
@@ -162,6 +166,13 @@ public class ReelCanvaManager : MonoBehaviour
         gear.rotation = Quaternion.Euler(0, 0, -crankRotation* 0.14f);
         crank.rotation = Quaternion.Euler(0, 0, crankRotation);
         fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, 137.1f);
+    }
+
+    public void UpdateTimer()
+    {
+        if (!_timerStarted) return;
+        var percentage = GameManager.Instance.battleTimer.GetTime()/GameManager.Instance.battleTimer.GetInitialTime();
+        timer.localScale = new Vector3(percentage, 1f, 1f);
     }
     
     public void Flash()
@@ -272,6 +283,24 @@ public class ReelCanvaManager : MonoBehaviour
         PlayAnimation();
     }
 
+    public void StartAttackEffect(string text,Color color)
+    {
+        var effect = Instantiate(attackEffectText,healthContainer.transform);
+        var randRotate = UnityEngine.Random.Range(-25f, 25f);
+        var textmesh = effect.GetComponent<TextMeshProUGUI>();
+        effect.transform.DOKill();
+        textmesh.text = text;
+        textmesh.color = color;
+        effect.transform.localScale = new Vector3(0, 0, 0);
+        effect.transform.rotation = Quaternion.Euler(0, 0, 0);
+        effect.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBounce);
+        effect.transform.DOLocalRotate(new Vector3(0,0,randRotate),0.4f).SetEase(Ease.OutQuad);
+        var afterColor = color;
+        afterColor.a = 0;
+        textmesh.DOColor(afterColor, 0.8f).SetEase(Ease.InQuad);
+        Destroy(effect,1);
+        //2025/8/1/22:24
+    }
     public void CloseUI()
     {
         DofController.instance.SetBlur(false);
@@ -281,6 +310,8 @@ public class ReelCanvaManager : MonoBehaviour
         timer.DOKill();
         controllCanva.DOKill();
         timer.localScale = Vector3.one;
+        _timerStarted = false;
+        controllCanva.DOKill();
     }
 
     private void Start()
@@ -288,6 +319,11 @@ public class ReelCanvaManager : MonoBehaviour
         // animator = GameManager.Instance.player.GetComponent<Animator>();
         // Material seaMat = seaBackground.material;
         // seaBackground.material = new Material(seaMat);
+    }
+
+    private void Update()
+    {
+        UpdateTimer();
     }
 
     public void Setup()

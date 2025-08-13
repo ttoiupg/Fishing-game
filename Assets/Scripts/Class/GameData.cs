@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
@@ -24,16 +25,20 @@ public class GameData
 public class PlayerData
 {
     public int level;
+    public int gold;
     public float experience;
     public int equipedFishingRod;
     public List<IDataDiscoverFish> discoverFishList = new List<IDataDiscoverFish>();
+    public List<String> modifiers = new List<String>();
 
     public PlayerData()
     {
+        this.gold = 0;
         this.level = 1;
         this.experience = 0;
         equipedFishingRod = 0;
         discoverFishList = new List<IDataDiscoverFish>();
+        modifiers = new List<String>();
     }
 }
 [System.Serializable]

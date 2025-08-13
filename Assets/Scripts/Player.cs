@@ -9,6 +9,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine.Serialization;
 
@@ -39,10 +40,10 @@ public class Player : MonoBehaviour, IDataPersistence
     public float playerSpeed;
     public float currentSpeed;
     [SerializeField] private float gravityValue = -9.81f;
-    [Header("Stats")] public float expRequire = 1f;
+    [Header("Stats")] public int gold;
+    public float expRequire = 1f;
     [SerializeField] private float _experience = 0.0f;
     public int level = 1;
-
     public float experience
     {
         get => _experience;
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour, IDataPersistence
             }
         }
     }
+
     public Dictionary<string, DiscoveredFish> discoveredFish = new Dictionary<string, DiscoveredFish>();
     private StateMachine _playerStateMachine;
 
@@ -94,6 +96,14 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private string currentPrompt;
     [SerializeField] private float currentLength;
     [Header("Testing")] public bool CanInteract = true;
+    [Header("Modifer")]
+    [SerializeField] public List<ModifierBase> modifiers = new();
+    public float tempDamage;
+    public float tempAccuracy;
+    public float tempCritChance;
+    public float tempCritMultiplier;
+    public float tempresilience;
+    public float templuck;
 
     private void Start()
     {
@@ -104,7 +114,7 @@ public class Player : MonoBehaviour, IDataPersistence
     public void Setup()
     {
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
-        UnityEngine.Rendering.DebugManager.instance.displayRuntimeUI = true;
+        UnityEngine.Rendering.DebugManager.instance.displayRuntimeUI = false;
         var fishingCanva = GameObject.Find("FishingCanva(Clone)");
         ReelCanvaManager = fishingCanva.GetComponent<ReelCanvaManager>();
         boostCanvaManager = fishingCanva.GetComponent<BoostCanvaManager>();
@@ -116,14 +126,14 @@ public class Player : MonoBehaviour, IDataPersistence
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
         PlayerInputs = new DefaultInputActions();
         _playerStateMachine = new StateMachine();
-        
+
         //declare what states we have
         var locomotionState = new LocomotionState(this, animator);
         var fishingState = new FishingState(this, animator);
         var inactiveState = new InactiveState(this, animator);
         var fishingBoostState = new FishingBoostState(this, animator);
         var fishingReelState = new FishingReelState(this, animator);
-        
+
         //add transition
         At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
         At(locomotionState, inactiveState, new FuncPredicate(() => isActive == false));
@@ -134,30 +144,6 @@ public class Player : MonoBehaviour, IDataPersistence
         At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
         _playerStateMachine.SetState(locomotionState);
         PlayerInputs?.Player.Enable();
-    }
-    private void Awake()
-    {
-        // interactionDebounceTimer = new Countdowntimer(0.5f);
-        // interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
-        // PlayerInputs = new DefaultInputActions();
-        // _playerStateMachine = new StateMachine();
-        //
-        // //declare what states we have
-        // var locomotionState = new LocomotionState(this, animator);
-        // var fishingState = new FishingState(this, animator);
-        // var inactiveState = new InactiveState(this, animator);
-        // var fishingBoostState = new FishingBoostState(this, animator);
-        // var fishingReelState = new FishingReelState(this, animator);
-        //
-        // //add transition
-        // At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
-        // At(locomotionState, inactiveState, new FuncPredicate(() => isActive == false));
-        // At(inactiveState, locomotionState, new FuncPredicate(() => isActive == true));
-        // At(fishingState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
-        // At(fishingState, fishingBoostState, new FuncPredicate(() => fishingController.fishOnBait));
-        // At(fishingBoostState, fishingReelState, new FuncPredicate(() => fishingController.boostApplied));
-        // At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
-        // _playerStateMachine.SetState(locomotionState);
     }
 
     private void OnEnable()
@@ -182,7 +168,7 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         _playerStateMachine?.FixedUpdate();
     }
-    
+
     private Collider GetClosestCollider(Collider[] colliders)
     {
         var distance = 10000f;
@@ -212,6 +198,7 @@ public class Player : MonoBehaviour, IDataPersistence
     public void LoadData(GameData gameData)
     {
         level = gameData.playerData.level;
+        gold = gameData.playerData.gold;
         experience = gameData.playerData.experience;
         expRequire = (float)GetExpRequirement(level);
         currentFishingRod = gameData.playerData.equipedFishingRod;
@@ -220,10 +207,13 @@ public class Player : MonoBehaviour, IDataPersistence
         {
             discoveredFish.Add(dis.id, new DiscoveredFish(dis));
         }
+        modifiers.Clear();
+        gameData.playerData.modifiers.ForEach(id => this.modifiers.Add(DataPersistenceManager.Instance.ModifierCards[id]));
     }
 
     public void SaveData(ref GameData gameData)
     {
+        gameData.playerData.gold = gold;
         gameData.playerData.level = level;
         gameData.playerData.experience = experience;
         gameData.playerData.discoverFishList.Clear();
@@ -232,6 +222,12 @@ public class Player : MonoBehaviour, IDataPersistence
         {
             gameData.playerData.discoverFishList.Add(new IDataDiscoverFish(fish));
         }
+        gameData.playerData.modifiers.Clear();
+        foreach (var mod in modifiers)
+        {
+            gameData.playerData.modifiers.Add(mod.id);
+        }
+        
     }
 
     public void UpdateMovement()
@@ -353,5 +349,14 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         fishingRodSprite.sprite = fishingRod.fishingRodSO.spriteWorldRod;
         fishingRodReelSprite.sprite = fishingRod.fishingRodSO.spriteWorldReel;
+    }
+
+    public void OnModifierEvent(BattleEvent battleEvent)
+    {
+        if (modifiers.Count == 0) return;
+        foreach (var modifier in modifiers)
+        {
+            modifier?.OnBattleEvent(battleEvent);
+        }
     }
 }

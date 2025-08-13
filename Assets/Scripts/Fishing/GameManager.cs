@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     public void Setup()
     {
-        battleTimer = new Countdowntimer(15f);
+        battleTimer = new Countdowntimer(7f);
         player = FindAnyObjectByType<Player>();
         battleTimer.OnTimerStop += () =>
         {
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
             EndBattle();
         };
     }
+
     private void Update()
     {
         if (fishing)
@@ -60,49 +62,57 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AttackFishEffect()
+    public int SellFish(Fish fish)
     {
-        // seaBackground.material.DOFloat(CurrentBattle.battleStats.enemy.health / CurrentBattle.battleStats.enemy.maxHealth,"_Height",0.25f).SetEase(Ease.OutBack);
-        // fishHealthBar
-        //     .DOScaleX(CurrentBattle.battleStats.enemy.health / CurrentBattle.battleStats.enemy.maxHealth, 0.25f)
-        //     .SetEase(Ease.OutBack);
-        // fishHealthText.text = $"{CurrentBattle.battleStats.enemy.health}/{CurrentBattle.battleStats.enemy.maxHealth}";
-        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.health,CurrentBattle.battleStats.enemy.maxHealth);
-        player.ReelCanvaManager.BuffTimer.localScale = new Vector3(0,1,1);
+        var gold = fish.weight * 4;
+        player.gold += gold;
+        return gold;
+    }
+    public void AttackFishEffect(float damage, float multiplier, bool isCritical, float criticalMultiplier)
+    {
+        var text = (isCritical ? $"Crit! {damage}(x{multiplier + criticalMultiplier})" : $"{damage}(x{multiplier})");
+        player.ReelCanvaManager.StartAttackEffect(text,
+            (isCritical) ? player.ReelCanvaManager.criticalColor : player.ReelCanvaManager.normalAttackColor);
+        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.health,
+            CurrentBattle.battleStats.enemy.maxHealth);
+        player.ReelCanvaManager.BuffTimer.localScale = new Vector3(0, 1, 1);
     }
 
     public void NewBattle(BattleType battleType, IEnemy enemyBehavior)
     {
         CurrentBattle = new Battle(battleType, enemyBehavior);
-        CurrentBattle.Setup(15f);
+        CurrentBattle.Setup(7f);
     }
 
     public void StartBattle()
     {
         fishing = true;
         CurrentBattle.Start();
-        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.maxHealth,CurrentBattle.battleStats.enemy.maxHealth);
+        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.maxHealth,
+            CurrentBattle.battleStats.enemy.maxHealth);
     }
 
     public void EndBattle()
     {
         CurrentBattle.Stop();
         fishing = false;
-        
+
         switch (CurrentBattle.battleType)
         {
             case BattleType.Fish:
                 if (CurrentBattle.battleStats.enemy.IsDead())
                 {
                     FishCatched();
-                    player.ReelCanvaManager.UpdateFishHealth(0,CurrentBattle.battleStats.enemy.maxHealth);
+                    player.ReelCanvaManager.UpdateFishHealth(0, CurrentBattle.battleStats.enemy.maxHealth);
                 }
                 else
                 {
                     player.ID.playerEvents.OnFishFailed?.Invoke();
                     FishEnemy = null;
-                    player.ReelCanvaManager.UpdateFishHealth(0,CurrentBattle.battleStats.enemy.maxHealth);
-                };
+                    player.ReelCanvaManager.UpdateFishHealth(0, CurrentBattle.battleStats.enemy.maxHealth);
+                }
+
+                ;
                 break;
             case BattleType.Boss:
                 break;
@@ -188,6 +198,7 @@ public class GameManager : MonoBehaviour
 public class Enemy
 {
     private float _health;
+
     public float health
     {
         get => _health;
@@ -196,10 +207,10 @@ public class Enemy
             _health = value;
             if (GameManager.Instance.CurrentBattle.battleStarted)
             {
-                var rod = InventoryManager.Instance.fishingRods[GameManager.Instance.player.currentFishingRod];
-                Debug.Log("fish's health changed");
-                rod.onBattleEvent(BattleEvent.FishHealthChanged);
-            };
+                GameManager.Instance.player.OnModifierEvent(BattleEvent.FishHealthChanged);
+            }
+
+            ;
         }
     }
 
@@ -226,14 +237,21 @@ public class FishEnemy : IEnemy
 {
     public Fish fish;
 
-    public void TakeDamage(Enemy enemy,Battle battle, DamageInfo info)
+    public void TakeDamage(Enemy enemy, Battle battle, DamageInfo info)
     {
         if (info.isMiss)
         {
-            info.Rod?.onBattleEvent(BattleEvent.Miss);
+            GameManager.Instance.player.OnModifierEvent(BattleEvent.Miss);
+            GameManager.Instance.player.ReelCanvaManager.StartAttackEffect("Miss!",
+                GameManager.Instance.player.ReelCanvaManager.missColor);
             return;
         }
-        if (info.isCritical) info.Rod?.onBattleEvent(BattleEvent.CriticalHit);
+
+        if (info.isCritical)
+        {
+            GameManager.Instance.player.OnModifierEvent(BattleEvent.CriticalHit);
+        }
+
         var damageStageMultiplier = battle.battleStats.currentDamageStage switch
         {
             DamageStage.Stage1 => 0.4f,
@@ -241,9 +259,23 @@ public class FishEnemy : IEnemy
             DamageStage.Stage3 => 1f,
             _ => 0.4f
         };
+        switch (battle.battleStats.currentDamageStage)
+        {
+            case DamageStage.Stage2:
+                GameManager.Instance.battleTimer.ChangeTime(0.7f);
+                break;
+            case DamageStage.Stage3:
+                GameManager.Instance.battleTimer.ChangeTime(1.5f);
+                break;
+            default:
+                break;
+        }
         Debug.Log($"behavior dealt damage{info.damage * damageStageMultiplier}");
         enemy.health -= info.damage * damageStageMultiplier;
-        GameManager.Instance.AttackFishEffect();
+        var critMult = GameManager.Instance.player.tempCritMultiplier + InventoryManager.Instance
+            .fishingRods[GameManager.Instance.player.currentFishingRod].fishingRodSO.critMultiplier;
+        GameManager.Instance.AttackFishEffect(info.damage * damageStageMultiplier, damageStageMultiplier,
+            info.isCritical, critMult);
         if (!enemy.IsDead()) return;
         GameManager.Instance.EndBattle();
     }
@@ -319,19 +351,21 @@ public class Battle
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
         timeLimit = seconds;
     }
 
     public void Attack(DamageInfo info)
     {
+        if (!battleStarted) return;
         Debug.Log($"send info to behavior{info}");
-        enemyBehavior.TakeDamage(battleStats.enemy,this, info);
+        enemyBehavior.TakeDamage(battleStats.enemy, this, info);
     }
 
     public void SetDamageStage(DamageStage stage)
     {
         battleStats.currentDamageStage = stage;
-        GameManager.Instance.player.GetFishingRod().onBattleEvent(BattleEvent.DamageStageChanged);
+        GameManager.Instance.player.OnModifierEvent(BattleEvent.DamageStageChanged);
     }
 
     public void Start()
@@ -339,7 +373,7 @@ public class Battle
         if (battleStarted) return;
         battleStarted = true;
         GameManager.Instance.battleTimer.Start();
-        GameManager.Instance.player.GetFishingRod().onBattleEvent(BattleEvent.BattleStart);
+        GameManager.Instance.player.OnModifierEvent(BattleEvent.BattleStart);
     }
 
     public void Stop()
@@ -347,7 +381,7 @@ public class Battle
         if (!battleStarted) return;
         battleStarted = false;
         GameManager.Instance.battleTimer.Stop();
-        GameManager.Instance.player.GetFishingRod().onBattleEvent(BattleEvent.BattleEnd);
+        GameManager.Instance.player.OnModifierEvent(BattleEvent.BattleEnd);
     }
 
     public void SetOverlapping(bool overlapping)
@@ -355,12 +389,13 @@ public class Battle
         switch (battleStats.isOverlapping)
         {
             case false when overlapping:
-                GameManager.Instance.player.GetFishingRod().onBattleEvent(BattleEvent.OverlapStart);
+                GameManager.Instance.player.OnModifierEvent(BattleEvent.OverlapStart);
                 break;
             case true when !overlapping:
-                GameManager.Instance.player.GetFishingRod().onBattleEvent(BattleEvent.OverlapEnd);
+                GameManager.Instance.player.OnModifierEvent(BattleEvent.OverlapEnd);
                 break;
         }
+
         battleStats.isOverlapping = overlapping;
     }
 }
