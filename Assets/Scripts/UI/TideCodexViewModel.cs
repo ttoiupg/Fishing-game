@@ -122,21 +122,14 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
             {
                 mode = Navigation.Mode.Explicit
             };
-            var up = (i - 6 < 0) ? categoryButton[0].GetComponent<Button>() : icons[i - 6];
-            var down = (i + 6 > icons.Count - 1) ? closeButton : icons[i + 6];
-            var left = (i - 1 < 0) ? category.tabButtons[0].GetComponent<Button>() : icons[i - 1];
-            var right = (i + 1 > icons.Count - 1) ? null : icons[i + 1];
+            var up = (i < 6) ? categoryButton[0].GetComponent<Button>() : icons[i - 6];
+            var down = (i > icons.Count - 7) ? closeButton : icons[i + 6];
+            var left = (i%6 == 0) ? category.tabButtons[0].GetComponent<Button>() : icons[i - 1];
+            var right = (i%6 == 5) ? null : icons[i + 1];
             navigation.selectOnUp = up;
             navigation.selectOnDown = down;
             navigation.selectOnLeft = left;
             navigation.selectOnRight = right;
-            if ((i+1) % 6== 0)
-            {
-                navigation.selectOnRight = null;
-            }else if ((i + 1) % 6 == 1)
-            {
-                navigation.selectOnLeft = category.tabButtons[0].GetComponent<Button>();
-            }
             icon.navigation = navigation;
         }
 
@@ -144,7 +137,7 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
         {
             var button = tab.GetComponent<Button>();
             var nav = button.navigation;
-            nav.selectOnRight = icons[0].GetComponent<Button>();
+            nav.selectOnRight = (icons.Count() > 0) ? icons[0].GetComponent<Button>() : null;
             button.navigation = nav;
         }
         category.icons = icons;
@@ -234,7 +227,7 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
             foreach (var x in categoryButton)
             {
                 var navigation = x.GetComponent<Button>().navigation;
-                navigation.selectOnDown = categories[index].tabButtons[0].GetComponent<Button>();
+                navigation.selectOnDown = (categories[index].icons.Count>0)?categories[index].tabButtons[0].GetComponent<Button>():null;
                 x.GetComponent<Button>().navigation = navigation;
             }
 
