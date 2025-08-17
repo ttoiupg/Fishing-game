@@ -403,13 +403,11 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public void ShowInventory()
     {
         InventoryBody.gameObject.SetActive(true);
-        DofController.instance.SetBlur(true);
     }
 
     public void HideIventory()
     {
         _eventSystem.SetSelectedGameObject(null);
-        DofController.instance.SetBlur(false);
         InventoryBody.gameObject.SetActive(false);
     }
 

@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Fish Catched");
         AwardViewManager.Instance.ShowFishAward(FishEnemy.fish);
+        LootTagDisplayManager.instance.AddTag(FishEnemy.fish.fishType.Art,FishEnemy.fish.fishType.name,50,2.2f);
         //player.hudController.StartLootTag(FishEnemy.fish.fishType.Art, FishEnemy.fish.fishType.name,
         //    "Mutation:" + FishEnemy.fish.mutation.name, FishEnemy.fish.weight + "Kg");
         battleTimer.Pause();

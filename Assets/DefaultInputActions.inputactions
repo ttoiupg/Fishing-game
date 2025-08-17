@@ -1118,6 +1118,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Debug",
+            "id": "d4fdd9c3-61cc-4ab9-a8eb-8751edbdc51b",
+            "actions": [
+                {
+                    "name": "Spawn Tag",
+                    "type": "Button",
+                    "id": "1b57bb4c-23c4-4d8e-91d3-3d5942cd8837",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "72bf70d2-7732-4461-972f-4ef21b572dac",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spawn Tag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

@@ -412,6 +412,7 @@ GameObject:
   - component: {fileID: 2945597555027373804}
   - component: {fileID: 3157653375505309314}
   - component: {fileID: 8388696100672536519}
+  - component: {fileID: 6829311000842262362}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -501,6 +502,7 @@ MonoBehaviour:
   playerSpeed: 5
   currentSpeed: 0
   gravityValue: -9.81
+  gold: 0
   expRequire: 1
   _experience: 0
   level: 1
@@ -530,6 +532,13 @@ MonoBehaviour:
   currentPrompt: 
   currentLength: 0
   CanInteract: 1
+  modifiers: []
+  tempDamage: 0
+  tempAccuracy: 0
+  tempCritChance: 0
+  tempCritMultiplier: 0
+  tempresilience: 0
+  templuck: 0
 --- !u!114 &4680347839255988804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,6 +664,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 1280621f-1949-4141-ad3f-932a82c4465e
     m_ActionName: 'UI/Inventory[/Keyboard/b]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1b57bb4c-23c4-4d8e-91d3-3d5942cd8837
+    m_ActionName: 'Debug/Spawn Tag[/Keyboard/g]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -723,6 +736,19 @@ MonoBehaviour:
   eventSystem: {fileID: 0}
   lastSelectedElement: {fileID: 0}
   selectable: {fileID: 0}
+--- !u!114 &6829311000842262362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7679899894288195583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 516c57eae7e54659877a70b2948f3284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testIcon: {fileID: 21300000, guid: 95d785a1873174007916a664df2c6115, type: 3}
 --- !u!1 &7848077697010160229
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,6 +869,7 @@ MonoBehaviour:
   fishOnBait: 0
   boostApplied: 0
   ReelingBarOverlaping: 0
+  BonusBarOverlaping: 0
   bobberOffset: {x: 0, y: 2, z: 0}
   zones: []
   fishHealthBar: {fileID: 0}

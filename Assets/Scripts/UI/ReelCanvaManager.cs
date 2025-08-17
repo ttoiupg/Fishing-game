@@ -277,7 +277,6 @@ public class ReelCanvaManager : MonoBehaviour
     }
     public void ShowUI()
     {
-        DofController.instance.SetBlur(true);
         DestroyBonusBar();
         SetSeaHeight(1f);
         PlayAnimation();
@@ -303,7 +302,6 @@ public class ReelCanvaManager : MonoBehaviour
     }
     public void CloseUI()
     {
-        DofController.instance.SetBlur(false);
         pullCanva.DOScale(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
         buffTimerImage.material.SetFloat("_Speed",0f);
         buffTimerImageBackground.material.SetFloat("_Speed",0f);

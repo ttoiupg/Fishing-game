@@ -21,13 +21,11 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     public Slider volumeSlider;
     public RectTransform mainFrame;
     public List<SettingTabBinding> TabButtons;
-    public  DofController dofController;
     private Player _player;
     public void Start()
     {
         _player = GameManager.Instance.player;
         volumeSlider.value = PlayerPrefs.GetFloat("Volume");
-        dofController = FindAnyObjectByType<DofController>();
        
         for(int i = 0; i < TabButtons.Count; i++)
         {
@@ -59,7 +57,6 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultOpenSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(true);
-        dofController.SetFocusDistance(0f);
     }
     public void SelectTab(int index)
     {
@@ -77,7 +74,6 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     {
         SoundFXManger.Instance.PlaySoundFXClip(ViewManager.instance.defaultCloseSound, _player.characterTransform, 1f);
         mainFrame.gameObject.SetActive(false);
-        dofController.SetFocusDistance(100f);
     }
     
     public void Begin()

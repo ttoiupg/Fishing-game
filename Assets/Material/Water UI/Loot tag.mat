@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BlankWaterFrame
+  m_Name: Loot tag
   m_Shader: {fileID: -6465566751694194690, guid: 03e5e94011ecc614ebb7951671173041, type: 3}
   m_Parent: {fileID: 2100000, guid: 95a5ad65d0f560d4e869f0a777cfca93, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -25,19 +25,19 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Blend: 1
+    - _Blend: 0.16
     - _Blur_amount: 0
     - _Edge: 0
-    - _Fill: 0.5
-    - _FlowDirection: 111
+    - _Fill: 0.2
+    - _FlowDirection: 120
     - _Local_map: 1
     - _Phase: 0
     - _Procedual: 1
-    - _Speed: 0.05
+    - _Speed: 0.2
     - _scale: 5
     m_Colors:
-    - _BaseTop: {r: 1, g: 1, b: 1, a: 1}
-    - _Base_color: {r: 1, g: 1, b: 1, a: 1}
-    - _Edge_color: {r: 0, g: 0, b: 0, a: 1}
+    - _BaseTop: {r: 0.036947362, g: 0.26999995, b: 0.26999995, a: 0.8235294}
+    - _Base_color: {r: 0, g: 0.33305523, b: 0.42452827, a: 0.8352941}
+    - _Edge_color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

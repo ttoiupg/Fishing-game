@@ -40,7 +40,6 @@ public class AwardViewManager : MonoBehaviour
         PauseViewModel.Instance.PauseLock = true;
         GameManager.Instance.player.isActive = false;
         _eventSystem.SetSelectedGameObject(null);
-        DofController.instance.SetBlur(true);
         animator.enabled = true;
         animator.Play("AwardViewPopUP",0,0);
         await UniTask.WaitForSeconds(4f);
@@ -59,7 +58,6 @@ public class AwardViewManager : MonoBehaviour
         await UniTask.WaitForSeconds(1.2f);
         animator.enabled = false;
         GameManager.Instance.player.isActive = true;
-        DofController.instance.SetBlur(false);
         PauseViewModel.Instance.PauseLock = false;
         _debounce = false;
     }
