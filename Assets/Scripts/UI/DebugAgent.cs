@@ -12,7 +12,7 @@ public class DebugAgent : MonoBehaviour
         input = new DefaultInputActions();
         input.Debug.Enable();
         input.Debug.SpawnTag.started +=
-            (context => LootTagDisplayManager.instance.AddTag(testIcon, "Aqua", 150, 2.2f));
+            (context => LootTagDisplayManager.instance.AddTag(testIcon, "Aqua", 150, 2.2f,"x",""));
     }
 
 }

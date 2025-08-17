@@ -1,8 +1,6 @@
-using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 public class LootTagController : MonoBehaviour
@@ -14,11 +12,15 @@ public class LootTagController : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI amountText;
     private float amt = 0;
-
-    public void Setup(Sprite icon, string name, int amount,float length)
+    private string prefix;
+    private string suffix;
+    
+    public void Setup(Sprite icon, string name, int amount,float length, string prefix, string suffix)
     {
         iconHolder.sprite = icon;
         nameText.text = "";
+        this.prefix = prefix;
+        this.suffix = suffix;
         TextEffect(nameText, name, 0.7f);
         var sequence = DOTween.Sequence();
         sequence.Append(body.DOLocalMoveX(0,0.1f));
@@ -46,6 +48,6 @@ public class LootTagController : MonoBehaviour
     }
     private void Update()
     {
-        amountText.text = (amt <= 0) ? "": $"x{Mathf.RoundToInt(amt)}";
+        amountText.text = (amt <= 0) ? "": $"{prefix}{Mathf.RoundToInt(amt)}{suffix}";
     }
 }

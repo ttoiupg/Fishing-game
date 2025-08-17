@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [Header("effect")] public RectTransform fishHealthBar;
     public TextMeshProUGUI fishHealthText;
     public Image seaBackground;
+    public Sprite aquaIcon;
     public Battle CurrentBattle;
 
     private void Start()
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
     {
         var gold = fish.weight * 4;
         player.gold += gold;
+        LootTagDisplayManager.instance.AddTag(aquaIcon,"Aqua",gold,2.2f,"+","");
         return gold;
     }
     public void AttackFishEffect(float damage, float multiplier, bool isCritical, float criticalMultiplier)
@@ -165,7 +167,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Fish Catched");
         AwardViewManager.Instance.ShowFishAward(FishEnemy.fish);
-        LootTagDisplayManager.instance.AddTag(FishEnemy.fish.fishType.Art,FishEnemy.fish.fishType.name,50,2.2f);
+        LootTagDisplayManager.instance.AddTag(FishEnemy.fish.fishType.Art,FishEnemy.fish.fishType.name,FishEnemy.fish.weight,2.2f,"","kg");
         //player.hudController.StartLootTag(FishEnemy.fish.fishType.Art, FishEnemy.fish.fishType.name,
         //    "Mutation:" + FishEnemy.fish.mutation.name, FishEnemy.fish.weight + "Kg");
         battleTimer.Pause();

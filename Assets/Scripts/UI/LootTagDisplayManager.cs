@@ -14,9 +14,9 @@ public class LootTagDisplayManager : MonoBehaviour
         }
     }
 
-    public void AddTag(Sprite icon, string name, int amount, float length)
+    public void AddTag(Sprite icon, string name, int amount, float length, string prefix, string suffix)
     {
         var obj = Instantiate(prefab, transform);
-        obj.Setup(icon, name, amount, length);
+        obj.Setup(icon, name, amount, length,prefix,suffix);
     }
 }
