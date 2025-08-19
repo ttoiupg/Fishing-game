@@ -15,9 +15,7 @@ public class BuckectInteract : MonoBehaviour, IInteractable
     public float length => _length;
     public void Setup()
     {
-        Debug.Log("bucket interact setup finished");
-        var goddess = GameObject.Find("BucketGoddess(Clone)").GetComponent<BucketGoddessController>();
-        Debug.Log(goddess);
+        var goddess = GameObject.Find("BucketGoddess").GetComponent<BucketGoddessController>();
         triggered.AddListener(goddess.TriggerGoddess);
     }
     public void test()

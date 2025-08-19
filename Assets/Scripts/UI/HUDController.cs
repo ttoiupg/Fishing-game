@@ -63,11 +63,6 @@ public class HUDController : MonoBehaviour
 
     private void Start()
     {
-        
-    }
-
-    public void Setup()
-    {
         _eventSystem = EventSystem.current;
         player = GameManager.Instance.player;
     }

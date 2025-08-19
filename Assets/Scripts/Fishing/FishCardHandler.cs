@@ -52,19 +52,8 @@ public class FishCardHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // _eventSystem = EventSystem.current;
-        // cardTransform = GetComponent<Transform>();
-        // Debug.Log("started");
-    }
-
-    public void Setup()
-    {
         loaded = true;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        cardOverlay = GameObject.Find("FishCardOverlay");
-        closeButton = GameObject.Find("FishCardClose");
         closeButton.GetComponent<Button>().onClick.AddListener(() => CloseCard());
-        shadow = GameObject.Find("FishCardShadow");
         cardOverlay.gameObject.SetActive(false);
         shadow.SetActive(false);
         _eventSystem = EventSystem.current;

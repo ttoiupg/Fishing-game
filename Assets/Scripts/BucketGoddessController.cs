@@ -17,12 +17,12 @@ public class BucketGoddessController : MonoBehaviour
     public GameObject leaveButton;
     
 
-    public void Setup()
+    private void Start()
     {
-        leaveButton = GameObject.Find("BucketGoddessLeaveButton");
-        leaveButton.transform.localPosition = new Vector3(leaveButton.transform.localPosition.x,-1000f, leaveButton.transform.localPosition.z);
-        leaveButton.gameObject.GetComponent<Button>().onClick.AddListener(LeaveGoddess);
-        goddessRenderObject = GameObject.Find("BucketGoddessRenderTexture");
+        // leaveButton = GameObject.Find("BucketGoddessLeaveButton");
+        // leaveButton.transform.localPosition = new Vector3(leaveButton.transform.localPosition.x,-1000f, leaveButton.transform.localPosition.z);
+        // leaveButton.gameObject.GetComponent<Button>().onClick.AddListener(LeaveGoddess);
+        // goddessRenderObject = GameObject.Find("BucketGoddessRenderTexture");
         animator = GetComponent<Animator>();
         _eventSystem = EventSystem.current;
     }

@@ -15,7 +15,6 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     public ItemIconDisplayer itemIconDisplayer;
     public FishIconDisplayer fishIconDisplayer;
     public FishingRodCellDisplayer fishingRodCellDisplayer;
-    public GameObject closeButton;
     public RectTransform inventoryContext;
     [Header("contents")]
     public RectTransform baitBoxContent;

@@ -35,17 +35,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // battleTimer = new Countdowntimer(15f);
-        // player = FindAnyObjectByType<Player>();
-        // battleTimer.OnTimerStop += () =>
-        // {
-        //     if (!CurrentBattle.battleStarted) return;
-        //     EndBattle();
-        // };
-    }
-
-    public void Setup()
-    {
         battleTimer = new Countdowntimer(7f);
         player = FindAnyObjectByType<Player>();
         battleTimer.OnTimerStop += () =>

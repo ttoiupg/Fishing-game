@@ -5,7 +5,7 @@ public class InteractionLoader : MonoBehaviour
 {
     [SerializeField]public GameObject interactionContainer;
 
-    public void Setup()
+    private void Start()
     {
         var interactionObjects = interactionContainer.GetComponentsInChildren<IInteractable>();
         foreach(var io in interactionObjects)

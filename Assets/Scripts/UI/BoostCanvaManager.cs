@@ -18,7 +18,7 @@ public class BoostCanvaManager : MonoBehaviour
 
     private float currentRotation;
     private Tween pointerTween;
-    private Player player;
+    public Player player;
 
     public float moveRange = 17.5f;
     public float greenRange = 12.2f;
@@ -43,13 +43,6 @@ public class BoostCanvaManager : MonoBehaviour
             rotation -= 360;
         }
         float fixRotation = currentRotation * (28.34f / moveRange);
-        //Debug.Log(rotation);
-        //Debug.Log(currentRotation);
-        //Debug.Log(fixRotation);
-        //Debug.Log(fixRotation + greenRange);
-        //Debug.Log(fixRotation - greenRange);
-        //Debug.Log(fixRotation + orangeRange);
-        //Debug.Log(fixRotation - orangeRange);
         if (rotation <= fixRotation + greenRange && rotation >= fixRotation - greenRange)
         {
             return "green";
@@ -88,9 +81,5 @@ public class BoostCanvaManager : MonoBehaviour
         orangeImage.DOFillAmount(0, 0.7f).SetEase(Ease.OutQuint);
         greenImage.DOFillAmount(0, 0.7f).SetEase(Ease.OutQuint);
         boostState.DOScale(Vector3.zero, 0.3f).SetEase(Ease.OutBack).SetDelay(0.2f);
-    }
-    public void Setup()
-    {
-        player = GameManager.Instance.player;
     }
 }

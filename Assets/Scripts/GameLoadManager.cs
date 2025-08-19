@@ -25,37 +25,4 @@ public class GameLoadManager : MonoBehaviour
 
     [SerializeField] private Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        globalVolume = Instantiate(globalVolume);
-        eventSystem = Instantiate(eventSystem);
-        musicManager = Instantiate(musicManager);
-        inventoryManager = Instantiate(inventoryManager);
-        lootManager = Instantiate(lootManager);
-        visualFXManager = Instantiate(visualFXManager);
-        soundFXManger = Instantiate(soundFXManger);
-        player = Instantiate(player);
-        map = Instantiate(map);
-        gameManager = Instantiate(gameManager);
-        gameManager.Setup();
-        dataPersistenceManager = Instantiate(dataPersistenceManager);
-        dataPersistenceManager.Setup();
-        viewManager = Instantiate(viewManager);
-        HUDController hudController = viewManager.GetComponent<HUDController>();
-        hudController.Setup();
-        fishCardHandler = Instantiate(fishCardHandler);
-        fishCardHandler.Setup();
-        viewManager.Setup();
-        fishingCanvas = Instantiate(fishingCanvas);
-        ReelCanvaManager reelCanvaManager = fishingCanvas.GetComponent<ReelCanvaManager>();
-        BoostCanvaManager boostCanvaManager = fishingCanvas.GetComponent<BoostCanvaManager>();
-        boostCanvaManager.Setup();
-        reelCanvaManager.Setup();
-        cameras = Instantiate(cameras);
-        bucketGoddessController = Instantiate(bucketGoddessController);
-        //sea = Instantiate(sea);
-        bucketGoddessController.Setup();
-        player.Setup();
-        map.GetComponent<InteractionLoader>().Setup();
-    }
 }

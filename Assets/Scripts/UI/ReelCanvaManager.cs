@@ -62,7 +62,7 @@ public class ReelCanvaManager : MonoBehaviour
     
     public float rawLeftBound = -375;
     public float rawRightBound = 375;
-    private Player player;
+    public Player player;
 
     private bool _fishBarMoved = true;
     private bool _timerStarted = false;
@@ -314,21 +314,13 @@ public class ReelCanvaManager : MonoBehaviour
 
     private void Start()
     {
-        // animator = GameManager.Instance.player.GetComponent<Animator>();
-        // Material seaMat = seaBackground.material;
-        // seaBackground.material = new Material(seaMat);
+        animator = GameManager.Instance.player.GetComponent<Animator>();
+        Material seaMat = seaBackground.material;
+        seaBackground.material = new Material(seaMat);
     }
 
     private void Update()
     {
         UpdateTimer();
-    }
-
-    public void Setup()
-    {
-        player = GameManager.Instance.player;
-        animator = player.GetComponent<Animator>();
-        Material seaMat = seaBackground.material;
-        seaBackground.material = new Material(seaMat);
     }
 }

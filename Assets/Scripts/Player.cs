@@ -109,19 +109,9 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         Debug.Log("Graphics API: " + SystemInfo.graphicsDeviceType);
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
-    }
-
-    public void Setup()
-    {
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
         UnityEngine.Rendering.DebugManager.instance.displayRuntimeUI = false;
-        var fishingCanva = GameObject.Find("FishingCanva(Clone)");
-        ReelCanvaManager = fishingCanva.GetComponent<ReelCanvaManager>();
-        boostCanvaManager = fishingCanva.GetComponent<BoostCanvaManager>();
         fishingController.Setup();
-        hudController = GameObject.Find("View(Clone)").GetComponent<HUDController>();
-        cinemachineCamera = GameObject.Find("CinemachineCamera").GetComponent<CinemachinePositionComposer>();
-        cinemachineCamera.transform.GetComponent<CinemachineCamera>().Follow = this.transform;
         interactionDebounceTimer = new Countdowntimer(0.5f);
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
         PlayerInputs = new DefaultInputActions();

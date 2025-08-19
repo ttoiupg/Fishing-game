@@ -210,7 +210,6 @@ public class FishingController : PlayerSystem
     
     public void Setup()
     {
-        zoneContainer = GameObject.Find("Zones");
         _animator = player.GetComponent<Animator>();
         _reelSoundSource = GetComponent<AudioSource>();
         zones = zoneContainer.GetComponentsInChildren<ZoneDisplayer>();
@@ -359,7 +358,7 @@ public class FishingController : PlayerSystem
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
             player.ReelCanvaManager.controlBarDirection = Value;
             player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * Value;
-            ConfigureCamera(8f - 2f * Value);
+            ConfigureCamera(FishingCameraDistance - 2f * Value);
         }
         else
         {

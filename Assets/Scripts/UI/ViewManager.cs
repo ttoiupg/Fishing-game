@@ -26,7 +26,7 @@ public class ViewManager : MonoBehaviour
         }
     }
 
-    public void Setup()
+    private void Start()
     {
         _player = FindAnyObjectByType<Player>();
         tideViewModel.Initialize();
