@@ -1440,11 +1440,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6777576398381063988, guid: c5d68082712015248993569e6247ff9b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -189371870
+      value: -191512800
       objectReference: {fileID: 0}
     - target: {fileID: 6777576398381063988, guid: c5d68082712015248993569e6247ff9b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 123314980
+      value: 124708744
       objectReference: {fileID: 0}
     - target: {fileID: 7191356089890528619, guid: c5d68082712015248993569e6247ff9b, type: 3}
       propertyPath: m_Size
@@ -1511,13 +1511,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2595696951130864126, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4022017228707142542, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1064219905}
     - target: {fileID: 4022017228707142542, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
       propertyPath: m_VersionIndex
-      value: 2539
+      value: 2578
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581970976809843489, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581970976809843489, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6790008113366443918, guid: dfa34370c7031f44b8f9041b47145390, type: 3}
       propertyPath: m_Name

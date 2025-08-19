@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 8506032748820951549}
   - component: {fileID: 2601002588224740119}
   - component: {fileID: 7987963002193983032}
+  - component: {fileID: 6266864192675840369}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -92,10 +93,10 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 37.3
+    FieldOfView: 20
     OrthographicSize: 4
     NearClipPlane: 0.01
-    FarClipPlane: 1000
+    FarClipPlane: 60
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -123,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraDistance: 10.2
+  CameraDistance: 18
   DeadZoneDepth: 0
   Composition:
     ScreenPosition: {x: 0, y: 0}
@@ -138,10 +139,27 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   Damping: {x: 0.3, y: 0.3, z: 0.3}
   Lookahead:
-    Enabled: 0
-    Time: 0
-    Smoothing: 0
+    Enabled: 1
+    Time: 0.1
+    Smoothing: 11.4
     IgnoreY: 0
+--- !u!114 &6266864192675840369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267957571734435641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseProfile: {fileID: 11400000, guid: a3dacaec0287d7444b4bd276816e1666, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 0.7
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &5165327129343887696
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,9 +363,9 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
-  field of view: 37.3
-  orthographic: 1
+  far clip plane: 60
+  field of view: 20
+  orthographic: 0
   orthographic size: 4
   m_Depth: 1
   m_CullingMask:
