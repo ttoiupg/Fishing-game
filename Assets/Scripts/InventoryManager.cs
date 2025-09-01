@@ -12,6 +12,7 @@ public class InventoryManager : MonoBehaviour, IDataPersistence
     private void Awake()
     {
         if (Instance == null) Instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void LoadData(GameData data)

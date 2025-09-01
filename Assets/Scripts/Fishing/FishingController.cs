@@ -35,14 +35,9 @@ public class FishingController : PlayerSystem
     public bool BonusBarOverlaping;
 
     public Vector3 bobberOffset = new(0, 2f, 0);
-    [FormerlySerializedAs("Zones")] public ZoneDisplayer[] zones;
     [Header("effect")] public Image fishHealthBar;
     public Sprite normalHealthBar;
     public Sprite whiteHealthBar;
-
-    [FormerlySerializedAs("ZoneContainer")]
-    public GameObject zoneContainer;
-
     public Fish currentFish;
     public float fishMaxHealth = 100;
     public float fishHealth = 100;
@@ -153,23 +148,6 @@ public class FishingController : PlayerSystem
         }
     }
 
-    public void ZoneCheck()
-    {
-        foreach (var t in zones)
-        {
-            if (_isInside(t.zone.position, t.zone.size,
-                    new Vector2(_playerTransform.position.x, _playerTransform.position.z)))
-            {
-                player.currentZone = t.zone;
-                break;
-            }
-            else
-            {
-                player.currentZone = null;
-            }
-        }
-    }
-
     #region UnityFunction
 
     private void SetUpTimers()
@@ -212,7 +190,6 @@ public class FishingController : PlayerSystem
     {
         _animator = player.GetComponent<Animator>();
         _reelSoundSource = GetComponent<AudioSource>();
-        zones = zoneContainer.GetComponentsInChildren<ZoneDisplayer>();
         _playerTransform = player.GetComponent<Transform>();
         _controlBarAction = playerInput.Fishing.ControlFishingRod;
         player.ID.playerEvents.OnFishCatched += fish => { FishCatched(); };

@@ -13,11 +13,10 @@ public class ViewManager : MonoBehaviour
     public AudioClip defaultOpenSound;
     public AudioClip defaultCloseSound;
     public TideCodexViewModel tideViewModel;
-    
+    public bool frameLock;
     private Player _player;
     //private StateMachine _viewStateMachine;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [RuntimeInitializeOnLoadMethod]
     void Awake()
     {
         if (instance != this)
@@ -28,12 +27,14 @@ public class ViewManager : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         _player = FindAnyObjectByType<Player>();
         tideViewModel.Initialize();
     }
 
     public void OpenView(IViewFrame viewFrame)
     {
+        if (frameLock) return;
         if (viewFrame == currentViewFrame)
         {
             CloseView();
@@ -41,7 +42,7 @@ public class ViewManager : MonoBehaviour
         else
         {
             currentViewFrame?.End();
-            _player.isActive = false;
+            //_player.isActive = false;
             lastViewFrame = currentViewFrame;
             currentViewFrame = viewFrame;
             currentViewFrame.Begin();
@@ -49,6 +50,7 @@ public class ViewManager : MonoBehaviour
     }
     public void OpenView(GameObject obj)
     {
+        if (frameLock) return;
         var viewFrame = obj.GetComponent<IViewFrame>();
         if (viewFrame == currentViewFrame)
         {
@@ -57,7 +59,7 @@ public class ViewManager : MonoBehaviour
         else
         {
             currentViewFrame?.End();
-            _player.isActive = false;
+            //_player.isActive = false;
             lastViewFrame = currentViewFrame;
             currentViewFrame = viewFrame;
             currentViewFrame.Begin();
@@ -65,8 +67,9 @@ public class ViewManager : MonoBehaviour
     }
     public void CloseView()
     {
+        frameLock = false;
         if (currentViewFrame == null) return;
-        _player.isActive = true;
+        //_player.isActive = true;
         currentViewFrame.End();
         lastViewFrame = currentViewFrame;
         currentViewFrame = null;

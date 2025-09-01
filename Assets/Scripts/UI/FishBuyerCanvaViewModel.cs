@@ -127,14 +127,13 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     }
     public void Begin()
     {
-        PauseViewModel.Instance.PauseLock = true;
+        ViewManager.instance.frameLock = true;
         GameManager.Instance.player.isActive = false;
         ShowInventory();
         PrepareItems();
     }
     public void End()
     {
-        PauseViewModel.Instance.PauseLock = false;
         GameManager.Instance.player.isActive = true;
         HideInventory();
     }

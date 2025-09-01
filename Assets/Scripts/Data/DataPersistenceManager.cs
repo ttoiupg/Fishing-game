@@ -58,8 +58,8 @@ public class DataPersistenceManager : MonoBehaviour
         {
             Instance = this;
         }
-
         InitializeList();
+        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()

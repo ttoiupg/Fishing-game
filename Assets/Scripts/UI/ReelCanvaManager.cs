@@ -314,6 +314,7 @@ public class ReelCanvaManager : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         animator = GameManager.Instance.player.GetComponent<Animator>();
         Material seaMat = seaBackground.material;
         seaBackground.material = new Material(seaMat);

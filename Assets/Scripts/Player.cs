@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IDataPersistence
     private static readonly int Speed = Animator.StringToHash("Speed");
     public PlayerID ID;
 
+    public Rigidbody2D body;
     public float defaultCameraDistance = 8f;
     public int currentFishingRod;
     public bool isActive;
@@ -26,14 +27,14 @@ public class Player : MonoBehaviour, IDataPersistence
     public FishingController fishingController;
     public HUDController hudController;
     public Animator animator;
+    public GameObject cameras;
     public CinemachinePositionComposer cinemachineCamera;
     public SpriteRenderer fishingRodSprite;
     public SpriteRenderer fishingRodReelSprite;
 
     [FormerlySerializedAs("CharacterTransform")]
     public Transform characterTransform;
-
-    public CharacterController controller;
+    
     public Vector3 playerVelocity;
     public bool groundedPlayer;
     public float movementResponsiveness = 25f;
@@ -85,7 +86,7 @@ public class Player : MonoBehaviour, IDataPersistence
 
     [SerializeField] private float _interactionRange;
     [SerializeField] private LayerMask _interactionLayerMask;
-    private readonly Collider[] _colliders = new Collider[3];
+    private readonly Collider2D[] _colliders = new Collider2D[3];
     [SerializeField] private int _numFound;
     [SerializeField] private bool isEnter = true;
     private bool interactionDebounce = false;
@@ -105,8 +106,14 @@ public class Player : MonoBehaviour, IDataPersistence
     public float tempresilience;
     public float templuck;
 
+    public void SetActive(bool isActive)
+    {
+        this.isActive = isActive;
+    }
     private void Start()
     {
+        DontDestroyOnLoad(cameras);
+        DontDestroyOnLoad(this.gameObject);
         Debug.Log("Graphics API: " + SystemInfo.graphicsDeviceType);
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
@@ -159,10 +166,10 @@ public class Player : MonoBehaviour, IDataPersistence
         _playerStateMachine?.FixedUpdate();
     }
 
-    private Collider GetClosestCollider(Collider[] colliders)
+    private Collider2D GetClosestCollider(Collider2D[] colliders)
     {
         var distance = 10000f;
-        Collider result = null;
+        Collider2D result = null;
         foreach (var c in colliders)
         {
             if (!c) continue;
@@ -199,6 +206,7 @@ public class Player : MonoBehaviour, IDataPersistence
         }
         modifiers.Clear();
         gameData.playerData.modifiers.ForEach(id => this.modifiers.Add(DataPersistenceManager.Instance.ModifierCards[id]));
+        transform.position = gameData.playerData.position;
     }
 
     public void SaveData(ref GameData gameData)
@@ -217,25 +225,23 @@ public class Player : MonoBehaviour, IDataPersistence
         {
             gameData.playerData.modifiers.Add(mod.id);
         }
-        
+        gameData.playerData.position = transform.position;
     }
 
     public void UpdateMovement()
     {
+        if (!isActive)
+        {
+            body.linearVelocity = Vector2.zero;
+            return;
+        };
         var moveHorizontal = Input.GetAxisRaw("Horizontal");
         var moveVertical = Input.GetAxisRaw("Vertical");
         // DOING CHARACTER MOVEMENT
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        var move = Vector3.ClampMagnitude(new Vector3(moveHorizontal, playerVelocity.y, moveVertical), 1f);
+        var move = Vector3.ClampMagnitude(new Vector3(moveHorizontal,moveVertical,0 ), 1f);
         currentSpeed = Mathf.Lerp(currentSpeed, playerSpeed * move.magnitude,
             1 - Mathf.Exp(-movementResponsiveness * Time.deltaTime));
-        controller.Move(move * (Time.deltaTime * currentSpeed));
+        body.linearVelocity = move * currentSpeed;
         UpdateAnimator(move);
     }
 
@@ -255,9 +261,7 @@ public class Player : MonoBehaviour, IDataPersistence
                 characterTransform.localScale = new Vector3(-1, 1, 1);
             }
         }
-
-        var flatDirection = new Vector3(direction.x, 0, direction.z);
-        if (flatDirection.magnitude > 0.05f)
+        if (direction.magnitude > 0.05f)
         {
             animator.SetBool(IsMoving, true);
             animator.SetFloat(Speed, currentSpeed / 3.5f);
@@ -273,15 +277,16 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         interactionDebounceTimer.Tick(Time.deltaTime);
         if (_numFound == 0) isEnter = true;
-        _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionRange, _colliders,
-            _interactionLayerMask);
+        var mask = new ContactFilter2D();
+        mask.useLayerMask = true;
+        mask.layerMask = _interactionLayerMask;
+        _numFound = Physics2D.OverlapCircle(new Vector2(_interactionPoint.position.x,_interactionPoint.position.y), _interactionRange,mask, _colliders);
         if (interactionDebounce) return;
         if (_numFound > 0)
         {
             var closest = GetClosestCollider(_colliders);
             currentInteract = closest.GetComponent<IInteractable>();
             if (!isEnter && currentInteract == lastInteract) return;
-            lastInteract?.PromptHide(this);
             hudController.interactionPrompt.localScale = Vector3.zero;
             interacted = false;
             lastInteract = currentInteract;

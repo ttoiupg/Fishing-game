@@ -266,12 +266,14 @@ public class TideCodexViewModel : MonoBehaviour, IViewFrame
 
     public void Begin()
     {
+        player.isActive = false;
         OpenUI();
         SetupInput();
     }
 
     public void End()
     {
+        player.isActive = true;
         CloseUI();
         CleanupInput();
     }

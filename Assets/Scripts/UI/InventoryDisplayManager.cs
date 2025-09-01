@@ -417,6 +417,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     }
     public void Begin()
     {
+        GameManager.Instance.player.isActive = false;
         ShowInventory();
         PrepareIcons();
         SetupMoney();
@@ -424,6 +425,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
 
     public void End()
     {
+        GameManager.Instance.player.isActive = true;
         HideIventory();
         //CleanItems();
     }

@@ -43,6 +43,10 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
         _player = FindAnyObjectByType<Player>();
     }
 
+    public void SetLock(bool isLocked)
+    {
+        PauseLock = isLocked;
+    }
     public void Trigger(InputAction.CallbackContext context)
     {
         if (MenuDebounce || PauseLock) return;
@@ -92,11 +96,13 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
     }
     public void Begin()
     {
+        _player.isActive = false;
         MenuOpenAnimation();
         _eventSystem.SetSelectedGameObject(resumeButton.gameObject);
     }
     public void End()
     {
+        _player.isActive = true;
         MenuCloseAnimation();
     }
 }

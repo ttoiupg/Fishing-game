@@ -78,11 +78,13 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame
     
     public void Begin()
     {
+        GameManager.Instance.player.isActive = false;
         OpenUI();
     }
 
     public void End()
     {
+        GameManager.Instance.player.isActive = true;
         CloseUI();
     }
 }

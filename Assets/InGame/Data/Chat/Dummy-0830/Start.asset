@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: Start
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueSection
+  name: Dummy-0830
+  chats:
+  - Icon: {fileID: 3835609648334738073, guid: 39666e1eec73c2249b8803cc1f82b923, type: 3}
+    Voice: {fileID: 8300000, guid: 9c8b54976e870144888d42f5efdfe1f7, type: 3}
+    speaker: Dummy-0830
+    message: Is there somthing on my face?
+    duration: 1
+    options:
+    - name: Yes
+      text: You're smiling, weirdly...
+      to: {fileID: 11400000, guid: ec3b0f88876ce994fb8a940fd713bcff, type: 2}
+    - name: No
+      text: Sorry, never mind
+      to: {fileID: 11400000, guid: 0f32ebf72dc004843967faa22d91775e, type: 2}

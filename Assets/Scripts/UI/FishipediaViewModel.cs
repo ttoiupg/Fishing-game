@@ -68,11 +68,13 @@ public class FishipediaViewModel : MonoBehaviour, IViewFrame
 
     public void Begin()
     {
+        player.isActive = false;
         OpenUI();
     }
 
     public void End()
     {
+        player.isActive = true;
         CloseUI();
     }
 }

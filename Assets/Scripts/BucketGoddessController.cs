@@ -19,6 +19,7 @@ public class BucketGoddessController : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         // leaveButton = GameObject.Find("BucketGoddessLeaveButton");
         // leaveButton.transform.localPosition = new Vector3(leaveButton.transform.localPosition.x,-1000f, leaveButton.transform.localPosition.z);
         // leaveButton.gameObject.GetComponent<Button>().onClick.AddListener(LeaveGoddess);
@@ -54,7 +55,7 @@ public class BucketGoddessController : MonoBehaviour
     public void TriggerGoddess()
     {
         _eventSystem.SetSelectedGameObject(null);
-        PauseViewModel.Instance.PauseLock = true;
+        ViewManager.instance.frameLock = true;
         GameManager.Instance.player.isActive = false;
         animator.SetTrigger(Appear);
         StartEffect();
@@ -64,7 +65,7 @@ public class BucketGoddessController : MonoBehaviour
     public void LeaveGoddess()
     {
         _eventSystem.SetSelectedGameObject(null);
-        PauseViewModel.Instance.PauseLock = false;
+        ViewManager.instance.frameLock = false;
         GameManager.Instance.player.isActive = true;
         animator.SetTrigger(Exit);
         LeaveEffect();

@@ -5,12 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Menu.unity
-    guid: 60cdedda645759b45b48462fb99421ac
   - enabled: 1
-    path: Assets/Scenes/Main.unity
+    path: Assets/Scenes/BaseScene.unity
+    guid: e15cbdd2c39974c45b66592cdc9038b7
+  - enabled: 1
+    path: Assets/Scenes/CenterTown.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/TeleportTest.unity
+    guid: 85d05313b1ba64a4696c6b6b588d58b4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9a27827162f681f42bb8ccf9d57e7518, type: 3}
   m_UseUCBPForAssetBundles: 0

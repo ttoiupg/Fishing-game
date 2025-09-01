@@ -15,6 +15,7 @@ public class VisualFXManager : MonoBehaviour
         {
             Instance = this;
         }
+        DontDestroyOnLoad(this.gameObject);
     }
     private IEnumerator BobberNumerator(Vector3 position, int direction)
     {

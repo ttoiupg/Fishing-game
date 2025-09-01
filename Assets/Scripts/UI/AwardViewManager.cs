@@ -3,10 +3,9 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
-public class AwardViewManager : MonoBehaviour
+public class AwardViewManager : MonoBehaviour,IViewFrame
 {
     public static AwardViewManager Instance;
     private EventSystem _eventSystem;
@@ -61,19 +60,6 @@ public class AwardViewManager : MonoBehaviour
         PauseViewModel.Instance.PauseLock = false;
         _debounce = false;
     }
-    public void SetAwardView(bool isOn)
-    {
-        if (_debounce) return;
-        _debounce = true;
-        if (isOn)
-        {
-            On();
-        }
-        else
-        {
-            Off();
-        }
-    }
 
     public void ShowFishAward(Fish fish)
     {
@@ -82,6 +68,16 @@ public class AwardViewManager : MonoBehaviour
         NameLabel.text = fish.fishType.name;
         WeightLabel.text = $"{ fish.weight}kg";
         MutationLabel.text = $"Mutation: {fish.mutation.name}";
-        SetAwardView(true);
+        ViewManager.instance.OpenView(this);
+    }
+
+    public void Begin()
+    {
+        On();
+    }
+
+    public void End()
+    {
+        Off();
     }
 }
