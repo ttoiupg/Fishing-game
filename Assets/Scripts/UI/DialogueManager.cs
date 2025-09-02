@@ -28,6 +28,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
 
     public float volume;
     private EventSystem eventSystem;
+    private bool canClick;
     [SerializeField] private Transform SpeakerPosition;
     [SerializeField] private List<GameObject> options;
     [SerializeField] private DialogueSection currentSection;
@@ -91,6 +92,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         ImageDisplayer.sprite = dialogueData.Icon;
         speakerName.text = dialogueData.speaker;
         currentAudio = SoundFXManger.Instance.PlaySoundFXClip(dialogueData.Voice,vcam.transform,volume);
+        if (textCoroutine != null)
+        {
+            StopCoroutine(textCoroutine);
+        }
         textCoroutine = TextEffect(dialogueData.message,dialogueData.duration);
         StartCoroutine(textCoroutine);
         CreateOption(dialogueData.options);
@@ -109,6 +114,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
 
     private async UniTask SetupDialogue(DialogueSection section,Transform speakerPosition)
     {
+        canClick = false;
         SpeakerPosition = speakerPosition;
         ViewManager.instance.OpenView(this);
         currentSection = section;
@@ -118,6 +124,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         speakerName.text = currentData.speaker;
         textLabel.text = "";
         await UniTask.WaitForSeconds(1f);
+        canClick = true;
         displayeDialogueData(currentData);
     }
 
@@ -151,7 +158,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     
     public void ButtonClick()
     {
-        if (choosing) return;
+        if (choosing || !canClick) return;
         if (textCoroutine != null)
         {
             Debug.Log("stop");

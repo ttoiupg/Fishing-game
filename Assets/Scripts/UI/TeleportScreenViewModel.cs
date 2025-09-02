@@ -13,6 +13,7 @@ public class TeleportScreenViewModel : MonoBehaviour,IViewFrame
     public RectTransform picture;
     public TextMeshProUGUI targetText;
     public TextMeshProUGUI tipText;
+    private Tween backgroundTween;
 
     private void Start()
     {
@@ -29,12 +30,15 @@ public class TeleportScreenViewModel : MonoBehaviour,IViewFrame
         picture.localPosition = Vector3.left * 90;
         var fade = canvasGroup.DOFade(1, 0.25f);
         fade.onComplete += () => { canvasGroup.blocksRaycasts = true; Container.SetActive(true);};
+        backgroundTween = picture.DOLocalMoveX(90, 5f).SetEase(Ease.Linear);
         var sequence = DOTween.Sequence();
         sequence.Append(fade);
         sequence.Append(cover.DOLocalMoveY(1700, 0.5f));
-        sequence.Join(picture.DOLocalMoveX(90, 3f).SetEase(Ease.Linear));
+        sequence.AppendInterval(3);
         sequence.Play();
-        sequence.onComplete += () => {ViewManager.instance.CloseView();};
+        sequence.onComplete += () => {
+            ViewManager.instance.CloseView();
+        };
     }
 
     public void End()
@@ -42,7 +46,10 @@ public class TeleportScreenViewModel : MonoBehaviour,IViewFrame
         var fade = canvasGroup.DOFade(0, 0.25f);
         fade.onComplete += () => { canvasGroup.blocksRaycasts = false;};
         var move = cover.DOLocalMoveY(0, 0.5f);
-        move.onComplete += () => { Container.SetActive(false); };
+        move.onComplete += () => {
+            Container.SetActive(false);
+            backgroundTween.Kill();
+        };
         var sequence = DOTween.Sequence();
         sequence.Append(move);
         sequence.Append(fade);
