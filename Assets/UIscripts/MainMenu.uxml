@@ -1,7 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/MainMenu.uss?fileID=7433441132597879392&amp;guid=9816faee579b5e540b96fdda52a1209c&amp;type=3#MainMenu" />
-    <engine:VisualElement name="Container" class="Container" style="flex-grow: 1; align-self: auto; align-items: center;">
-        <engine:VisualElement style="flex-grow: 1; width: 100%; height: 576%; background-image: url(&quot;project://database/Assets/Sprite/tide&amp;fins%20logo.png?fileID=2800000&amp;guid=d019c846c74fe604b8acf4f3e94c2bf9&amp;type=3#tide&amp;fins logo&quot;); background-size: 100% 100%; transform-origin: center; min-height: initial; max-height: 56%; top: auto; max-width: initial; margin-top: 0; position: relative; min-width: initial; background-position-x: center 0; background-position-y: center 0; -unity-background-scale-mode: scale-to-fit; align-items: flex-start;" />
-        <engine:Button text="PLAY" name="StartButton" class="StartButton" style="height: 9%;" />
-    </engine:VisualElement>
-</engine:UXML>
