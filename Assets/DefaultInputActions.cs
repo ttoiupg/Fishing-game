@@ -1139,6 +1139,17 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""54e7a750-a22b-472a-b88a-9275dc58462e"",
+                    ""path"": ""<FishingRodGamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigations"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""2c0f27f5-4fc4-4dc9-8d09-d23113e8f58a"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",

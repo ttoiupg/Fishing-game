@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using DG.Tweening;
 using TMPro;
@@ -69,6 +70,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
 
     private List<Fish> _cacheFishList = new();
     private List<FishingRod> _cacheFishingRodList = new();
+    private IEnumerator autoSelectCourutine;
     private void Awake()
     {
         if (instance == null)
@@ -128,7 +130,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             var button = icon.GetComponent<Button>();
             iconDisplayer.fish = fish;
             iconDisplayer.Init();
-            button.onClick.AddListener(() => SetFishDetailView(iconDisplayer));
+            iconDisplayer.Select.AddListener(() => { StartAutoSelectFish(iconDisplayer); });
             _fishIconDisplayers.Add(iconDisplayer);
         }
         for (int i = 0; i < _fishIconDisplayers.Count; i++)
@@ -159,7 +161,35 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
 
         SetupFishNavigation();
     }
-
+    private IEnumerator selectCourutine(FishIconDisplayer icon)
+    {
+        yield return new WaitForSeconds(0.25f);
+        SetFishDetailView(icon);
+        
+    }
+    private IEnumerator selectCourutineRod(FishingRodCellDisplayer rod)
+    {
+        yield return new WaitForSeconds(0.25f);
+        SetFishingRodDetailView(rod);
+    }
+    public void StartAutoSelectFish(FishIconDisplayer icon)
+    {
+        if (autoSelectCourutine != null)
+        {
+            StopCoroutine(autoSelectCourutine);
+        }
+        autoSelectCourutine = selectCourutine(icon);
+        StartCoroutine(autoSelectCourutine);
+    }
+    public void StartAutoSelectRod(FishingRodCellDisplayer rod)
+    {
+        if (autoSelectCourutine != null)
+        {
+            StopCoroutine(autoSelectCourutine);
+        }
+        autoSelectCourutine = selectCourutineRod(rod);
+        StartCoroutine(autoSelectCourutine);
+    }
     public void SetupFishNavigation()
     {
         for (int i = 0; i < categoryButtons.Count; i++)
