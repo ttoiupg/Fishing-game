@@ -7,6 +7,7 @@ using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour, IViewFrame
@@ -16,11 +17,16 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public CinemachinePositionComposer cpc;
     [Header("UI")]
     public CanvasGroup canvasGroup;
+    public TextMeshProUGUI speakerName;
+    public TextMeshProUGUI dialogueTextLabel;
+    [Header("Speaker")]
+    public RectTransform SpeakerContainer;
+    public RectTransform RightSpeaker;
+    public RectTransform LeftSpeaker;
+    public RectTransform LeftSpeakerSmall;
+    
     public RectTransform topCover;
     public RectTransform bottomCover;
-    public TextMeshProUGUI speakerName;
-    public TextMeshProUGUI textLabel;
-    public TextMeshProUGUI SkipButtonLabel;
     public Image ImageDisplayer;
     public GameObject optionPrefab;
     public Transform optionContainer;
@@ -49,10 +55,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
 
     private IEnumerator TextEffect(string text,float duration)
     {
-        textLabel.text = "";
+        dialogueTextLabel.text = "";
         for (int i = 0; i < text.Length; i++)
         {
-            textLabel.text += text[i];
+            dialogueTextLabel.text += text[i];
             yield return new WaitForSeconds(duration/text.Length);
         }
         textCoroutine = null;
@@ -122,7 +128,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         currentData = currentSection.chats[currentChatIndex];
         ImageDisplayer.sprite = currentData.Icon;
         speakerName.text = currentData.speaker;
-        textLabel.text = "";
+        dialogueTextLabel.text = "";
         await UniTask.WaitForSeconds(1f);
         canClick = true;
         displayeDialogueData(currentData);
@@ -135,7 +141,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             Destroy(currentAudio);
         }
         StopCoroutine(textCoroutine);
-        textLabel.text = currentData.message;
+        dialogueTextLabel.text = currentData.message;
     }
     
     public void NextDialogue()
