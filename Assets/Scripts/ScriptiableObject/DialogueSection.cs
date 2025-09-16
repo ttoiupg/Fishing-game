@@ -9,7 +9,13 @@ public enum DiablogueDisplayStyle
     Tide,
     none,
 }
-
+[System.Serializable]
+public enum DialogueSpeaker
+{
+    Right,
+    Left,
+    LeftSmall
+}
 [System.Serializable]
 public struct DialogueOption
 {
@@ -17,13 +23,13 @@ public struct DialogueOption
     public string text;
     public DialogueSection to; 
 }
-
 [System.Serializable]
 public struct DialogueData
 {
-    public Sprite Icon;
+    public DialogueSpeaker speaker;
+    public Sprite speakerSprite;
     public AudioClip Voice;
-    public string speaker;
+    public string speakerName;
     public string message;
     public float duration;
     public List<DialogueOption> options;
@@ -33,6 +39,6 @@ public struct DialogueData
 [CreateAssetMenu(fileName = "Dialogue", menuName = "Game/Dialogue/Dialogue")]
 public class DialogueSection : ScriptableObject
 {
-    public string name;
+    public string Speaker;
     public List<DialogueData> chats = new List<DialogueData>();
 }

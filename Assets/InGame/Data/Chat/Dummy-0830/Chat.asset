@@ -12,17 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
   m_Name: Chat
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSection
-  name: Dummy-0830
+  Speaker: 
   chats:
-  - Icon: {fileID: 3835609648334738073, guid: 39666e1eec73c2249b8803cc1f82b923, type: 3}
-    Voice: {fileID: 8300000, guid: d75d646220e5895428c88b37ed33a525, type: 3}
-    speaker: Dummy-0830
-    message: Oh! I heard about an event coming up!
-    duration: 2
-    options: []
-  - Icon: {fileID: 3835609648334738073, guid: 39666e1eec73c2249b8803cc1f82b923, type: 3}
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
     Voice: {fileID: 8300000, guid: e20ece4347db84146a084b5066fa18ad, type: 3}
-    speaker: Dummy-0830
+    speakerName: Weni
+    message: You're smilling, weirdly...
+    duration: 0.6
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: d75d646220e5895428c88b37ed33a525, type: 3}
+    speakerName: Carlo
+    message: Oh! I heard about an event coming up!
+    duration: 1
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: e20ece4347db84146a084b5066fa18ad, type: 3}
+    speakerName: Carlo
     message: It's PRETTY obvious that I'm excited!
-    duration: 2
+    duration: 0.7
     options: []

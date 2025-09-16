@@ -19,18 +19,16 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public CanvasGroup canvasGroup;
     public TextMeshProUGUI speakerName;
     public TextMeshProUGUI dialogueTextLabel;
+    public RectTransform contentContainer;
+    public RectTransform Sea;
     [Header("Speaker")]
     public RectTransform SpeakerContainer;
     public RectTransform RightSpeaker;
     public RectTransform LeftSpeaker;
     public RectTransform LeftSpeakerSmall;
-    
-    public RectTransform topCover;
-    public RectTransform bottomCover;
-    public Image ImageDisplayer;
     public GameObject optionPrefab;
     public Transform optionContainer;
-    public Transform contentContainer;
+    public Image rightSpeaker;
 
     public float volume;
     private EventSystem eventSystem;
@@ -91,13 +89,41 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             options.Add(option);
         }
     }
-
+    private void DimSpeaker(RectTransform speaker)
+    {
+        speaker.DOScale(Vector3.one * 0.8f, 0.15f).SetEase(Ease.OutBack);
+        speaker.GetComponent<Image>().color = Color.gray;
+    }
+    private void HighlightSpeaker(RectTransform speaker)
+    {
+        speaker.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack);
+        speaker.GetComponent<Image>().color = Color.white;
+    }
+    private void OnlyHighLightSpeaker(DialogueSpeaker speaker)
+    {
+        DimSpeaker(RightSpeaker);
+        DimSpeaker(LeftSpeaker);
+        DimSpeaker(LeftSpeakerSmall);
+        switch (speaker)
+        {
+            case DialogueSpeaker.Right:
+                HighlightSpeaker(RightSpeaker);
+                break;
+            case DialogueSpeaker.Left:
+                HighlightSpeaker(LeftSpeaker);
+                break;
+            case DialogueSpeaker.LeftSmall:
+                HighlightSpeaker(LeftSpeakerSmall);
+                break;
+        }
+    }
     private void displayeDialogueData(DialogueData dialogueData)
     {
         currentData = dialogueData;
-        ImageDisplayer.sprite = dialogueData.Icon;
-        speakerName.text = dialogueData.speaker;
+        rightSpeaker.sprite = dialogueData.speakerSprite;
+        speakerName.text = dialogueData.speakerName;
         currentAudio = SoundFXManger.Instance.PlaySoundFXClip(dialogueData.Voice,vcam.transform,volume);
+        OnlyHighLightSpeaker(dialogueData.speaker);
         if (textCoroutine != null)
         {
             StopCoroutine(textCoroutine);
@@ -122,13 +148,13 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     {
         canClick = false;
         SpeakerPosition = speakerPosition;
-        ViewManager.instance.OpenView(this);
         currentSection = section;
         currentChatIndex = 0;
         currentData = currentSection.chats[currentChatIndex];
-        ImageDisplayer.sprite = currentData.Icon;
-        speakerName.text = currentData.speaker;
+        rightSpeaker.sprite = currentData.speakerSprite;
+        speakerName.text = currentData.speakerName;
         dialogueTextLabel.text = "";
+        ViewManager.instance.OpenView(this);
         await UniTask.WaitForSeconds(1f);
         canClick = true;
         displayeDialogueData(currentData);
@@ -187,10 +213,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         vcam.Lens.OrthographicSize = 2.5f;
         canvasGroup.blocksRaycasts = true;
         canvasGroup.interactable = true;
-        contentContainer.DOMoveY(160,0.5f);
+        contentContainer.DOLocalMoveY(-440,0.5f);
+        Sea.DOLocalMoveY(-440, 0.5f);
         canvasGroup.DOFade(1, 0.2f);
-        topCover.DOScaleY(1, 0.6f);
-        bottomCover.DOScaleY(1, 0.6f);
+        SpeakerContainer.DOScale(Vector3.one, 0.4f);
     }
 
     public void End()
@@ -202,13 +228,13 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         cpc.TargetOffset = new Vector3(0,1.48f,0);
         vcam.Follow = GameManager.Instance.player.transform;
         vcam.Lens.OrthographicSize = 4.5f;
-        contentContainer.DOMoveY(-200,0.5f);
+        contentContainer.DOLocalMoveY(-700,0.5f);
+        Sea.DOLocalMoveY(-800, 0.5f);
+        SpeakerContainer.DOScale(Vector3.one * 6, 0.4f);
         canvasGroup.DOFade(0, 0.2f).onComplete += (() =>
         {
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
         });
-        topCover.DOScaleY(0, 0.6f);
-        bottomCover.DOScaleY(0, 0.6f);
     }
 }

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
   m_Name: End
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSection
-  name: Dummy-0830
+  Speaker: 
   chats:
-  - Icon: {fileID: 3835609648334738073, guid: 39666e1eec73c2249b8803cc1f82b923, type: 3}
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
     Voice: {fileID: 8300000, guid: fd3fdb9e828061641ad25a850df403fc, type: 3}
-    speaker: Dummy-0830
+    speakerName: Carlo
     message: such a weirdo..
-    duration: 1
+    duration: 0.4
     options: []
