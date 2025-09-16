@@ -134,6 +134,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     }
     public void JumpDialouge(DialogueSection section)
     {
+        if (currentAudio != null)
+        {
+            Destroy(currentAudio);
+        }
         currentSection = section;
         currentChatIndex = 0;
         currentData = currentSection.chats[currentChatIndex];
@@ -173,6 +177,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public void NextDialogue()
     {
         currentChatIndex++;
+        if (currentAudio != null)
+        {
+            Destroy(currentAudio);
+        }
         if (currentChatIndex >= currentSection.chats.Count)
         {
             Debug.Log("close");

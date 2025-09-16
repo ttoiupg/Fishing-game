@@ -122,7 +122,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     {
         _cacheFishList = InventoryManager.Instance.fishes;
         var FishList = _cacheFishList.ToList().OrderBy(item => 1 / item.fishType.Rarity.OneIn);
-
+        var haveController = Gamepad.current != null;
         foreach (var fish in FishList)
         {
             var icon = Instantiate(fishIconDisplayer.gameObject, fishContent);
@@ -130,7 +130,14 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
             var button = icon.GetComponent<Button>();
             iconDisplayer.fish = fish;
             iconDisplayer.Init();
-            iconDisplayer.Select.AddListener(() => { StartAutoSelectFish(iconDisplayer); });
+            if (haveController)
+            {
+                iconDisplayer.Select.AddListener(() => { StartAutoSelectFish(iconDisplayer); });
+            }
+            else
+            {
+                button.onClick.AddListener(() => { SetFishDetailView(iconDisplayer); });
+            }
             _fishIconDisplayers.Add(iconDisplayer);
         }
         for (int i = 0; i < _fishIconDisplayers.Count; i++)

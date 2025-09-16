@@ -18,6 +18,7 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private List<BaseMutation> gameMutationList = new List<BaseMutation>();
     [SerializeField] private List<GameItemSo> gameItemList = new List<GameItemSo>();
     [SerializeField] private List<ModifierBase> ModifierCardList = new List<ModifierBase>();
+    public List<CraftElement> craftElements = new List<CraftElement>();
     public Dictionary<string, BaseFish> gameFish = new Dictionary<string, BaseFish>();
     public Dictionary<string, BaseMutation> gameMutations = new Dictionary<string, BaseMutation>();
     public Dictionary<string, FishingRodSO> gameFishingRods = new Dictionary<string, FishingRodSO>();

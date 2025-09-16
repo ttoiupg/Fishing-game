@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     public UnityEvent TeleportEnded;
     private List<BaseMutation> _avaliableMutations;
     private List<BaseFish> _availableFishes;
-
     private void Awake()
     {
         if (Instance == null)
