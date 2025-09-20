@@ -61,13 +61,12 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
 
     //[InputControl(name = "leftShoulder", bit = 0)]
     //[InputControl(name = "rightShoulder", bit = 1)]
-    //[InputControl(name = "leftTriggerButton", layout = "Button", bit = 2)]
-    //[InputControl(name = "rightTriggerButton", layout = "Button", bit = 3)]
+    [InputControl(name = "rightTrigger", offset = 12, format = "BYTE")]
+    [FieldOffset(6)] public byte rightTrigger;
     //[InputControl(name = "select", displayName = "Share", bit = 4)]
     //[InputControl(name = "start", displayName = "Options", bit = 5)]
     //[InputControl(name = "leftStickPress", bit = 6)]
     //[InputControl(name = "rightStickPress", bit = 7)]
-    //[FieldOffset(6)] public byte buttons2;
 
     //[InputControl(name = "systemButton", layout = "Button", displayName = "System", bit = 0)]
     //[InputControl(name = "touchpadButton", layout = "Button", displayName = "Touchpad Press", bit = 1)]
