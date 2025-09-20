@@ -1,23 +1,22 @@
+﻿using Halfmoon.Utilities;
 using UnityEngine;
-using Halfmoon.Utilities;
 using UnityEngine.Events;
 
-public class FishBuyerInteract : MonoBehaviour, IInteractable
+public class NormalInteract : MonoBehaviour, IInteractable
 {
-    [SerializeField] private string _prompt = "Sell Fish";
-    [SerializeField] private bool _isInstant = false;
-    [SerializeField] private float _length = 0.6f;
+    [SerializeField] private string _prompt;
+    [SerializeField] private bool _isInstant;
+    [SerializeField] private float _length;
     public string InteractionPrompt => _prompt;
     public UnityEvent triggered = new UnityEvent();
 
     public bool IsInstant => _isInstant;
 
     public float length => _length;
-    private FishBuyerCanvaViewModel fishBuyerCanvaViewModel;
-
+    
     public void Setup()
     {
-        fishBuyerCanvaViewModel = GameObject.Find("FishBuyerCanva").GetComponent<FishBuyerCanvaViewModel>();
+        
     }
     public bool checkInteractable(Player player)
     {
@@ -49,7 +48,7 @@ public class FishBuyerInteract : MonoBehaviour, IInteractable
     }
     public void Interact(Player plyaer)
     {
-        ViewManager.instance.OpenView(fishBuyerCanvaViewModel);
+        triggered.Invoke();
         Debug.Log(gameObject.name + " interacted");
     }
 }

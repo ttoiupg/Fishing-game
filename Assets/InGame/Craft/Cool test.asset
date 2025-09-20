@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9283ef189b844f99999fa6387de74b1d, type: 3}
+  m_Name: Cool test
+  m_EditorClassIdentifier: 
+  craftItem: {fileID: 11400000, guid: b8292444ccf52fe4a95a05b3034c0011, type: 2}
+  amount: 1
+  requirements:
+  - type: 1
+    item: {fileID: 0}
+    fish: {fileID: 11400000, guid: 28d9b1a8abc864843abcd72b68490be3, type: 2}
+    amount: 10
+  - type: 1
+    item: {fileID: 0}
+    fish: {fileID: 11400000, guid: 92420d49c96a56248b16e3a38661aa01, type: 2}
+    amount: 5
