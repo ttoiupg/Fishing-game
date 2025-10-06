@@ -2048,12 +2048,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Talk
-  _isInstant: 1
-  _length: 0
+  _isInstant: 0
+  _length: 0.2
   triggered:
     m_PersistentCalls:
       m_Calls: []
-  startSection: {fileID: 11400000, guid: 7491962078e806b47b5d6cac4770ffc0, type: 2}
+  startSection: {fileID: 11400000, guid: d0ed0d5fbef9f9d4dbb719f2bb1cc6c4, type: 2}
 --- !u!61 &956218351
 BoxCollider2D:
   m_ObjectHideFlags: 0

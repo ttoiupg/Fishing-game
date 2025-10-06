@@ -8,6 +8,12 @@ public class GameItem
     public GameItem(IDataGameItem item)
     {
         this.item = DataPersistenceManager.Instance.gameItems[item.id];
+        this.amount = item.amount;
+    }
+
+    public GameItem(GameItemSo item, int amount)
+    {
+        this.item = item;
         this.amount = amount;
     }
 }

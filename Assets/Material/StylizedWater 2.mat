@@ -12,8 +12,9 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 0
+  m_InvalidKeywords:
+  - _EMISSION
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -89,12 +90,15 @@ Material:
     - _Ambient: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _Blur: 0
     - _BumpScale: 1
     - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _Clip: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DepthStrength: 1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distance: 5000
@@ -133,6 +137,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
+    - _normal_distance: 0.01
     - _smoothness: 0
     - _strength: 1
     m_Colors:
@@ -158,4 +163,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 9
+  version: 10

@@ -27,4 +27,9 @@ public class LootManager : MonoBehaviour
     {
         InventoryManager.Instance.fishes.Add(fish);
     }
+
+    public void AddItem(GameItem item)
+    {
+        InventoryManager.Instance.items.Add(item);
+    }
 }
