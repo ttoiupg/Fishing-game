@@ -20,6 +20,7 @@ public class CraftViewModel : MonoBehaviour, IViewFrame
     public TextMeshProUGUI craftElementDescription;
     public Image craftButton;
     public TextMeshProUGUI craftButtonText;
+    public GameEvent channel;
     private Dictionary<GameObject,CraftElement> craftElementDisplays = new Dictionary<GameObject,CraftElement>();
     private Dictionary<GameObject,bool> craftables = new Dictionary<GameObject, bool>();
     private CraftElement currentCraftElement;
@@ -31,7 +32,18 @@ public class CraftViewModel : MonoBehaviour, IViewFrame
     {
         eventSystem = EventSystem.current;
     }
-
+    private void OnEnable()
+    {
+        channel.Raised += Activate;
+    }
+    private void OnDisable()
+    {
+        channel.Raised -= Activate;
+    }
+    private void Activate()
+    {
+        ViewManager.instance.OpenView(gameObject);
+    }
     private void SelectElement(GameObject element)
     {
         if (currentCraftElementGameObject == element) return;

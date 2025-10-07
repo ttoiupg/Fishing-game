@@ -43,11 +43,11 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 0
   alignment: 7
-  spritePivot: {x: 0.5, y: 0.5}
+  spritePivot: {x: 0.5, y: 0}
   spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -104,8 +104,8 @@ TextureImporter:
         y: 0
         width: 464
         height: 516
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.49864516, y: 0.007797352}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -114,6 +114,28 @@ TextureImporter:
       bones: []
       spriteID: dc175d40790e75941b55554a6c895502
       internalID: -1506372179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bucket-assets__0003_Bucket_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 464
+        height: 516
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0e3e8289ccc54751be784be0a146c5c
+      internalID: -1353195721
       vertices: []
       indices: 
       edges: []
@@ -133,6 +155,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Bucket-assets__0003_Bucket_0: -1506372179
+      Bucket-assets__0003_Bucket_1: -1353195721
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

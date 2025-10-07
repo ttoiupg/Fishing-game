@@ -8,12 +8,13 @@ public class NormalInteract : MonoBehaviour, IInteractable
     [SerializeField] private bool _isInstant;
     [SerializeField] private float _length;
     public string InteractionPrompt => _prompt;
+    public GameEvent channel;
     public UnityEvent triggered = new UnityEvent();
 
     public bool IsInstant => _isInstant;
 
     public float length => _length;
-    
+
     public void Setup()
     {
         
@@ -49,6 +50,7 @@ public class NormalInteract : MonoBehaviour, IInteractable
     public void Interact(Player plyaer)
     {
         triggered.Invoke();
+        channel.Raise();
         Debug.Log(gameObject.name + " interacted");
     }
 }

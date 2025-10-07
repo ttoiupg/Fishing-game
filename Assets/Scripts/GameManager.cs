@@ -238,6 +238,17 @@ public class FishEnemy : IEnemy
 
     public void TakeDamage(Enemy enemy, Battle battle, DamageInfo info)
     {
+        switch (battle.battleStats.currentDamageStage)
+        {
+            case DamageStage.Stage2:
+                GameManager.Instance.battleTimer.ChangeTime(0.7f);
+                break;
+            case DamageStage.Stage3:
+                GameManager.Instance.battleTimer.ChangeTime(1.5f);
+                break;
+            default:
+                break;
+        }
         if (info.isMiss)
         {
             GameManager.Instance.player.OnModifierEvent(BattleEvent.Miss);
@@ -258,17 +269,6 @@ public class FishEnemy : IEnemy
             DamageStage.Stage3 => 1f,
             _ => 0.4f
         };
-        switch (battle.battleStats.currentDamageStage)
-        {
-            case DamageStage.Stage2:
-                GameManager.Instance.battleTimer.ChangeTime(0.7f);
-                break;
-            case DamageStage.Stage3:
-                GameManager.Instance.battleTimer.ChangeTime(1.5f);
-                break;
-            default:
-                break;
-        }
 
         Debug.Log($"behavior dealt damage{info.damage * damageStageMultiplier}");
         enemy.health -= info.damage * damageStageMultiplier;

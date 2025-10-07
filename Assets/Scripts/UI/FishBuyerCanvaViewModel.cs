@@ -11,6 +11,7 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     public FishIconDisplayer fishIconDisplayer;
     public RectTransform fishContent;
     public GameObject inventoryBody;
+    public GameEvent channel;
     public Button sellButton;
     public Button closeButton;
     private EventSystem _eventSystem;
@@ -18,6 +19,18 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
     void Start()
     {
         _eventSystem = EventSystem.current;
+    }
+    private void OnEnable()
+    {
+        channel.Raised += Activate;
+    }
+    private void OnDisable()
+    {
+        channel.Raised += Activate;
+    }
+    private void Activate()
+    {
+        ViewManager.instance.OpenView(gameObject);
     }
     public void SelectIcon(FishIconDisplayer icon)
     {

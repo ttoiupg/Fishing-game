@@ -15,6 +15,7 @@ public class BucketGoddessController : MonoBehaviour
     public AudioClip appearAudio;
     public AudioClip submergeAudio;
     public GameObject leaveButton;
+    public GameEvent channel;
     
 
     private void Start()
@@ -27,7 +28,14 @@ public class BucketGoddessController : MonoBehaviour
         animator = GetComponent<Animator>();
         _eventSystem = EventSystem.current;
     }
-
+    private void OnEnable()
+    {
+        channel.Raised += TriggerGoddess;
+    }
+    private void OnDisable()
+    {
+        channel.Raised -= TriggerGoddess;
+    }
     private void StartEffect()
     {
         animator.enabled = true;
