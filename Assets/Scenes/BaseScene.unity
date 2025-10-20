@@ -17054,10 +17054,10 @@ MonoBehaviour:
     ScreenPosition: {x: 0, y: 0}
     DeadZone:
       Enabled: 0
-      Size: {x: 0.2, y: 0.2}
+      Size: {x: 0, y: 0}
     HardLimits:
       Enabled: 0
-      Size: {x: 0.8, y: 0.8}
+      Size: {x: 2, y: 0.8}
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 1.48, z: 0}
@@ -24085,7 +24085,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 0.5
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -25980,7 +25980,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -272170660, y: 176912930}
+  m_AnchoredPosition: {x: -273247740, y: 177635700}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &4603943534130282238
@@ -35173,6 +35173,7 @@ GameObject:
   - component: {fileID: 4320236029005981019}
   - component: {fileID: 7631189461945077681}
   - component: {fileID: 2532433079068074654}
+  - component: {fileID: 7631189461945077682}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -37880,8 +37881,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority:
-    Enabled: 0
-    m_Value: 0
+    Enabled: 1
+    m_Value: 1
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -37909,7 +37910,26 @@ MonoBehaviour:
       Curvature: {x: 2, y: 11}
       BarrelClipping: 0.25
       Anamorphism: 0
-  BlendHint: 0
+  BlendHint: 8
+--- !u!114 &7631189461945077682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964234530781029279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de066765cd85e7343a36d6a27386157d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHandler
+  cinemachineCamera: {fileID: 7631189461945077681}
+  cinemachinePositionComposer: {fileID: 2532433079068074654}
+  positionX: 0
+  positionY: 0
+  dpos: {x: 0, y: 0}
+  dposX: 0
+  dposY: 0
 --- !u!222 &7632800774752548843
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -44950,11 +44970,11 @@ SceneRoots:
   - {fileID: 1581144189}
   - {fileID: 140056106}
   - {fileID: 606345350328008909}
-  - {fileID: 1717153568398221235}
   - {fileID: 1353000277}
   - {fileID: 5326918438948420921}
   - {fileID: 6911559118721064959}
   - {fileID: 2236925121874764165}
   - {fileID: 676334097848035102}
   - {fileID: 2003628532}
+  - {fileID: 1717153568398221235}
   - {fileID: 2134700016}
