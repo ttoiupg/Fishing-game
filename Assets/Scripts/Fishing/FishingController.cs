@@ -118,12 +118,12 @@ public class FishingController : PlayerSystem
 
     private void ConfigureCamera(float distance)
     {
-        player.cinemachineCamera.CameraDistance = distance;
+        player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
     }
 
     private void ConfigureCamera(float distance, Vector2 position)
     {
-        player.cinemachineCamera.CameraDistance = distance;
+        player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
         player.cinemachineCamera.Composition.ScreenPosition = position;
     }
 
@@ -450,7 +450,7 @@ public class FishingController : PlayerSystem
     private async UniTask SetHook()
     {
         castDebounce = true;
-        //biteNoticeUIManager.StartAnimation();
+        biteNoticeUIManager.StartAnimation();
         SoundFXManger.Instance.PlaySoundFXClip(biteNotifySound, _playerTransform, 1f);
         ConfigureCamera(2.15f, _biteNoticeScreenPosition);
         await UniTask.WaitForSeconds(2);

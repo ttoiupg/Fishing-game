@@ -101,7 +101,7 @@ public class CraftViewModel : MonoBehaviour, IViewFrame
             var amount = (cr.type == CraftRequirementType.Item)
                 ? InventoryManager.Instance.items.Find(x => x.item == cr.item).amount
                 : InventoryManager.Instance.fishes.FindAll(fish => fish.fishType == cr.fish).Count;
-            totalHave += amount;
+            totalHave = (amount >= cr.amount)? totalHave + cr.amount : totalHave + amount;
             canCraft = (amount >= cr.amount) ? canCraft : false;
         }
         craftables[obj] = canCraft;
