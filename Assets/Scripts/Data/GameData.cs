@@ -12,9 +12,11 @@ public class GameData
     public PlayerData playerData;
     public FishingRodData fishingRodData;
     public ItemData itemData;
+    public GlobalSettings globalSettings;
 
     public GameData()
     {
+        this.globalSettings = new GlobalSettings();
         this.playerData = new PlayerData();
         this.fishingRodData = new FishingRodData();
         this.itemData = new ItemData();
@@ -41,7 +43,7 @@ public class PlayerData
         equipedFishingRod = 0;
         discoverFishList = new List<IDataDiscoverFish>();
         modifiers = new List<String>();
-        position = new Vector3(-7.3f,1.92f,-13.6f);
+        position = new Vector3(-7.14900017f,4.46799994f,0);
         Scene = "CenterTown";
     }
 }
@@ -66,5 +68,28 @@ public class ItemData
     {
         fishes = new List<IDataFish>();
         gameItems = new List<IDataGameItem>();
+    }
+}
+public enum AntiAlias
+{
+    None = 0,
+    FXAA = 1,
+    SMAA = 2,
+    TAA = 3
+}
+[System.Serializable]
+public class GlobalSettings
+{
+    public AntiAlias antiAlias;
+    public Vector2Int screenSize;
+    public float masterVolume;
+    public int Fullscreen;
+
+    public GlobalSettings()
+    {
+        this.antiAlias = AntiAlias.FXAA;
+        this.screenSize = new Vector2Int(1920, 1080);
+        this.masterVolume = 0.5f;
+        this.Fullscreen = 0;
     }
 }

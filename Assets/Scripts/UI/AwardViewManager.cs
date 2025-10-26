@@ -16,6 +16,7 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
     [SerializeField] private TextMeshProUGUI WeightLabel;
     [SerializeField] private TextMeshProUGUI MutationLabel;
     [SerializeField] private GameObject TipButton;
+    private PauseViewModel _pauseViewModel;
     private bool _debounce = false;
     private void Awake()
     {
@@ -27,6 +28,7 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
 
     private void Start()
     {
+        _pauseViewModel = GameObject.FindFirstObjectByType<PauseViewModel>();
         _eventSystem = EventSystem.current;
     }
 
@@ -36,7 +38,7 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
     }
     private async UniTask On()
     {
-        PauseViewModel.Instance.PauseLock = true;
+        _pauseViewModel.PauseLock = true;
         GameManager.Instance.player.isActive = false;
         _eventSystem.SetSelectedGameObject(null);
         animator.enabled = true;
@@ -57,7 +59,7 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
         await UniTask.WaitForSeconds(1.2f);
         animator.enabled = false;
         GameManager.Instance.player.isActive = true;
-        PauseViewModel.Instance.PauseLock = false;
+        _pauseViewModel.PauseLock = false;
         _debounce = false;
     }
 

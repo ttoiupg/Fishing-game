@@ -20,7 +20,6 @@ public class BucketGoddessController : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         // leaveButton = GameObject.Find("BucketGoddessLeaveButton");
         // leaveButton.transform.localPosition = new Vector3(leaveButton.transform.localPosition.x,-1000f, leaveButton.transform.localPosition.z);
         // leaveButton.gameObject.GetComponent<Button>().onClick.AddListener(LeaveGoddess);

@@ -1,18 +1,39 @@
+using System;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using Cysharp.Threading.Tasks;
+using UnityEditor;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
+[System.Serializable]
+public class Saves
+{
+    public string directory;
+    public string Name;
+    public Sprite screenShot;
+
+    public Saves(string directory, string name)
+    {
+        this.directory = directory;
+        this.Name = name;
+    }
+}
 public class DataPersistenceManager : MonoBehaviour
 {
     [FormerlySerializedAs("fileName")] [SerializeField] private string playerDataFileName;
+    public List<Saves> saves = new List<Saves>();
     [SerializeField] private string fishingRodDataFileName;
     [SerializeField] private string itemDataFileName;
+    [SerializeField] private string globalSettingsFileName;
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler<PlayerData> playerDataHandler;
     private FileDataHandler<FishingRodData> fishingRodDataHandler;
     private FileDataHandler<ItemData> itemDataHandler;
+    private FileDataHandler<GlobalSettings> globalSettingsHandler;
     [SerializeField] private List<BaseFish> gameFishList = new List<BaseFish>();
     [SerializeField] private List<FishingRodSO> gameFishingRodsList = new List<FishingRodSO>();
     [SerializeField] private List<BaseMutation> gameMutationList = new List<BaseMutation>();
@@ -24,6 +45,8 @@ public class DataPersistenceManager : MonoBehaviour
     public Dictionary<string, FishingRodSO> gameFishingRods = new Dictionary<string, FishingRodSO>();
     public Dictionary<string, GameItemSo> gameItems = new Dictionary<string, GameItemSo>();
     public Dictionary<string, ModifierBase> ModifierCards = new Dictionary<string, ModifierBase>();
+    public bool ingame;
+    public int currentSave;
     public static DataPersistenceManager Instance { get; private set; }
 
     private void InitializeList()
@@ -60,17 +83,46 @@ public class DataPersistenceManager : MonoBehaviour
             Instance = this;
         }
         InitializeList();
-        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()
     {
+        string[] folders = Directory.GetDirectories(Application.persistentDataPath);
+        foreach (var dirc in folders)
+        {
+            print(dirc);
+            if (File.Exists(dirc + "/Tide.FishingRodData") &&
+                File.Exists(dirc + "/Tide.PlayerData") &&
+                File.Exists(dirc + "/Tide.ItemData"))
+            {
+                var filename = Path.GetFileName(dirc);
+                var dic = Application.persistentDataPath + "/" + filename;
+                saves.Add(new Saves(dic,filename));
+            }
+        }
         this.playerDataHandler = new FileDataHandler<PlayerData>(Application.persistentDataPath, playerDataFileName);
         this.fishingRodDataHandler = new FileDataHandler<FishingRodData>(Application.persistentDataPath, fishingRodDataFileName);
         this.itemDataHandler = new FileDataHandler<ItemData>(Application.persistentDataPath, itemDataFileName);
+        
+        this.globalSettingsHandler =
+            new FileDataHandler<GlobalSettings>(Application.persistentDataPath, globalSettingsFileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
-        LoadGame();
+        SceneManager.sceneLoaded += backToMenu;
     }
+
+    private void backToMenu(Scene arg0, LoadSceneMode arg1)
+    {
+        if (arg0.name == "Menu")
+        {
+            LoadGlobalSettings(); 
+        }
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= backToMenu;
+    }
+
     public void NewFishingRodData()
     {
         FishingRod rod = new FishingRod(gameFishingRods["rod_starter"], 0, 100,
@@ -79,42 +131,134 @@ public class DataPersistenceManager : MonoBehaviour
         this.gameData.fishingRodData.fishingRods.Add(starterRod);
     }
 
-    public void LoadGame()
+    public async UniTask CreateNewSave(string Direc)
     {
+        SaveGlobalSettings();
+        if (Directory.Exists(Direc))
+        {
+            Directory.Delete(Direc, true);
+        }
+        DirectoryInfo info = Directory.CreateDirectory(Direc);
         this.gameData = new GameData();
-        this.gameData.playerData = playerDataHandler.Load() ?? new PlayerData();
-        this.gameData.itemData = itemDataHandler.Load() ?? new ItemData();
-        this.gameData.fishingRodData = fishingRodDataHandler.Load();
+        this.gameData.globalSettings = globalSettingsHandler.Load() ?? new GlobalSettings();
+        this.gameData.playerData = playerDataHandler.Load(Direc) ?? new PlayerData();
+        this.gameData.itemData = itemDataHandler.Load(Direc) ?? new ItemData();
+        this.gameData.fishingRodData = fishingRodDataHandler.Load(Direc);
         if (this.gameData.fishingRodData == null)
         {
             Debug.Log("there's no fishing rod data");
             this.gameData.fishingRodData = new FishingRodData();
             NewFishingRodData();
         }
+
+        var direct = Path.Combine(Application.persistentDataPath, Direc);
+        var filename = Path.GetFileName(direct);
+        saves.Add(new Saves(direct,filename));
+        currentSave = saves.Count-1;
+        PlayerInputSystem.Instance.load();
+        ingame = true;
+        await SceneManager.LoadSceneAsync("BaseScene");
+        await UniTask.Delay(500);
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        {
+            dataPersistenceObj.LoadData(gameData);
+        }
+        SaveGame(currentSave);
+    }
+    public void LoadGlobalSettings()
+    {
+        this.gameData = new GameData();
+        this.gameData.globalSettings = globalSettingsHandler.Load() ?? new GlobalSettings();
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
         }
     }
-
-    public void SaveGame()
+    public async UniTask LoadGame(int saveIndex)
     {
+        SaveGlobalSettings();
+        var save = saves[saveIndex];
+        currentSave = saveIndex;
+        string directory = Application.persistentDataPath + "/" + save.directory;
+        this.gameData = new GameData();
+        this.gameData.globalSettings = globalSettingsHandler.Load() ?? new GlobalSettings();
+        this.gameData.playerData = playerDataHandler.Load(save.Name) ?? new PlayerData();
+        this.gameData.itemData = itemDataHandler.Load(save.Name) ?? new ItemData();
+        this.gameData.fishingRodData = fishingRodDataHandler.Load(save.Name);
+        if (this.gameData.fishingRodData == null)
+        {
+            Debug.Log("there's no fishing rod data");
+            this.gameData.fishingRodData = new FishingRodData();
+            NewFishingRodData();
+        }
+        PlayerInputSystem.Instance.load();
+        ingame = true;
+        await SceneManager.LoadSceneAsync("BaseScene");
+        await UniTask.Delay(500);
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        {
+            dataPersistenceObj.LoadData(gameData);
+        }
+        SaveGame(saveIndex);
+    }
+
+    public void SaveGlobalSettings()
+    {
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.SaveData(ref gameData);
         }
 
-        string playerSave = playerDataHandler.Save(gameData.playerData);
-        string fishingRodSave = fishingRodDataHandler.Save(gameData.fishingRodData);
-        string itemSave = itemDataHandler.Save(gameData.itemData);
+        string settings = globalSettingsHandler.Save(gameData.globalSettings);
+        Debug.Log(settings);
+    }
+    public void SaveGame(int saveIndex)
+    {
+        var save = saves[saveIndex];
+        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        {
+            dataPersistenceObj.SaveData(ref gameData);
+        }
+
+        string playerSave = playerDataHandler.Save(save.directory,gameData.playerData);
+        string fishingRodSave = fishingRodDataHandler.Save(save.directory,gameData.fishingRodData);
+        string itemSave = itemDataHandler.Save(save.directory,gameData.itemData);
+        var pngPath = save.directory +"/SaveThumbnail.png";
+        if (File.Exists(pngPath))
+        {
+            File.Delete(pngPath);
+        }
+        ScreenCapture.CaptureScreenshot(pngPath);
         Debug.Log(playerSave);
         Debug.Log(fishingRodSave);
         Debug.Log(itemSave);
     }
+    
+    public void OnGameLeave()
+    {
+        ViewManager.instance.CloseView();
+        SaveGame(currentSave);
+        leave();
+    }
 
+    public async UniTask leave()
+    {
+        PlayerInputSystem.Instance.unload();
+        await UniTask.Delay(200);
+        ingame = false;
+        SceneManager.LoadScene("Menu");
+    }
     private void OnApplicationQuit()
     {
-        SaveGame();
+        if (ingame)
+        {
+            SaveGame(currentSave);
+        }
+        SaveGlobalSettings();
     }
 
     private List<IDataPersistence> FindAllDataPersistenceObjects()

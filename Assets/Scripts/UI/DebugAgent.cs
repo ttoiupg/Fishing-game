@@ -9,10 +9,14 @@ public class DebugAgent : MonoBehaviour
 
     private void Start()
     {
-        input = new DefaultInputActions();
+        input = PlayerInputSystem.Instance.playerInput;
         input.Debug.Enable();
         input.Debug.SpawnTag.started +=
             (context => LootTagDisplayManager.instance.AddTag(testIcon, "Aqua", 150, 2.2f,"x",""));
     }
 
+    public void Unload()
+    {
+        input.Debug.SpawnTag.Dispose();
+    }
 }

@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 using DG.Tweening;
 using TMPro;
 using Unity.Cinemachine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDataPersistence
@@ -105,15 +106,21 @@ public class Player : MonoBehaviour, IDataPersistence
     public float tempCritMultiplier;
     public float tempresilience;
     public float templuck;
-
+    private PauseViewModel _pauseViewModel;
+    private InactiveState inactiveState;
+    private FishingState fishingState;
+    private LocomotionState locomotionState;
+    private FishingBoostState fishingBoostState;
+    private FishingReelState fishingReelState;
+    public DebugAgent DebugAgent;
+    
     public void SetActive(bool isActive)
     {
         this.isActive = isActive;
     }
     private void Start()
     {
-        DontDestroyOnLoad(cameras);
-        DontDestroyOnLoad(this.gameObject);
+        _pauseViewModel = GameObject.Find("Pause").GetComponent<PauseViewModel>();
         Debug.Log("Graphics API: " + SystemInfo.graphicsDeviceType);
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
@@ -121,15 +128,15 @@ public class Player : MonoBehaviour, IDataPersistence
         fishingController.Setup();
         interactionDebounceTimer = new Countdowntimer(0.5f);
         interactionDebounceTimer.OnTimerStop += () => interactionDebounce = false;
-        PlayerInputs = new DefaultInputActions();
+        PlayerInputs = PlayerInputSystem.Instance.playerInput;
         _playerStateMachine = new StateMachine();
 
         //declare what states we have
-        var locomotionState = new LocomotionState(this, animator);
-        var fishingState = new FishingState(this, animator);
-        var inactiveState = new InactiveState(this, animator);
-        var fishingBoostState = new FishingBoostState(this, animator);
-        var fishingReelState = new FishingReelState(this, animator);
+        locomotionState = new LocomotionState(this, animator,_pauseViewModel);
+        fishingState = new FishingState(this, animator);
+        inactiveState = new InactiveState(this, animator,_pauseViewModel);
+        fishingBoostState = new FishingBoostState(this, animator);
+        fishingReelState = new FishingReelState(this, animator);
 
         //add transition
         At(locomotionState, fishingState, new FuncPredicate(() => currentZone && fishingController.isFishing));
@@ -141,6 +148,16 @@ public class Player : MonoBehaviour, IDataPersistence
         At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
         _playerStateMachine.SetState(locomotionState);
         PlayerInputs?.Player.Enable();
+    }
+
+    public void unload()
+    {
+        Debug.Log("unload ");
+        DebugAgent.Unload();
+        inactiveState.Unload();
+        locomotionState.Unload();
+        fishingState.Unload();
+        fishingBoostState.Unload();
     }
 
     private void OnEnable()

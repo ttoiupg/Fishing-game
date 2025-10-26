@@ -10,7 +10,6 @@ public class SoundFXManger : MonoBehaviour
         {
             Instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
     }
     public GameObject PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume)
     {

@@ -14,4 +14,9 @@ public class FishingBoostState : BaseState
     {
         player.PlayerInputs.Fishing.CastFishingRod.performed -= player.fishingController.LandPointer;
     }
+
+    public void Unload()
+    {
+        player.PlayerInputs.Fishing.CastFishingRod.Dispose();
+    }
 }

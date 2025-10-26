@@ -26,7 +26,6 @@ public class TeleportManager : MonoBehaviour,IDataPersistence
         {
             Instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
         InitializeSceneData();
     }
 
@@ -117,6 +116,7 @@ public class TeleportManager : MonoBehaviour,IDataPersistence
 
     public void LoadData(GameData data)
     {
+        Debug.Log("loadScene");
         currentScene = data.playerData.Scene;
         LoadScene(currentScene);
     }

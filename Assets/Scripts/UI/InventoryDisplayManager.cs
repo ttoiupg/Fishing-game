@@ -199,6 +199,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     }
     public void SetupFishNavigation()
     {
+        if (_fishIconDisplayers.Count == 0) return;
         for (int i = 0; i < categoryButtons.Count; i++)
         {
             var nav = new Navigation { mode = Navigation.Mode.Explicit };
@@ -278,6 +279,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     }
     public void SetupFishingRodsNavigation()
     {
+        if (_fishingRodCellDisplayers.Count == 0) return;
         for (int i = 0; i < categoryButtons.Count; i++)
         {
             var nav = new Navigation { mode = Navigation.Mode.Explicit };
@@ -294,6 +296,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         CleanItems();
         PrepareFish();
         PrepareFishingRods();
+        if (_fishIconDisplayers.Count == 0) return;
         _eventSystem.SetSelectedGameObject(_fishIconDisplayers[0].gameObject, null);
     }
 

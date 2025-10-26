@@ -12,6 +12,6 @@ public abstract class PlayerSystem : MonoBehaviour
     public virtual void Awake()
     {
         player = transform.root.GetComponent<Player>();
-        playerInput = new DefaultInputActions();
+        playerInput = PlayerInputSystem.Instance.playerInput;;
     }
 }

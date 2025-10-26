@@ -22,7 +22,6 @@ public class SelectorHandler : MonoBehaviour
     void Start()
     {
         _eventSystem = EventSystem.current;
-        DontDestroyOnLoad(_eventSystem.gameObject);
     }
     
     // async UniTask HandleDebounce()

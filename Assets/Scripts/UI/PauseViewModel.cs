@@ -6,11 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-
 public class PauseViewModel : MonoBehaviour, IViewFrame
 {
-    public static PauseViewModel Instance { get; private set; }
-    
     public GameObject menuContainer;
     public AudioClip OpenSound;
     public AudioClip CloseSound;
@@ -31,10 +28,6 @@ public class PauseViewModel : MonoBehaviour, IViewFrame
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
         _eventSystem = EventSystem.current;
     }
 

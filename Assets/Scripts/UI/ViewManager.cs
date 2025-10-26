@@ -27,9 +27,11 @@ public class ViewManager : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         _player = FindAnyObjectByType<Player>();
-        tideViewModel.Initialize();
+        if (tideViewModel)
+        {
+            tideViewModel.Initialize(); 
+        }
     }
 
     public void OpenView(IViewFrame viewFrame)

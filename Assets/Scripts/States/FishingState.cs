@@ -14,4 +14,9 @@ public class FishingState : BaseState
         Debug.Log("Exit fishing state");
         player.PlayerInputs.Fishing.CastFishingRod.performed -= player.fishingController.HandleInput;
     }
+
+    public void Unload()
+    {
+        player.PlayerInputs.Fishing.CastFishingRod.Dispose();
+    }
 }
