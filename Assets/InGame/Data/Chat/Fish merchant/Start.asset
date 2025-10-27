@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Start
   m_EditorClassIdentifier: 
   Speaker: Carlo
+  IsEvent: 0
+  OnEvent: {fileID: 0}
   chats:
   - speaker: 0
     speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
@@ -27,3 +29,6 @@ MonoBehaviour:
     - name: no
       text: No! its not that easy ok?
       to: {fileID: 11400000, guid: a344b1c13ebe54648b05d57c4bea9cea, type: 2}
+    - name: Sell fish
+      text: Sell fish
+      to: {fileID: 11400000, guid: 5742bd58717b7c44e8563acf1c5361c8, type: 2}

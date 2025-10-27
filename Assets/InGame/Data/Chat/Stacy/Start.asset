@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: Start
+  m_EditorClassIdentifier: 
+  Speaker: Carlo
+  IsEvent: 0
+  OnEvent: {fileID: 0}
+  chats:
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 43f9716259be0074390149258027e3ab, type: 3}
+    Voice: {fileID: 8300000, guid: 2540ca74b10ee6d49904ae4eb35698e7, type: 3}
+    speakerName: Stacy
+    message: Hi! what do you want?
+    duration: 0.5
+    options:
+    - name: Craft
+      text: Craft
+      to: {fileID: 11400000, guid: 5cba49fadfd922240a62abfc9bc4c616, type: 2}
+    - name: Worry about Stacy
+      text: Worry about Stacy
+      to: {fileID: 11400000, guid: 08939ac80b57f2542ad3919ea58f693a, type: 2}

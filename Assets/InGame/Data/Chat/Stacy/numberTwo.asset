@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: numberTwo
+  m_EditorClassIdentifier: 
+  Speaker: Carlo
+  chats:
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 43f9716259be0074390149258027e3ab, type: 3}
+    Voice: {fileID: 8300000, guid: b39b464be5e231d4abcdc06590418dd4, type: 3}
+    speakerName: Weni
+    message: Is there something happen to you?
+    duration: 1
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 43f9716259be0074390149258027e3ab, type: 3}
+    Voice: {fileID: 8300000, guid: 4427236679450a041bdaa4ebd0a328f9, type: 3}
+    speakerName: Stacy
+    message: yeah, the major is getting more aggressive about workers
+    duration: 1
+    options: []
+  - speaker: 2
+    speakerSprite: {fileID: 21300000, guid: 43f9716259be0074390149258027e3ab, type: 3}
+    Voice: {fileID: 8300000, guid: f9c81ac5b50399048850802538c3eaa5, type: 3}
+    speakerName: Pablo
+    message: Poor people..
+    duration: 1
+    options: []

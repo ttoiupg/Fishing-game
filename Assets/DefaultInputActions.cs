@@ -1165,7 +1165,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""54e7a750-a22b-472a-b88a-9275dc58462e"",
                     ""path"": ""<FishingRodGamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""InvertVector2(invertX=false)"",
                     ""groups"": """",
                     ""action"": ""Navigations"",
                     ""isComposite"": false,

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: numberTwo
+  m_EditorClassIdentifier: 
+  Speaker: Carlo
+  chats:
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 8300000, guid: e86fc7b60e0e0864f9d51120bdd7630e, type: 3}
+    speakerName: Weni
+    message: People are not happy about your policies sir!
+    duration: 1
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 8300000, guid: a27413b9c02aace4d814a014cba46adf, type: 3}
+    speakerName: Major Peloma
+    message: What did you just say? Don't talk to me like that little one!
+    duration: 4
+    options: []

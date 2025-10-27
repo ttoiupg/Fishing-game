@@ -4470,7 +4470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 4448802800491032738}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &586372959
@@ -12560,6 +12560,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759322775}
   m_CullTransparentMesh: 1
+--- !u!1 &1781071293 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 836268605659926680, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
+  m_PrefabInstance: {fileID: 3437457387424961971}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1781071299
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781071293}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1790955900
 GameObject:
   m_ObjectHideFlags: 0
@@ -15593,14 +15610,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1407239332622467652, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
-      propertyPath: transition
-      value: 
-      objectReference: {fileID: 3437457387424961972}
-    - target: {fileID: 1407239332622467652, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
-      propertyPath: transitionTime
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 2086913662077275646, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
       propertyPath: m_Name
       value: MainSceneLoader
@@ -15648,13 +15657,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 836268605659926680, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1781071299}
   m_SourcePrefab: {fileID: 100100000, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
---- !u!95 &3437457387424961972 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 4113800538441539569, guid: 8871d68d6e389b540a072c8c5827e3b2, type: 3}
-  m_PrefabInstance: {fileID: 3437457387424961971}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4448802800491032738
 GameObject:
   m_ObjectHideFlags: 0

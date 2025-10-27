@@ -138,6 +138,15 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         {
             Destroy(currentAudio);
         }
+
+        if (section.IsEvent)
+        {
+            ViewManager.instance.CloseView();
+            currentSection = null;
+            currentChatIndex = 0;
+            section.OnEvent.Raise();
+            return;
+        }
         currentSection = section;
         currentChatIndex = 0;
         currentData = currentSection.chats[currentChatIndex];

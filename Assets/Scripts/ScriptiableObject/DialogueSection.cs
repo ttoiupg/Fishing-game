@@ -40,5 +40,7 @@ public struct DialogueData
 public class DialogueSection : ScriptableObject
 {
     public string Speaker;
+    public bool IsEvent;
+    public GameEvent OnEvent;
     public List<DialogueData> chats = new List<DialogueData>();
 }

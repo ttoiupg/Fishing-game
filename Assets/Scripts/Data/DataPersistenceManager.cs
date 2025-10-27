@@ -157,14 +157,14 @@ public class DataPersistenceManager : MonoBehaviour
         currentSave = saves.Count-1;
         PlayerInputSystem.Instance.load();
         ingame = true;
-        await SceneManager.LoadSceneAsync("BaseScene");
+        await GameObject.FindAnyObjectByType<TransitionHandler>().LoadScene("BaseScene");
         await UniTask.Delay(500);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
         }
-        SaveGame(currentSave);
+        SaveGame(currentSave,true,false);
     }
     public void LoadGlobalSettings()
     {
@@ -195,14 +195,14 @@ public class DataPersistenceManager : MonoBehaviour
         }
         PlayerInputSystem.Instance.load();
         ingame = true;
-        await SceneManager.LoadSceneAsync("BaseScene");
+        await GameObject.FindAnyObjectByType<TransitionHandler>().LoadScene("BaseScene");
         await UniTask.Delay(500);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(gameData);
         }
-        SaveGame(saveIndex);
+        SaveGame(saveIndex,true,false);
     }
 
     public void SaveGlobalSettings()
@@ -216,7 +216,7 @@ public class DataPersistenceManager : MonoBehaviour
         string settings = globalSettingsHandler.Save(gameData.globalSettings);
         Debug.Log(settings);
     }
-    public void SaveGame(int saveIndex)
+    public void SaveGame(int saveIndex, bool screenshot,bool immidiate)
     {
         var save = saves[saveIndex];
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
@@ -228,35 +228,52 @@ public class DataPersistenceManager : MonoBehaviour
         string fishingRodSave = fishingRodDataHandler.Save(save.directory,gameData.fishingRodData);
         string itemSave = itemDataHandler.Save(save.directory,gameData.itemData);
         var pngPath = save.directory +"/SaveThumbnail.png";
-        if (File.Exists(pngPath))
+        if (screenshot)
         {
-            File.Delete(pngPath);
+            if (File.Exists(pngPath))
+            {
+                File.Delete(pngPath);
+            }
+            if (immidiate)
+            {
+                ScreenCapture.CaptureScreenshot(pngPath);
+            }
+            else
+            {
+                ScreenShot(1500, pngPath);
+            }
         }
-        ScreenCapture.CaptureScreenshot(pngPath);
         Debug.Log(playerSave);
         Debug.Log(fishingRodSave);
         Debug.Log(itemSave);
+    }
+
+    private async UniTask ScreenShot(int time,string pngPath)
+    {
+        await UniTask.Delay(time);
+        ScreenCapture.CaptureScreenshot(pngPath);
     }
     
     public void OnGameLeave()
     {
         ViewManager.instance.CloseView();
-        SaveGame(currentSave);
+        SaveGlobalSettings();
+        SaveGame(currentSave,true,true);
         leave();
     }
 
     public async UniTask leave()
     {
         PlayerInputSystem.Instance.unload();
-        await UniTask.Delay(200);
+        await UniTask.Delay(400);
         ingame = false;
-        SceneManager.LoadScene("Menu");
+        await GameObject.FindAnyObjectByType<TransitionHandler>().LoadScene("Menu");
     }
     private void OnApplicationQuit()
     {
         if (ingame)
         {
-            SaveGame(currentSave);
+            SaveGame(currentSave,false,true);
         }
         SaveGlobalSettings();
     }
