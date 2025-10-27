@@ -119,12 +119,13 @@ public class FishingController : PlayerSystem
 
     private void ConfigureCamera(float distance)
     {
-        player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
+        
+        //player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
     }
 
     private void ConfigureCamera(float distance, Vector2 position)
     {
-        player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
+        //player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
         player.cinemachineCamera.Composition.ScreenPosition = position;
     }
 

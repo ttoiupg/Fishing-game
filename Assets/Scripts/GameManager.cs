@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     public void NewBattle(BattleType battleType, IEnemy enemyBehavior)
     {
         CurrentBattle = new Battle(battleType, enemyBehavior);
-        CurrentBattle.Setup(7f);
+        CurrentBattle.Setup(15f);
     }
 
     public void StartBattle()
