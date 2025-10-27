@@ -113,6 +113,7 @@ public class Player : MonoBehaviour, IDataPersistence
     private FishingBoostState fishingBoostState;
     private FishingReelState fishingReelState;
     public DebugAgent DebugAgent;
+    public Vector3 inputMoveDirection;
     
     public void SetActive(bool isActive)
     {
@@ -148,6 +149,7 @@ public class Player : MonoBehaviour, IDataPersistence
         At(fishingReelState, locomotionState, new FuncPredicate(() => !fishingController.isFishing));
         _playerStateMachine.SetState(locomotionState);
         PlayerInputs?.Player.Enable();
+        PlayerInputSystem.Instance.playerInput.Player.Enable();
     }
 
     public void unload()
@@ -163,11 +165,13 @@ public class Player : MonoBehaviour, IDataPersistence
     private void OnEnable()
     {
         PlayerInputs?.Player.Enable();
+        PlayerInputSystem.Instance.playerInput.Player.Enable();
     }
 
     private void OnDisable()
     {
         PlayerInputs.Player.Disable();
+        PlayerInputSystem.Instance.playerInput.Player.Disable();
     }
 
     void At(IState from, IState to, IPredicate condition) => _playerStateMachine.AddTransition(from, to, condition);
@@ -252,8 +256,9 @@ public class Player : MonoBehaviour, IDataPersistence
             body.linearVelocity = Vector2.zero;
             return;
         };
-        var moveHorizontal = Input.GetAxisRaw("Horizontal");
-        var moveVertical = Input.GetAxisRaw("Vertical");
+        inputMoveDirection = PlayerInputSystem.Instance.playerInput.Player.Move.ReadValue<Vector2>();
+        var moveHorizontal = inputMoveDirection.x;//Input.GetAxisRaw("Horizontal");
+        var moveVertical = inputMoveDirection.y;//Input.GetAxisRaw("Vertical");
         // DOING CHARACTER MOVEMENT
         var move = Vector3.ClampMagnitude(new Vector3(moveHorizontal,moveVertical,0 ), 1f);
         currentSpeed = Mathf.Lerp(currentSpeed, playerSpeed * move.magnitude,

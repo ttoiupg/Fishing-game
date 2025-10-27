@@ -79,6 +79,7 @@ public class FishingController : PlayerSystem
     private CancellationTokenSource _castRodCancellationTokenSource;
     private List<Timer> _timers;
     private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
+    private float prevValue;
 
     [FormerlySerializedAs("RumbleLowFreq")] [Header("Gamepad")]
     public float rumbleLowFreq = 0.25f;
@@ -328,14 +329,15 @@ public class FishingController : PlayerSystem
     public void ControlReelingBar()
     {
         var Value = _controlBarAction.ReadValue<float>();
-        if (Value > 0)
+        var final = (Value + prevValue) / 2f;
+        if (final > 0.5f)
         {
-            _animator.SetFloat("PullingSpeed", 1f + Value);
-            _reelSoundSource.pitch = 0.7f + Value * 0.35f;
+            _animator.SetFloat("PullingSpeed", 1f + final);
+            _reelSoundSource.pitch = 0.7f + final * 0.35f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-            player.ReelCanvaManager.controlBarDirection = Value;
-            player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * Value;
-            ConfigureCamera(FishingCameraDistance - 2f * Value);
+            player.ReelCanvaManager.controlBarDirection = final;
+            player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * final;
+            ConfigureCamera(FishingCameraDistance - 2f * final);
         }
         else
         {
@@ -346,6 +348,8 @@ public class FishingController : PlayerSystem
             player.ReelCanvaManager.crankDirection = -player.ReelCanvaManager.crankSpeed * 0.4f;
             ConfigureCamera(player.defaultCameraDistance);
         }
+
+        prevValue = Value;
     }
 
     public void ReelStateUpdateFunction()
