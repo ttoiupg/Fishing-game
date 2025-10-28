@@ -150,7 +150,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Previous"",
                     ""type"": ""Button"",
                     ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -336,17 +336,6 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""85e05880-80f4-4d13-8bc0-1a99ef758a69"",
-                    ""path"": ""<FishingRodGamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -771,7 +760,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Navigations"",
+                    ""name"": ""Navigate"",
                     ""type"": ""PassThrough"",
                     ""id"": ""54699d43-5fde-401e-a06c-68a05d34f65e"",
                     ""expectedControlType"": ""Vector2"",
@@ -996,57 +985,57 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""gamepadRightStick"",
-                    ""id"": ""d805e4eb-fe61-4087-9af1-d50367bfcaf7"",
+                    ""name"": ""FishingRod"",
+                    ""id"": ""fd34e82c-0b81-4cb0-a88a-8a8da9ea2c0b"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""d1b3e514-02ea-4d96-849a-7dad7a28a0ee"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""id"": ""709d8768-5f3d-41b6-ab65-251370bbfc95"",
+                    ""path"": ""<FishingRodGamepad>/rightStick/down"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.5)"",
                     ""groups"": "";Gamepad;Joystick"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""3131b5f7-4be9-4dff-8532-584e706bbc29"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""id"": ""ce9f94c2-d4a8-43ee-bfd3-01250e3631ba"",
+                    ""path"": ""<FishingRodGamepad>/rightStick/up"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.5)"",
                     ""groups"": "";Gamepad;Joystick"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""9d6e164a-b997-4bb4-ac89-704cfa993dfd"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""id"": ""f6dfdd67-e3b7-4d27-9928-ffdd90aa4d2c"",
+                    ""path"": ""<FishingRodGamepad>/rightStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad;Joystick"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""0c3006e3-a134-4f68-815f-e83ee54972b5"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""id"": ""50bec915-f442-4daa-a5ea-9b57c2c33361"",
+                    ""path"": ""<FishingRodGamepad>/rightStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad;Joystick"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1057,7 +1046,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -1068,7 +1057,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1079,7 +1068,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1090,7 +1079,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1101,7 +1090,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1112,7 +1101,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -1123,7 +1112,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1134,7 +1123,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1145,7 +1134,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -1156,20 +1145,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Navigations"",
+                    ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""54e7a750-a22b-472a-b88a-9275dc58462e"",
-                    ""path"": ""<FishingRodGamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": ""InvertVector2(invertX=false)"",
-                    ""groups"": """",
-                    ""action"": ""Navigations"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -1358,7 +1336,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
-        m_UI_Navigations = m_UI.FindAction("Navigations", throwIfNotFound: true);
+        m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_LeftSwitch = m_UI.FindAction("LeftSwitch", throwIfNotFound: true);
         m_UI_RightSwitch = m_UI.FindAction("RightSwitch", throwIfNotFound: true);
         m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
@@ -1749,7 +1727,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Pause;
-    private readonly InputAction m_UI_Navigations;
+    private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_LeftSwitch;
     private readonly InputAction m_UI_RightSwitch;
     private readonly InputAction m_UI_Inventory;
@@ -1805,9 +1783,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Navigations".
+        /// Provides access to the underlying input action "UI/Navigate".
         /// </summary>
-        public InputAction @Navigations => m_Wrapper.m_UI_Navigations;
+        public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         /// <summary>
         /// Provides access to the underlying input action "UI/LeftSwitch".
         /// </summary>
@@ -1876,9 +1854,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
-            @Navigations.started += instance.OnNavigations;
-            @Navigations.performed += instance.OnNavigations;
-            @Navigations.canceled += instance.OnNavigations;
+            @Navigate.started += instance.OnNavigate;
+            @Navigate.performed += instance.OnNavigate;
+            @Navigate.canceled += instance.OnNavigate;
             @LeftSwitch.started += instance.OnLeftSwitch;
             @LeftSwitch.performed += instance.OnLeftSwitch;
             @LeftSwitch.canceled += instance.OnLeftSwitch;
@@ -1929,9 +1907,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
-            @Navigations.started -= instance.OnNavigations;
-            @Navigations.performed -= instance.OnNavigations;
-            @Navigations.canceled -= instance.OnNavigations;
+            @Navigate.started -= instance.OnNavigate;
+            @Navigate.performed -= instance.OnNavigate;
+            @Navigate.canceled -= instance.OnNavigate;
             @LeftSwitch.started -= instance.OnLeftSwitch;
             @LeftSwitch.performed -= instance.OnLeftSwitch;
             @LeftSwitch.canceled -= instance.OnLeftSwitch;
@@ -2306,12 +2284,12 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Navigations" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Navigate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNavigations(InputAction.CallbackContext context);
+        void OnNavigate(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "LeftSwitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

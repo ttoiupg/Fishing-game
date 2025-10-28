@@ -54,6 +54,7 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
     }
     public void Start()
     {
+        camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         ScreenSizeDropdown.onValueChanged.AddListener(delegate { ScreenSizeChanged(); });
         AntiAliasDropdown.onValueChanged.AddListener(delegate { AntiAliasChanged(); });
         FullscreenDropdown.onValueChanged.AddListener(delegate { FullscreenChanged(); });
@@ -78,12 +79,13 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
                 navigation.selectOnLeft = TabButtons[i - 1].Button.GetComponent<Button>();
             }
 
-            navigation.selectOnLeft = TabButtons[CurrentTab].FirstObject;
+            navigation.selectOnDown = TabButtons[CurrentTab].FirstObject;
             button.navigation = navigation;
         }
         var nav = new Navigation();
         nav.mode = Navigation.Mode.Explicit;
         nav.selectOnUp = TabButtons[CurrentTab].LastObject;
+        closeButton.navigation = nav;
     }
 
     private void ScreenSizeChanged()
@@ -143,12 +145,13 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
                 navigation.selectOnLeft = TabButtons[i - 1].Button.GetComponent<Button>();
             }
 
-            navigation.selectOnLeft = TabButtons[index].FirstObject;
+            navigation.selectOnDown = TabButtons[index].FirstObject;
             button.navigation = navigation;
         }
         var nav = new Navigation();
         nav.mode = Navigation.Mode.Explicit;
         nav.selectOnUp = TabButtons[index].LastObject;
+        closeButton.navigation = nav;
     }
     public void CloseUI()
     {

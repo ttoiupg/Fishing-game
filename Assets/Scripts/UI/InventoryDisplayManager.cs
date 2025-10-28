@@ -82,6 +82,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     private void Start()
     {
         _eventSystem = EventSystem.current;
+        ChangeCategory(0);
     }
     public void ChangeCategory(int index)
     {

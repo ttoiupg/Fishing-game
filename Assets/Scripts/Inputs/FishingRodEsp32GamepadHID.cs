@@ -44,7 +44,7 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
     [InputControl(name = "rightStick/right", offset = 4, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
     [InputControl(name = "rightStick/y", offset = 2, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
     [InputControl(name = "rightStick/up", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
-    [InputControl(name = "rightStick/down", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
+    [InputControl(name = "rightStick/down", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
     [FieldOffset(0)] public byte rightStickX;
     [FieldOffset(3)] public byte rightStickY;
 
