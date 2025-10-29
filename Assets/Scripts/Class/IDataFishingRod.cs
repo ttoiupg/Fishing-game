@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine.Serialization;
 
 [System.Serializable]
@@ -17,4 +18,11 @@ public class IDataFishingRod
         acquireDate = fishingRod.acquireDate;
         modifiers = new List<string>();
     }
+}
+
+[System.Serializable]
+public class IDataQuest
+{
+    public string id;
+    public List<int> progress;
 }

@@ -21,7 +21,6 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
 {
     public Color DarkColor;
     public Color LightColor;
-    public Slider volumeSlider;
     public RectTransform mainFrame;
     public List<SettingTabBinding> TabButtons;
     public Button closeButton;
@@ -38,9 +37,16 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
         new Vector2Int(640, 360),
     };
     private Player _player;
+    [Header("Audio tab")]
+    public Slider volumeSlider;
+    [Header("display tab")]
+    public FPSLimiter FPSLimiter;
     public TMP_Dropdown AntiAliasDropdown;
     public TMP_Dropdown ScreenSizeDropdown;
     public TMP_Dropdown FullscreenDropdown;
+    public Slider FPSSlider;
+    public TextMeshProUGUI FPSText;
+    
 
     public void CloseGame()
     {
@@ -54,6 +60,7 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
     }
     public void Start()
     {
+        FPSLimiter = GetComponent<FPSLimiter>();
         camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         ScreenSizeDropdown.onValueChanged.AddListener(delegate { ScreenSizeChanged(); });
         AntiAliasDropdown.onValueChanged.AddListener(delegate { AntiAliasChanged(); });
@@ -111,6 +118,20 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
     public void UpdateMainMixerVolume()
     {
         AudioListener.volume = volumeSlider.value;
+    }
+
+    public void UpdateFPS()
+    {
+        if (FPSSlider.value == 301)
+        {
+            FPSLimiter.SetFrameRate(-1);
+            FPSText.text = "Unlimited";
+        }
+        else
+        {
+            FPSLimiter.SetFrameRate((int)FPSSlider.value);
+            FPSText.text = $"{(int)FPSSlider.value}Hz";
+        }
     }
     public void OpenUI()
     {
@@ -186,10 +207,12 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
         ScreenSizeDropdown.RefreshShownValue();
         FullscreenDropdown.value = data.globalSettings.Fullscreen;
         FullscreenDropdown.RefreshShownValue();
+        FPSSlider.value = data.globalSettings.framerate;
         Debug.Log(data.globalSettings.screenSize);
         AntiAliasChanged();
         ScreenSizeChanged();
         UpdateMainMixerVolume();
+        UpdateFPS();
     }
 
     public void SaveData(ref GameData data)
@@ -198,5 +221,6 @@ public class SettingsViewModel : MonoBehaviour,IViewFrame,IDataPersistence
         data.globalSettings.antiAlias = (AntiAlias)AntiAliasDropdown.value;
         data.globalSettings.screenSize = screenResolutions[ScreenSizeDropdown.value];
         data.globalSettings.Fullscreen = FullscreenDropdown.value;
+        data.globalSettings.framerate = (int)FPSSlider.value;
     }
 }

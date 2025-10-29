@@ -34,6 +34,7 @@ public class PlayerData
     public List<String> modifiers = new List<String>();
     public Vector3 position;
     public string Scene;
+    public List<IDataQuest>  questList = new List<IDataQuest>();
 
     public PlayerData()
     {
@@ -44,6 +45,7 @@ public class PlayerData
         discoverFishList = new List<IDataDiscoverFish>();
         modifiers = new List<String>();
         position = new Vector3(-7.14900017f,4.46799994f,0);
+        questList = new List<IDataQuest>();
         Scene = "CenterTown";
     }
 }
@@ -84,6 +86,7 @@ public class GlobalSettings
     public Vector2Int screenSize;
     public float masterVolume;
     public int Fullscreen;
+    public int framerate;
 
     public GlobalSettings()
     {
@@ -91,5 +94,6 @@ public class GlobalSettings
         this.screenSize = new Vector2Int(1920, 1080);
         this.masterVolume = 0.5f;
         this.Fullscreen = 0;
+        this.framerate = -1;
     }
 }
