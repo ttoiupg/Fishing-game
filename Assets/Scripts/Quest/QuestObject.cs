@@ -7,43 +7,13 @@ public class QuestObject : ScriptableObject
     [SerializeField] private string id;
     public string ID => id;
     public string name;
-    public string description;
-    public List<QuestItem> items;
+    [TextArea]public string description;
+    public List<QuestStepDef> items = new();
 }
 
-public interface QuestItem
-{
-    int OnEvent(int value);
-}
 
-public abstract class BaseQuestObject :ScriptableObject, QuestItem
+public abstract class QuestStepDef :ScriptableObject
 {
-    string text;
-
-    public virtual int OnEvent(int value)
-    {
-        return 1;
-    }
-}
-
-[CreateAssetMenu(fileName = "EventQuest", menuName = "Quest/EventQuest")]
-public class EventQuestObject :BaseQuestObject
-{
-    public GameEvent Event;
-
-    public override int OnEvent(int value)
-    {
-        return 1;
-    }
-    
-}
-[CreateAssetMenu(fileName = "ValueGoalQuest", menuName = "Quest/ValueGoalQuest")]
-public class ValueGoalQuestObject :BaseQuestObject
-{
-    public NumberEvent valueEvent;
-    public int goal;
-    public override int OnEvent(int value)
-    {
-        return value;
-    }
+    public string text;
+    public abstract IQuestStep GetQuestStep();
 }

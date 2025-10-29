@@ -19,10 +19,3 @@ public class IDataFishingRod
         modifiers = new List<string>();
     }
 }
-
-[System.Serializable]
-public class IDataQuest
-{
-    public string id;
-    public List<int> progress;
-}

@@ -39,12 +39,14 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private List<BaseMutation> gameMutationList = new List<BaseMutation>();
     [SerializeField] private List<GameItemSo> gameItemList = new List<GameItemSo>();
     [SerializeField] private List<ModifierBase> ModifierCardList = new List<ModifierBase>();
+    [SerializeField] private List<QuestObject> QuestList = new List<QuestObject>();
     public List<CraftElement> craftElements = new List<CraftElement>();
     public Dictionary<string, BaseFish> gameFish = new Dictionary<string, BaseFish>();
     public Dictionary<string, BaseMutation> gameMutations = new Dictionary<string, BaseMutation>();
     public Dictionary<string, FishingRodSO> gameFishingRods = new Dictionary<string, FishingRodSO>();
     public Dictionary<string, GameItemSo> gameItems = new Dictionary<string, GameItemSo>();
     public Dictionary<string, ModifierBase> ModifierCards = new Dictionary<string, ModifierBase>();
+    public Dictionary<string, QuestObject> Quests = new Dictionary<string, QuestObject>();
     public bool ingame;
     public int currentSave;
     public static DataPersistenceManager Instance { get; private set; }
@@ -73,6 +75,10 @@ public class DataPersistenceManager : MonoBehaviour
         foreach (var modifier in ModifierCardList)
         {
             ModifierCards.Add(modifier.id, modifier);
+        }
+        foreach (var quest in QuestList )
+        {
+            Quests.Add(quest.ID, quest);
         }
     }
 
