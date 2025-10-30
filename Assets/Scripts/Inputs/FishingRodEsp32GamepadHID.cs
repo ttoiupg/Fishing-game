@@ -32,9 +32,9 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
     [InputControl(name = "leftStick/x", offset = 4, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
     [InputControl(name = "leftStick/left", offset = 4, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
     [InputControl(name = "leftStick/right", offset = 4, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
-    [InputControl(name = "leftStick/y", offset = 2, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
-    [InputControl(name = "leftStick/up", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
-    [InputControl(name = "leftStick/down", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
+    [InputControl(name = "leftStick/y", offset = 2, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,invert")]
+    [InputControl(name = "leftStick/up", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert = true")]
+    [InputControl(name = "leftStick/down", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
     [FieldOffset(0)] public byte leftStickX;
      [FieldOffset(3)] public byte leftStickY;
 
@@ -42,9 +42,9 @@ struct FishingRodEsp32GamepadHIDInputReport : IInputStateTypeInfo
     [InputControl(name = "rightStick/x", offset = 4, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
     [InputControl(name = "rightStick/left", offset = 4, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
     [InputControl(name = "rightStick/right", offset = 4, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1")]
-    [InputControl(name = "rightStick/y", offset = 2, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+    [InputControl(name = "rightStick/y", offset = 2, format = "SHRT", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,invert")]
     [InputControl(name = "rightStick/up", offset = 2, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0,clampMax=0.5,invert")]
-    [InputControl(name = "rightStick/down", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert=false")]
+    [InputControl(name = "rightStick/down", offset = 1, format = "BYTE", parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5,clamp,clampMin=0.5,clampMax=1,invert = false")]
     [FieldOffset(0)] public byte rightStickX;
     [FieldOffset(3)] public byte rightStickY;
 
