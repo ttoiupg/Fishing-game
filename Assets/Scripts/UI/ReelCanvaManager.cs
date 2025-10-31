@@ -139,7 +139,7 @@ public class ReelCanvaManager : MonoBehaviour
     {
         var leftBound = -338.4f;
         var rightBound = 338.4f;
-        controlBarGravity = (controlBarDirection<0)? controlBackwardGravity : controlForwardGravity * controlBarDirection;
+        controlBarGravity = controlForwardGravity * controlBarDirection;
         controlBarVelocity += controlBarGravity * Time.deltaTime;
         controlBarVelocity = (Mathf.Abs(controlBarVelocity)>controlBarMaxSpeed) ?  Mathf.Sign(controlBarVelocity) * controlBarMaxSpeed : controlBarVelocity;
         //crankVelocity = Mathf.Abs((crankVelocity + crankDirection * Time.deltaTime)) > crankMaxSpeed ? crankMaxSpeed : crankVelocity + crankDirection * Time.deltaTime;

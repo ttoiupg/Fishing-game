@@ -8448,7 +8448,7 @@ MonoBehaviour:
   pullCanvaRotation: 0
   controlForwardGravity: 3500
   controlBackwardGravity: -3500
-  controlBarMaxSpeed: 350
+  controlBarMaxSpeed: 400
   controlBarPosition: 50
   controlBarGravity: 0
   controlBarDirection: 0
@@ -25052,7 +25052,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -274341600, y: 178360060}
+  m_AnchoredPosition: {x: -274365380, y: 178375520}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &4603943534130282238
@@ -34012,6 +34012,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37263bcc5992a4333916df74ba02a48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadzone: 0.1
+  fishingFactor: 0
+  animationSpeedFactor: 2.5
   biteNoticeUIManager: {fileID: 1996706726648911289}
   castRodCooldownlength: 3
   retractDebounceLength: 0.6
@@ -34035,6 +34038,7 @@ MonoBehaviour:
   fishMaxHealth: 100
   fishHealth: 100
   pointerLanded: 0
+  lastInputTime: 0
   attackFish: {fileID: 8300000, guid: 58e62abda5eb1a641887f48fbeb8fd25, type: 3}
   biteNotifySound: {fileID: 8300000, guid: efc40fed4a4f5cf4994e6cb86442a9bf, type: 3}
   pedalFlip: {fileID: 8300000, guid: 592bd17c001003648b510b17605b949c, type: 3}

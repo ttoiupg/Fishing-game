@@ -16,6 +16,10 @@ using Timer = Halfmoon.Utilities.Timer;
 
 public class FishingController : PlayerSystem
 {
+    [Header("Debug")]
+    [SerializeField] private float deadzone;
+    [SerializeField] private float fishingFactor;
+    [SerializeField] private float animationSpeedFactor;
     private static readonly int IsMoving = Animator.StringToHash("IsMoving");
     private static readonly int CastFishingRod = Animator.StringToHash("CastFishingRod");
     private static readonly int RetractFishingRod = Animator.StringToHash("RetractFishingRod");
@@ -42,7 +46,9 @@ public class FishingController : PlayerSystem
     public float fishMaxHealth = 100;
     public float fishHealth = 100;
 
-    [Header("Pull state")] public bool pointerLanded;
+    [Header("Pull state")] 
+    public bool pointerLanded;
+    [SerializeField] private float lastInputTime;
 
     [FormerlySerializedAs("attakFish")] [Header("Sound effects")]
     public AudioClip attackFish;
@@ -331,25 +337,43 @@ public class FishingController : PlayerSystem
     {
         var Value = _controlBarAction.ReadValue<float>();
         var final = (Value + prevValue) / 2f;
-        if (final > 0.5f)
+        var offset = final - 0.5f;
+        var dist = Mathf.Abs(offset);
+        if (dist > deadzone)
         {
-            _animator.SetFloat("PullingSpeed", 1f + final);
-            _reelSoundSource.pitch = 0.7f + final * 0.35f;
+            _animator.SetFloat("PullingSpeed", final * animationSpeedFactor);
+            _reelSoundSource.pitch = 0.7f + dist * 0.35f;
             //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
-            player.ReelCanvaManager.controlBarDirection = final;
-            player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * final;
-            ConfigureCamera(FishingCameraDistance - 2f * final);
+            player.ReelCanvaManager.controlBarDirection = offset * 2f;
+            player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * offset * 2f;
+            //ConfigureCamera(FishingCameraDistance - 2f * final);
         }
         else
         {
-            _animator.SetFloat("PullingSpeed", 0.6f);
-            _reelSoundSource.pitch = 0.7f;
-            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
-            player.ReelCanvaManager.controlBarDirection = -1;
-            player.ReelCanvaManager.crankDirection = -player.ReelCanvaManager.crankSpeed * 0.4f;
-            ConfigureCamera(player.defaultCameraDistance);
+            _animator.SetFloat("PullingSpeed", 0);
+            _reelSoundSource.pitch = 0;
+            //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+            player.ReelCanvaManager.controlBarDirection = 0;
+            player.ReelCanvaManager.crankDirection = 0;
+            //ConfigureCamera(FishingCameraDistance - 2f * final);
         }
-
+        //{
+        //    _animator.SetFloat("PullingSpeed", 1f + final);
+        //    _reelSoundSource.pitch = 0.7f + final * 0.35f;
+        //    //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, Value * 0.6f);
+        //    player.ReelCanvaManager.controlBarDirection = final;
+        //    player.ReelCanvaManager.crankDirection = player.ReelCanvaManager.crankSpeed * final;
+        //    ConfigureCamera(FishingCameraDistance - 2f * final);
+        //}
+        //else
+        //{
+        //    _animator.SetFloat("PullingSpeed", 0.6f);
+        //    _reelSoundSource.pitch = 0.7f;
+        //    //Gamepad.current?.SetMotorSpeeds(RumbleLowFreq, 0);
+        //    player.ReelCanvaManager.controlBarDirection = -1;
+        //    player.ReelCanvaManager.crankDirection = -player.ReelCanvaManager.crankSpeed * 0.4f;
+        //    ConfigureCamera(player.defaultCameraDistance);
+        //}
         prevValue = Value;
     }
 
