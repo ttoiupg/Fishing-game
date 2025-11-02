@@ -2057,6 +2057,7 @@ GameObject:
   - component: {fileID: 956218352}
   - component: {fileID: 956218351}
   - component: {fileID: 956218350}
+  - component: {fileID: 956218353}
   m_Layer: 8
   m_Name: Carlo
   m_TagString: Untagged
@@ -2096,7 +2097,19 @@ MonoBehaviour:
   _length: 0.2
   triggered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 6f7d02ae6d723a7499d425628c254983, type: 2}
+        m_TargetAssemblyTypeName: GameEvent, Assembly-CSharp
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   startSection: {fileID: 11400000, guid: d0ed0d5fbef9f9d4dbb719f2bb1cc6c4, type: 2}
 --- !u!61 &956218351
 BoxCollider2D:
@@ -2202,6 +2215,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &956218353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956218348}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1528df980962ee48b1ef9fd2e788547, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatStoryStateChanger
+  chatInteract: {fileID: 956218350}
+  sections: []
+  storyVariable: {fileID: 11400000, guid: a22271733dcfe2a419a044411b16e99a, type: 2}
 --- !u!1 &1002279535
 GameObject:
   m_ObjectHideFlags: 0

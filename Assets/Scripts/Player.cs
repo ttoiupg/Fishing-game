@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IDataPersistence
     private static readonly int IsMoving = Animator.StringToHash("IsMoving");
     private static readonly int Speed = Animator.StringToHash("Speed");
     public PlayerID ID;
+    public StringVariable playerName;
 
     public Rigidbody2D body;
     public float defaultCameraDistance = 8f;
@@ -216,6 +217,7 @@ public class Player : MonoBehaviour, IDataPersistence
     public void LoadData(GameData gameData)
     {
         level = gameData.playerData.level;
+        playerName.Value = gameData.playerData.name;
         gold = gameData.playerData.gold;
         experience = gameData.playerData.experience;
         expRequire = (float)GetExpRequirement(level);
@@ -228,11 +230,13 @@ public class Player : MonoBehaviour, IDataPersistence
         modifiers.Clear();
         gameData.playerData.modifiers.ForEach(id => this.modifiers.Add(DataPersistenceManager.Instance.ModifierCards[id]));
         transform.position = gameData.playerData.position;
+
     }
 
     public void SaveData(ref GameData gameData)
     {
         gameData.playerData.gold = gold;
+        gameData.playerData.name = playerName.Value;
         gameData.playerData.level = level;
         gameData.playerData.experience = experience;
         gameData.playerData.discoverFishList.Clear();

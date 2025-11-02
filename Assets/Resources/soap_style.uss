@@ -1,0 +1,88 @@
+.cardText {
+    justify-content: flex-start;
+    align-self: auto;
+    align-content: auto;
+    align-items: auto;
+    -unity-text-align: middle-left;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    font-size: 100%;
+    -unity-text-outline-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.card {
+    align-items: stretch;
+    align-content: auto;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border-left-color: rgb(157, 189, 207);
+    border-right-color: rgb(157, 189, 207);
+    border-top-color: rgb(157, 189, 207);
+    border-bottom-color: rgb(157, 189, 207);
+    background-color: rgba(57, 95, 106, 0.8);
+}
+
+.card--true {
+    align-items: stretch;
+    align-content: auto;
+    background-color: rgba(0, 135, 86, 0.8);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-left-color: rgb(0, 202, 96);
+    border-right-color: rgb(0, 202, 96);
+    border-top-color: rgb(0, 202, 96);
+    border-bottom-color: rgb(0, 202, 96);
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.card--false {
+    border-left-color: rgb(202, 0, 79);
+    border-right-color: rgb(202, 0, 79);
+    border-top-color: rgb(202, 0, 79);
+    border-bottom-color: rgb(202, 0, 79);
+    background-color: rgba(135, 0, 17, 0.8);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}

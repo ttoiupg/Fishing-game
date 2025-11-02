@@ -42,5 +42,6 @@ public class DialogueSection : ScriptableObject
     public string Speaker;
     public bool IsEvent;
     public GameEvent OnEvent;
+    public QuestObject giveQuest;
     public List<DialogueData> chats = new List<DialogueData>();
 }

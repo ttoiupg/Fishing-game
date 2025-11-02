@@ -26,10 +26,11 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
     }
-
+    [Header("Battle")]
     public FishEnemy FishEnemy;
     public Countdowntimer battleTimer;
     public bool fishing;
+    public UnityEvent<Fish> OnFishCatched;
     [Header("effect")] public RectTransform fishHealthBar;
     public TextMeshProUGUI fishHealthText;
     public Image seaBackground;
@@ -166,6 +167,7 @@ public class GameManager : MonoBehaviour
         //    "Mutation:" + FishEnemy.fish.mutation.name, FishEnemy.fish.weight + "Kg");
         battleTimer.Pause();
         ProcessFish();
+        OnFishCatched?.Invoke(FishEnemy.fish);
         player.ID.playerEvents.OnFishCatched?.Invoke(FishEnemy.fish);
     }
 

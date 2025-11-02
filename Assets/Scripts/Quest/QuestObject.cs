@@ -8,7 +8,8 @@ public class QuestObject : ScriptableObject
     public string ID => id;
     public string name;
     [TextArea]public string description;
-    public List<QuestStepDef> items = new();
+    [SerializeReference]public List<QuestStepDef> steps = new();
+    public QuestObject next;
 }
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -6,10 +7,48 @@ using UnityEngine.TextCore.Text;
 
 public class QuestManager : MonoBehaviour,IDataPersistence
 {
+    public static QuestManager Instance { get; private set; }
     public List<Quest> quests;
+    public Action<Quest> onQuestAdded;
+    [SerializeField] private int currentIndex = 0;
+
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        quests = new List<Quest>();
+    }
     public static QuestObject LoadCharacter(string id)
     {
         return DataPersistenceManager.Instance.Quests[id];
+    }
+    public void AddQuest(QuestObject questObject, List<int> progress)
+    {
+        var quest = new Quest(questObject, progress,currentIndex);
+        quest.Start();
+        quests.Add(quest);
+        onQuestAdded?.Invoke(quest);
+        currentIndex++;
+    }
+    public void AddQuestEmpty(QuestObject questObject)
+    {
+        var quest = new Quest(questObject,currentIndex);
+        quest.Start();
+        quests.Add(quest);
+        onQuestAdded?.Invoke(quest);
+        currentIndex++;
+    }
+    public void AddQuestEmpty(QuestObject questObject, int index)
+    {
+        var quest = new Quest(questObject, index);
+        quest.Start();
+        quests.Add(quest);
+        onQuestAdded?.Invoke(quest);
+    }
+    public void RemoveQuest(Quest quest)
+    {
+        quest.Stop();
+        quests.Remove(quest);
     }
     public void LoadData(GameData data)
     {
@@ -17,9 +56,7 @@ public class QuestManager : MonoBehaviour,IDataPersistence
         var progress = data.playerData.questList.Select(g => g.progress).ToList();
         for (int i = 0; i < objs.Count; i++)
         {
-            var quest = new Quest(objs[i],progress[i]);
-            quest.Start();
-            quests.Add(quest);
+            AddQuest(objs[i], progress[i]);
         }
     }
 
@@ -35,12 +72,14 @@ public interface IQuestStep
     string text { get; }
     bool isCompleted { get; }
     float progress01 { get; }
+    float goal { get; }
+    Action<IQuestStep,float> onUpdate { get; set; }
     void Bind();
     void Unbind();
     int GetProgress();
     void SetProgress(int value);
 }
-
+[System.Serializable]
 public sealed class EventQuestStep : IQuestStep
 {
     readonly EventQuestStepObject so;
@@ -48,7 +87,10 @@ public sealed class EventQuestStep : IQuestStep
     public string text => so.text;
     public bool isCompleted => done;
     public float progress01 => done?1f:0f;
-    
+    public float goal => 1f;
+
+    public Action<IQuestStep,float> onUpdate { get; set; }
+
     public EventQuestStep(EventQuestStepObject so) => this.so = so;
     
     public void Bind()
@@ -63,15 +105,20 @@ public sealed class EventQuestStep : IQuestStep
     public void SetProgress(int value)
     {
         done = value == 1;
+        onUpdate?.Invoke(this,GetProgress());
     }
-    private void OnTriggerd(){done = true;}
+    private void OnTriggerd(){
+        done = true;
+        Debug.Log("EventQuestStep triggered: " + text);
+        onUpdate?.Invoke(this, GetProgress());
+    }
 
     public int GetProgress()
     {
         return done?1:0;
     }
 }
-
+[System.Serializable]
 public sealed class ValueQuestStep : IQuestStep
 {
     readonly ValueQuestStepObject so;
@@ -79,7 +126,9 @@ public sealed class ValueQuestStep : IQuestStep
     public string text => so.text;
     public bool isCompleted => progress >= so.goal;
     public float progress01 => Mathf.Clamp01((float)progress / so.goal);
-    
+    public float goal => so.goal;
+    public Action<IQuestStep, float> onUpdate { get; set; }
+
     public ValueQuestStep(ValueQuestStepObject so) => this.so = so;
     
     public void Bind()
@@ -96,11 +145,14 @@ public sealed class ValueQuestStep : IQuestStep
     {
         progress = value;
         if (progress >= so.goal) progress = so.goal;
+        onUpdate?.Invoke(this,GetProgress());
     }
     private void OnTriggerd(int value)
     {
         progress += value;
         if (progress >= so.goal) progress = so.goal;
+        onUpdate?.Invoke(this, GetProgress());
+        Debug.Log("ValueQuestStep triggered: " + text);
     }
 
     public int GetProgress()
@@ -114,20 +166,44 @@ public sealed class Quest
 {
     public readonly QuestObject questObject;
     readonly List<IQuestStep> steps;
-
-    public Quest(QuestObject questObject)
+    public Action onComplete;
+    public readonly int index;
+    public Quest(QuestObject questObject, int index)
     {
+        this.index = index;
         this.questObject = questObject;
-        steps = questObject.items.Select(s => s.GetQuestStep()).ToList();
+        steps = questObject.steps.Select(s => s.GetQuestStep()).ToList();
+        this.index = index;
     }
 
-    public Quest(QuestObject questObject, List<int> preset)
+    public Quest(QuestObject questObject, List<int> preset,int index)
     {
+        this.index = index;
         this.questObject = questObject;
-        steps = questObject.items.Select(s => s.GetQuestStep()).ToList();
+        steps = questObject.steps.Select(s => s.GetQuestStep()).ToList();
         for (int i = 0; i < steps.Count; i++)
         {
-            steps[i].SetProgress(preset[i]);
+            if (i < preset.Count)
+                steps[i].SetProgress(preset[i]);
+            else
+            {
+                steps[i].SetProgress(0);
+            }
+            steps[i].onUpdate += CheckCompletion;
+        }
+    }
+
+    private void CheckCompletion(IQuestStep step, float progress)
+    {
+        Debug.Log($"Checking quest completion for {step.text} {progress}");
+        if (IsCompleted)
+        {
+            Debug.Log("Quest completed: " + questObject.name);
+            onComplete?.Invoke();
+            if (questObject.next != null)
+            {
+                QuestManager.Instance.AddQuestEmpty(questObject.next,this.index);
+            }
         }
     }
     public bool IsCompleted => steps.All(s => s.isCompleted);
@@ -135,7 +211,10 @@ public sealed class Quest
 
     public void Start()
     {
-        foreach (var s in steps) { s.Bind(); }
+        foreach (var s in steps) 
+        {
+            s.Bind();
+        }
     }
 
     public void Stop()

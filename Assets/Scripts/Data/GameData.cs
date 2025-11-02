@@ -26,6 +26,7 @@ public class GameData
 [System.Serializable]
 public class PlayerData
 {
+    public string name;
     public int level;
     public int gold;
     public float experience;
@@ -35,6 +36,8 @@ public class PlayerData
     public Vector3 position;
     public string Scene;
     public List<IDataQuest>  questList = new List<IDataQuest>();
+    public List<IDataStoryIntValue> storyIntValues = new List<IDataStoryIntValue>();
+    public List<IDataStoryBoolValue> storyBoolValues = new List<IDataStoryBoolValue>();
 
     public PlayerData()
     {
@@ -46,6 +49,8 @@ public class PlayerData
         modifiers = new List<String>();
         position = new Vector3(-7.14900017f,4.46799994f,0);
         questList = new List<IDataQuest>();
+        storyIntValues = new List<IDataStoryIntValue>();
+        storyBoolValues = new List<IDataStoryBoolValue>();
         Scene = "CenterTown";
     }
 }

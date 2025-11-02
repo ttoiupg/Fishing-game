@@ -21,6 +21,7 @@ public class PlayMenuViewModel : MonoBehaviour, IViewFrame
     private int selectIndex = 0;
     private bool overwrite = false;
     public bool haveSaves = false;
+    private bool loadButtonPressed = false;
 
     public GameObject loadButton;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,6 +34,7 @@ public class PlayMenuViewModel : MonoBehaviour, IViewFrame
 
     public void OnButtonClick(int index)
     {
+        loadButtonPressed = false;
         selectIndex = index;
         if (DataPersistenceManager.Instance.saves.Count-1 < index)
         {
@@ -58,10 +60,15 @@ public class PlayMenuViewModel : MonoBehaviour, IViewFrame
     }
     public void ConfirmLoad()
     {
+        if (loadButtonPressed) return;
+        loadButtonPressed = true;
+        Debug.Log("Loading Save Slot " + selectIndex);
         DataPersistenceManager.Instance.LoadGame(selectIndex);
     }
     public void ConfirmCreateNewGame()
     {
+        if (loadButtonPressed) return;
+        loadButtonPressed = true;
         if (overwrite)
         {
             var direc = DataPersistenceManager.Instance.saves[selectIndex].directory;

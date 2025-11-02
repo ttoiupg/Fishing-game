@@ -86,12 +86,6 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     }
     public void ChangeCategory(int index)
     {
-        for(int i = 0; i < scrollViews.Count; i++)
-        {
-            categoryButtons[i].alpha = (i==index)?1:0.5f;
-            scrollViews[i].SetActive(i == index);
-        }
-        CloseDetailView();
         switch (index)
         {
          case 0:
@@ -115,6 +109,12 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
              break;
         }
 
+        for(int i = 0; i < scrollViews.Count; i++)
+        {
+            categoryButtons[i].alpha = (i==index)?1:0.5f;
+            scrollViews[i].SetActive(i == index);
+        }
+        CloseDetailView();
         currentInspecting = null;
         currentFishingRod = null;
     }

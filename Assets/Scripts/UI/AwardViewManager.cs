@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine.EventSystems;
 using Image = UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 public class AwardViewManager : MonoBehaviour,IViewFrame
 {
@@ -15,7 +16,7 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
     [SerializeField] private TextMeshProUGUI NameLabel;
     [SerializeField] private TextMeshProUGUI WeightLabel;
     [SerializeField] private TextMeshProUGUI MutationLabel;
-    [SerializeField] private GameObject TipButton;
+    [SerializeField] private Button TipButton;
     private PauseViewModel _pauseViewModel;
     private bool _debounce = false;
     private void Awake()
@@ -44,17 +45,17 @@ public class AwardViewManager : MonoBehaviour,IViewFrame
         animator.enabled = true;
         animator.Play("AwardViewPopUP",0,0);
         await UniTask.WaitForSeconds(4f);
-        TipButton.SetActive(true);
-        _eventSystem.SetSelectedGameObject(TipButton);
+        TipButton.interactable = true;
         animator.enabled = false;
+        _eventSystem.SetSelectedGameObject(TipButton.gameObject);
         _debounce = false;
     }
 
     private async UniTask Off()
     {
+        TipButton.interactable = false;
         animator.enabled = true;
         _eventSystem.SetSelectedGameObject(null);
-        TipButton.SetActive(false);
         animator.Play("AwardViewClose",0,0);
         await UniTask.WaitForSeconds(1.2f);
         animator.enabled = false;

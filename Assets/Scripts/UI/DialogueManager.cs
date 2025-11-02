@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using static System.Collections.Specialized.BitVector32;
 
 public class DialogueManager : MonoBehaviour, IViewFrame
 {
@@ -69,6 +71,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             Destroy(options[i]);
         }
         options.Clear();
+        eventSystem.SetSelectedGameObject(null);
     }
     
     private void CreateOption(List<DialogueOption> optionsList)
@@ -78,6 +81,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         choosing = true;
         foreach (var optionData in optionsList)
         {
+ 
             var option = Instantiate(optionPrefab, optionContainer);
             option.name = optionData.name;
             option.GetComponentInChildren<TextMeshProUGUI>().text = optionData.text;
@@ -88,6 +92,25 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             });
             options.Add(option);
         }
+        foreach (var option in options)
+        {
+            var navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+            };
+            var index = options.IndexOf(option);
+            var btn = option.GetComponent<Button>();
+            if (index > 0)
+            {
+                navigation.selectOnUp = options[index - 1].GetComponent<Button>();
+            }
+            if (index < options.Count - 1)
+            {
+                navigation.selectOnDown = options[index + 1].GetComponent<Button>();
+            }
+            btn.navigation = navigation;
+        }
+        eventSystem.SetSelectedGameObject(options[0]);
     }
     private void DimSpeaker(RectTransform speaker)
     {
@@ -147,6 +170,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             section.OnEvent.Raise();
             return;
         }
+        if (section.giveQuest != null)
+        {
+            QuestManager.Instance.AddQuestEmpty(section.giveQuest);
+        }
         currentSection = section;
         currentChatIndex = 0;
         currentData = currentSection.chats[currentChatIndex];
@@ -167,6 +194,18 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         rightSpeaker.sprite = currentData.speakerSprite;
         speakerName.text = currentData.speakerName;
         dialogueTextLabel.text = "";
+        if (section.IsEvent)
+        {
+            ViewManager.instance.CloseView();
+            currentSection = null;
+            currentChatIndex = 0;
+            section.OnEvent.Raise();
+            return;
+        }
+        if (section.giveQuest != null)
+        {
+            QuestManager.Instance.AddQuestEmpty(section.giveQuest);
+        }
         ViewManager.instance.OpenView(this);
         await UniTask.WaitForSeconds(1f);
         canClick = true;
@@ -205,7 +244,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         }
     }
     
-    public void ButtonClick()
+    public void ButtonClick(InputAction.CallbackContext ctx)
     {
         if (choosing || !canClick) return;
         if (textCoroutine != null)
@@ -219,9 +258,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             NextDialogue();
         }
     }
-    
+
     public void Begin()
     {
+        PlayerInputSystem.Instance.playerInput.UI.Dialogue.performed += ButtonClick;
         GameManager.Instance.player.CanInteract = false;
         ViewManager.instance.frameLock = true;
         GameManager.Instance.player.isActive = false;
@@ -238,6 +278,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
 
     public void End()
     {
+        PlayerInputSystem.Instance.playerInput.UI.Dialogue.performed -= ButtonClick;
         eventSystem.SetSelectedGameObject(null);
         GameManager.Instance.player.CanInteract = true;
         ViewManager.instance.frameLock = false;
