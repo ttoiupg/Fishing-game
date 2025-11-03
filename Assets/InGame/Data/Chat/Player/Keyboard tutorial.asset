@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: Keyboard tutorial
+  m_EditorClassIdentifier: 
+  Speaker: You
+  IsSingle: 1
+  IsEvent: 0
+  OnEvent: {fileID: 0}
+  giveQuest: {fileID: 0}
+  chats:
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 8300000, guid: 5d9133b3223d67f42beb82ef18c0606a, type: 3}
+    speakerName: You
+    message: This game is in beta, expect bugs!
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 8300000, guid: 5d9133b3223d67f42beb82ef18c0606a, type: 3}
+    speakerName: You
+    message: Which device are you using to play?
+    duration: 1
+    image: {fileID: 0}
+    options:
+    - name: PC
+      text: Mouse & Keyboard
+      to: {fileID: 0}
+    - name: Gamepad
+      text: Gamepad
+      to: {fileID: 0}

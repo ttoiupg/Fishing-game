@@ -1,7 +1,9 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using UnityEngine.Windows.Speech;
 
 public class QuestDisplayManager : MonoBehaviour
 {
@@ -18,6 +20,14 @@ public class QuestDisplayManager : MonoBehaviour
     void Start()
     {
         Initialize();
+    }
+    private void OnEnable()
+    {
+        PlayerInputSystem.Instance.playerInput.UI.QuestList.performed += ctx => Toggle();
+    }
+    private void OnDisable()
+    {
+        PlayerInputSystem.Instance.playerInput.UI.QuestList.performed -= ctx => Toggle();
     }
     void AddQuestDisplay(Quest quest)
     {
@@ -55,6 +65,7 @@ public class QuestDisplayManager : MonoBehaviour
         headerText.SetActive(false);
         header.DOKill();
         header.DOLocalMoveX(-1190f, 0.3f).SetEase(Ease.OutQuad);
+        EventSystem.current.SetSelectedGameObject(null);
     }
     void Initialize()
     {

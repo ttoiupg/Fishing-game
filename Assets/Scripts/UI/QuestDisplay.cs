@@ -17,11 +17,12 @@ public class QuestDisplay : MonoBehaviour
             var stepDisplay = Instantiate(stepDisplayPrefab, transform);
             stepDisplay.Setup(step);
         }
+
         quest.onComplete += () =>
         {
             Debug.Log("Finished quest: " + quest.questObject.name);
             QuestManager.Instance.RemoveQuest(quest);
-            Destroy(gameObject,1.2f);
+            Destroy(gameObject,0.5f);
         };
     }
 }

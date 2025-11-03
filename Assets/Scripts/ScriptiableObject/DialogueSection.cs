@@ -32,6 +32,7 @@ public struct DialogueData
     public string speakerName;
     public string message;
     public float duration;
+    public Sprite image;
     public List<DialogueOption> options;
 }
 
@@ -40,6 +41,7 @@ public struct DialogueData
 public class DialogueSection : ScriptableObject
 {
     public string Speaker;
+    public bool IsSingle;
     public bool IsEvent;
     public GameEvent OnEvent;
     public QuestObject giveQuest;

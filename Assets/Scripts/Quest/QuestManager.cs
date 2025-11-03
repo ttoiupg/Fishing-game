@@ -173,13 +173,20 @@ public sealed class Quest
         this.index = index;
         this.questObject = questObject;
         steps = questObject.steps.Select(s => s.GetQuestStep()).ToList();
+        foreach (var step in steps)
+        {
+            step.SetProgress(0);
+            step.onUpdate += CheckCompletion;
+        }
         this.index = index;
+        Debug.Log("Setup");
     }
 
     public Quest(QuestObject questObject, List<int> preset,int index)
     {
         this.index = index;
         this.questObject = questObject;
+        Debug.Log("Setup");
         steps = questObject.steps.Select(s => s.GetQuestStep()).ToList();
         for (int i = 0; i < steps.Count; i++)
         {
@@ -189,6 +196,7 @@ public sealed class Quest
             {
                 steps[i].SetProgress(0);
             }
+            Debug.Log("Setup");
             steps[i].onUpdate += CheckCompletion;
         }
     }

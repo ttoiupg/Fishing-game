@@ -12,6 +12,8 @@ public class LocomotionState : BaseState
     public override void OnEnter()
     {
         //Debug.Log("enter locomotion state");
+        player.CanInteract = true;
+        player.ShowInteractPrompt();
         player.PlayerInputs.Fishing.Enable();
         player.PlayerInputs.UI.Enable();
         player.PlayerInputs.Fishing.CastFishingRod.performed += player.fishingController.HandleInput;

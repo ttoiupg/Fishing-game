@@ -86,6 +86,7 @@ public class FishingController : PlayerSystem
     private List<Timer> _timers;
     private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
     private float prevValue;
+    private Tween _cameraTween;
 
     [FormerlySerializedAs("RumbleLowFreq")] [Header("Gamepad")]
     public float rumbleLowFreq = 0.25f;
@@ -125,13 +126,18 @@ public class FishingController : PlayerSystem
 
     private void ConfigureCamera(float distance)
     {
-        
-        //player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
+        if (_cameraTween != null && _cameraTween.IsActive()) _cameraTween.Kill();
+        _cameraTween = DOTween.To(() => player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize,
+            x => player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = x,
+            distance, 0.5f).SetEase(Ease.OutQuint);
     }
 
     private void ConfigureCamera(float distance, Vector2 position)
     {
-        //player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = distance;
+        if (_cameraTween != null && _cameraTween.IsActive()) _cameraTween.Kill();
+        _cameraTween = DOTween.To(() => player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize,
+    x => player.cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = x,
+    distance, 0.5f).SetEase(Ease.OutQuint);
         player.cinemachineCamera.Composition.ScreenPosition = position;
     }
 

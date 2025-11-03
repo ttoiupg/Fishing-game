@@ -803,6 +803,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuestList"",
+                    ""type"": ""Button"",
+                    ""id"": ""eddccedc-d1c1-4f40-b426-26d45b255573"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1256,6 +1265,28 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Dialogue"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9dfd889e-59d2-4ed6-9f7b-c863f5aa4d91"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuestList"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""387164b8-bc21-4dac-af2c-ec0da6416e90"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuestList"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1383,6 +1414,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_UI_RightSwitch = m_UI.FindAction("RightSwitch", throwIfNotFound: true);
         m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
         m_UI_Dialogue = m_UI.FindAction("Dialogue", throwIfNotFound: true);
+        m_UI_QuestList = m_UI.FindAction("QuestList", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_SpawnTag = m_Debug.FindAction("Spawn Tag", throwIfNotFound: true);
@@ -1775,6 +1807,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_RightSwitch;
     private readonly InputAction m_UI_Inventory;
     private readonly InputAction m_UI_Dialogue;
+    private readonly InputAction m_UI_QuestList;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1847,6 +1880,10 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Dialogue => m_Wrapper.m_UI_Dialogue;
         /// <summary>
+        /// Provides access to the underlying input action "UI/QuestList".
+        /// </summary>
+        public InputAction @QuestList => m_Wrapper.m_UI_QuestList;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1917,6 +1954,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Dialogue.started += instance.OnDialogue;
             @Dialogue.performed += instance.OnDialogue;
             @Dialogue.canceled += instance.OnDialogue;
+            @QuestList.started += instance.OnQuestList;
+            @QuestList.performed += instance.OnQuestList;
+            @QuestList.canceled += instance.OnQuestList;
         }
 
         /// <summary>
@@ -1973,6 +2013,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Dialogue.started -= instance.OnDialogue;
             @Dialogue.performed -= instance.OnDialogue;
             @Dialogue.canceled -= instance.OnDialogue;
+            @QuestList.started -= instance.OnQuestList;
+            @QuestList.performed -= instance.OnQuestList;
+            @QuestList.canceled -= instance.OnQuestList;
         }
 
         /// <summary>
@@ -2372,6 +2415,13 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDialogue(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "QuestList" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuestList(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.

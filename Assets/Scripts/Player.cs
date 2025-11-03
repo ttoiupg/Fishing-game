@@ -76,6 +76,8 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public Fish currentFish;
     public BaseZone currentZone;
+    public GameObject currentZoneDisplayer;
+    public TMP_Text zoneText;
     public bool pullstate;
     public bool inspecting;
     public bool CardOpened;
@@ -88,6 +90,7 @@ public class Player : MonoBehaviour, IDataPersistence
 
     [SerializeField] private float _interactionRange;
     [SerializeField] private LayerMask _interactionLayerMask;
+    private string closestName;
     private readonly Collider2D[] _colliders = new Collider2D[3];
     [SerializeField] private int _numFound;
     [SerializeField] private bool isEnter = true;
@@ -298,7 +301,26 @@ public class Player : MonoBehaviour, IDataPersistence
             animator.SetBool(IsMoving, false);
         }
     }
-
+    public void ShowInteractPrompt()
+    {
+        if (currentInteract == null) return;
+        hudController.interactionPrompt.localScale = Vector3.zero;
+        interacted = false;
+        lastInteract = currentInteract;
+        currentPrompt = currentInteract.InteractionPrompt;
+        currentLength = currentInteract.length;
+        hudController.requiredInteractTime = currentInteract.length;
+        isEnter = false;
+        hudController.ShowInteractionPrompt(currentPrompt, closestName);
+        currentInteract.PromptShow(this);
+    }
+    public void HideInteractPrompt()
+    {
+        hudController.HideInteractionPrompt();
+        currentInteract.PromptHide(this);
+        interactionDebounceTimer.Start();
+        currentInteract = null;
+    }
     public void UpdateInteraction()
     {
         interactionDebounceTimer.Tick(Time.deltaTime);
@@ -313,23 +335,13 @@ public class Player : MonoBehaviour, IDataPersistence
             var closest = GetClosestCollider(_colliders);
             currentInteract = closest.GetComponent<IInteractable>();
             if (!isEnter && currentInteract == lastInteract) return;
-            hudController.interactionPrompt.localScale = Vector3.zero;
-            interacted = false;
-            lastInteract = currentInteract;
-            currentPrompt = currentInteract.InteractionPrompt;
-            currentLength = currentInteract.length;
-            hudController.requiredInteractTime = currentInteract.length;
-            isEnter = false;
-            hudController.ShowInteractionPrompt(currentPrompt, closest.name);
-            currentInteract.PromptShow(this);
+            closestName = closest.name;
+            ShowInteractPrompt();
         }
         else if (!isEnter)
         {
             interactionDebounce = true;
-            hudController.HideInteractionPrompt();
-            currentInteract.PromptHide(this);
-            interactionDebounceTimer.Start();
-            currentInteract = null;
+            HideInteractPrompt();
         }
     }
 
@@ -359,7 +371,17 @@ public class Player : MonoBehaviour, IDataPersistence
                 break;
         }
     }
-
+    public void ShowCurrentZone(string zoneName)
+    {
+        currentZoneDisplayer.transform.DOKill();
+        currentZoneDisplayer.transform.DOLocalMoveY(452, 0.5f).SetEase(Ease.OutBack);
+        zoneText.text = zoneName;
+    }
+    public void HideCurrentZone()
+    {
+        currentZoneDisplayer.transform.DOKill();
+        currentZoneDisplayer.transform.DOLocalMoveY(652, 0.3f).SetEase(Ease.InBack);
+    }
     public void EquipFishingRod(FishingRod fishingRod)
     {
         currentFishingRod = InventoryManager.Instance.fishingRods.FindIndex(fRod => fRod == fishingRod);

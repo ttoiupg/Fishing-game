@@ -83,6 +83,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
     {
         _eventSystem = EventSystem.current;
         ChangeCategory(0);
+        SetupFishNavigation();
     }
     public void ChangeCategory(int index)
     {
@@ -298,7 +299,7 @@ public class InventoryDisplayManager : MonoBehaviour,IViewFrame
         PrepareFish();
         PrepareFishingRods();
         if (_fishIconDisplayers.Count == 0) return;
-        _eventSystem.SetSelectedGameObject(_fishIconDisplayers[0].gameObject, null);
+        _eventSystem.SetSelectedGameObject(categoryButtons[0].gameObject, null);
     }
 
     public void CleanItems()

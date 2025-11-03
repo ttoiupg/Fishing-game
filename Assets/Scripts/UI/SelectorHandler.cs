@@ -47,6 +47,7 @@ public class SelectorHandler : MonoBehaviour
             {
                 _selected = _eventSystem.currentSelectedGameObject;
                 _selectTransform = _selected.GetComponent<RectTransform>();
+                SoundFXManger.Instance.PlaySoundFXClip(moveSound, Camera.main.transform, 0.55f);
             }
             selector.gameObject.SetActive(true);
             var size = _selectTransform.sizeDelta + offset;
@@ -62,3 +63,4 @@ public class SelectorHandler : MonoBehaviour
         }
     }
 }
+

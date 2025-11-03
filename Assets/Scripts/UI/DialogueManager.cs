@@ -28,6 +28,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public RectTransform RightSpeaker;
     public RectTransform LeftSpeaker;
     public RectTransform LeftSpeakerSmall;
+    public Image imageDisplayer;
     public GameObject optionPrefab;
     public Transform optionContainer;
     public Image rightSpeaker;
@@ -145,7 +146,8 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         currentData = dialogueData;
         rightSpeaker.sprite = dialogueData.speakerSprite;
         speakerName.text = dialogueData.speakerName;
-        currentAudio = SoundFXManger.Instance.PlaySoundFXClip(dialogueData.Voice,vcam.transform,volume);
+        if (dialogueData.Voice != null)
+            currentAudio = SoundFXManger.Instance.PlaySoundFXClip(dialogueData.Voice,vcam.transform,volume);
         OnlyHighLightSpeaker(dialogueData.speaker);
         if (textCoroutine != null)
         {
@@ -153,6 +155,15 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         }
         textCoroutine = TextEffect(dialogueData.message,dialogueData.duration);
         StartCoroutine(textCoroutine);
+        if (dialogueData.image != null)
+        {
+            imageDisplayer.gameObject.SetActive(true);
+            imageDisplayer.sprite = dialogueData.image;
+        }
+        else
+        {
+            imageDisplayer.gameObject.SetActive(false);
+        }
         CreateOption(dialogueData.options);
     }
     public void JumpDialouge(DialogueSection section)
@@ -205,6 +216,16 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         if (section.giveQuest != null)
         {
             QuestManager.Instance.AddQuestEmpty(section.giveQuest);
+        }
+        if (section.IsSingle)
+        {
+            RightSpeaker.gameObject.SetActive(false);
+            LeftSpeakerSmall.gameObject.SetActive(false);
+        }
+        else
+        {
+            RightSpeaker.gameObject.SetActive(true);
+            LeftSpeakerSmall.gameObject.SetActive(true);
         }
         ViewManager.instance.OpenView(this);
         await UniTask.WaitForSeconds(1f);

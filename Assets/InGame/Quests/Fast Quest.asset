@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d960083bec544158c55c76ec4759b43, type: 3}
+  m_Name: Fast Quest
+  m_EditorClassIdentifier: Assembly-CSharp::QuestObject
+  id: Fast_Quest
+  name: Debug
+  description: talk to carlo
+  steps:
+  - {fileID: 11400000, guid: ca0a79bf7848d9747869bd77e0125229, type: 2}
+  next: {fileID: 11400000, guid: 5a812861daa3fd24f916c3eeeb0352fb, type: 2}

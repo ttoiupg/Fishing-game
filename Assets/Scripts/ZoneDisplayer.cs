@@ -21,6 +21,7 @@ public class ZoneDisplayer : MonoBehaviour
         {
             var player = other.GetComponent<Player>();
             player.currentZone = zone;
+            player.ShowCurrentZone(zone.name);
         }
     }
 
@@ -30,6 +31,7 @@ public class ZoneDisplayer : MonoBehaviour
         {
             var player = other.GetComponent<Player>();
             player.currentZone = null;
+            player.HideCurrentZone();
         }
     }
 }
