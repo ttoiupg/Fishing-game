@@ -17,19 +17,19 @@ MonoBehaviour:
   OnEvent: {fileID: 0}
   giveQuest: {fileID: 0}
   chats:
-  - speaker: 2
+  - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: 90ac9e85af087a04ab9f8e6b036352aa, type: 3}
-    speakerName: Pablo
+    Voice: {fileID: 8300000, guid: 9fea83f01b0b21d4ba9071e771c7cf09, type: 3}
+    speakerName: You
     IsSingle: 1
-    message: Hi, i am your friend, Pablo. and i'm here to guide you!
+    message: "Hi!\_guess you're new to here, let me teach you about this game!"
     duration: 1
     image: {fileID: 0}
     options: []
-  - speaker: 2
+  - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: bea451e95b29e184b9a0c47c3c3043cb, type: 3}
-    speakerName: Pablo
+    Voice: {fileID: 8300000, guid: 0fa1c9601e4f9594192d839e50910a22, type: 3}
+    speakerName: You
     IsSingle: 1
     message: Which device are you using?
     duration: 1
@@ -37,7 +37,7 @@ MonoBehaviour:
     options:
     - name: PC
       text: Mouse & Keyboard
-      to: {fileID: 11400000, guid: 203e8edc8527b18489591d9e88dc3182, type: 2}
+      to: {fileID: 11400000, guid: a0c57adf6c390904594675912e0c6cbb, type: 2}
     - name: Gamepad
       text: Gamepad
-      to: {fileID: 11400000, guid: 203e8edc8527b18489591d9e88dc3182, type: 2}
+      to: {fileID: 11400000, guid: a0c57adf6c390904594675912e0c6cbb, type: 2}

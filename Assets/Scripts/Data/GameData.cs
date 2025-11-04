@@ -50,7 +50,11 @@ public class PlayerData
         position = new Vector3(-7.14900017f,4.46799994f,0);
         questList = new List<IDataQuest>();
         storyIntValues = new List<IDataStoryIntValue>();
-        storyBoolValues = new List<IDataStoryBoolValue>();
+        storyBoolValues = new List<IDataStoryBoolValue>()
+        {
+            new IDataStoryBoolValue("Bool_IsNewGame",true),
+            new IDataStoryBoolValue("Bool_IsFirstTime",true),
+        };
         Scene = "CenterTown";
     }
 }

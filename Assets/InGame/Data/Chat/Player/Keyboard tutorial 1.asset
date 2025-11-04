@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
-  m_Name: Gamepad tutorial
+  m_Name: Keyboard tutorial 1
   m_EditorClassIdentifier: 
   Speaker: You
   IsEvent: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
     IsSingle: 1
     message: Here are the basic controls!
     duration: 1
-    image: {fileID: 6164373776970289300, guid: 58cbc300e8290f843a47f2adf754981d, type: 3}
+    image: {fileID: 8810017340889447223, guid: 3dd6ff121e8eafe46a69400e9da18f16, type: 3}
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
@@ -33,17 +33,17 @@ MonoBehaviour:
     IsSingle: 1
     message: The core gameplay is fishing! so let's learn how to fish!
     duration: 1
-    image: {fileID: 6164373776970289300, guid: 58cbc300e8290f843a47f2adf754981d, type: 3}
+    image: {fileID: 0}
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: 7ba7fd17cd540cc4d98ce48f9a953964, type: 3}
+    Voice: {fileID: 8300000, guid: 65c167583ff97214a991898a477dc8fa, type: 3}
     speakerName: You
     IsSingle: 1
     message: "You can only fish when you\u2019re in a fishing area.\nWhen you\u2019re
-      there, press the south button to start fishing."
+      there, press the space bar to start fishing."
     duration: 1
-    image: {fileID: 6164373776970289300, guid: 58cbc300e8290f843a47f2adf754981d, type: 3}
+    image: {fileID: 8810017340889447223, guid: 3dd6ff121e8eafe46a69400e9da18f16, type: 3}
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
@@ -57,12 +57,12 @@ MonoBehaviour:
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: c2194a406621fb84a9bcb26833f3795e, type: 3}
+    Voice: {fileID: 8300000, guid: e12a4654d33416f4b8341d34f75dbb58, type: 3}
     speakerName: You
     IsSingle: 1
-    message: Use the right trigger to move the red CONTROL BAR.
+    message: Use the space bar to move the red CONTROL BAR.
     duration: 1
-    image: {fileID: -7824788603683552011, guid: 941ce8ce19dbbb44aa2ccf851359fdaf, type: 3}
+    image: {fileID: -8047757282469321913, guid: 846de85844a11aa4296ac43b09ec35df, type: 3}
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}

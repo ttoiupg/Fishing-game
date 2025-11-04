@@ -42,4 +42,9 @@ public class IDataStoryBoolValue
         id = intVariable.id;
         value = intVariable.Value;
     }
+    public IDataStoryBoolValue(string id, bool value)
+    {
+        this.id = id;
+        this.value = value;
+    }
 }

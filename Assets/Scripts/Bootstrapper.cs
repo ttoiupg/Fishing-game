@@ -13,7 +13,7 @@ public class Bootstrapper : MonoBehaviour
 
     private async UniTask LoadScene()
     {
-        await UniTask.Delay(2000);
+        await UniTask.Delay(2500);
         await SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Single);
         intro.SetTrigger("Start");
         await UniTask.Delay(100);
