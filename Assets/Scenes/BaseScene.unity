@@ -1892,8 +1892,8 @@ RectTransform:
   m_Children:
   - {fileID: 1615158370}
   - {fileID: 969979691}
-  - {fileID: 844852091}
   - {fileID: 423629034}
+  - {fileID: 844852091}
   - {fileID: 1494964913}
   - {fileID: 1306619460}
   m_Father: {fileID: 126513643}
@@ -1951,6 +1951,7 @@ MonoBehaviour:
     speakerSprite: {fileID: 0}
     Voice: {fileID: 0}
     speakerName: 
+    IsSingle: 0
     message: 
     duration: 0
     image: {fileID: 0}
@@ -2486,6 +2487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoryManager
   newGameFrame: {fileID: 1526671064}
   nameInputField: {fileID: 792557574}
+  introDialogue: {fileID: 11400000, guid: efe1d6578b111d5479abec9e3565286e, type: 2}
   intVariables:
   - {fileID: 11400000, guid: a22271733dcfe2a419a044411b16e99a, type: 2}
   - {fileID: 11400000, guid: cdde8a200979435478672e7687dea51f, type: 2}
@@ -27805,7 +27807,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -278467800, y: 181145940}
+  m_AnchoredPosition: {x: -278491700, y: 181159540}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &4603943534130282238
@@ -32115,7 +32117,7 @@ MonoBehaviour:
   selectedSprite: {fileID: 168236829, guid: d2a9f7a95dde49e41b3458183988f2ac, type: 3}
   offset: {x: 121.23, y: 15.61}
   speed: 25
-  moveSound: {fileID: 8300000, guid: 944fb32885f2bc842898663b3594676d, type: 3}
+  moveSound: {fileID: 8300000, guid: 0154038ec33a0fb45be8175c237850b7, type: 3}
 --- !u!114 &5913119409457153598
 MonoBehaviour:
   m_ObjectHideFlags: 0

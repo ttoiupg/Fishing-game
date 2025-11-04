@@ -33,6 +33,7 @@ public class QuestDisplayManager : MonoBehaviour
     {
         var display = Instantiate(questDisplayPrefab, questDisplayContainer);
         display.Setup(quest);
+        display.transform.SetSiblingIndex(quest.index);
     }
 
     public void Toggle()

@@ -123,6 +123,14 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         speaker.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack);
         speaker.GetComponent<Image>().color = Color.white;
     }
+    private void HideSpeaker(RectTransform speaker)
+    {
+        speaker.gameObject.SetActive(false);
+    }
+    private void ShowSpeaker(RectTransform speaker)
+    {
+        speaker.gameObject.SetActive(true);
+    }
     private void OnlyHighLightSpeaker(DialogueSpeaker speaker)
     {
         DimSpeaker(RightSpeaker);
@@ -138,6 +146,24 @@ public class DialogueManager : MonoBehaviour, IViewFrame
                 break;
             case DialogueSpeaker.LeftSmall:
                 HighlightSpeaker(LeftSpeakerSmall);
+                break;
+        }
+    }
+    private void OnlyShowSpeaker(DialogueSpeaker speaker)
+    {
+        HideSpeaker(RightSpeaker);
+        HideSpeaker(LeftSpeaker);
+        HideSpeaker(LeftSpeakerSmall);
+        switch (speaker)
+        {
+            case DialogueSpeaker.Right:
+                ShowSpeaker(RightSpeaker);
+                break;
+            case DialogueSpeaker.Left:
+                ShowSpeaker(LeftSpeaker);
+                break;
+            case DialogueSpeaker.LeftSmall:
+                ShowSpeaker(LeftSpeakerSmall);
                 break;
         }
     }
@@ -164,7 +190,17 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         {
             imageDisplayer.gameObject.SetActive(false);
         }
-        CreateOption(dialogueData.options);
+        if (dialogueData.IsSingle)
+        {
+            OnlyShowSpeaker(dialogueData.speaker);
+        }
+        else
+        {
+            ShowSpeaker(RightSpeaker);
+            ShowSpeaker(LeftSpeaker);
+            ShowSpeaker(LeftSpeakerSmall);
+        }
+            CreateOption(dialogueData.options);
     }
     public void JumpDialouge(DialogueSection section)
     {
@@ -216,16 +252,6 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         if (section.giveQuest != null)
         {
             QuestManager.Instance.AddQuestEmpty(section.giveQuest);
-        }
-        if (section.IsSingle)
-        {
-            RightSpeaker.gameObject.SetActive(false);
-            LeftSpeakerSmall.gameObject.SetActive(false);
-        }
-        else
-        {
-            RightSpeaker.gameObject.SetActive(true);
-            LeftSpeakerSmall.gameObject.SetActive(true);
         }
         ViewManager.instance.OpenView(this);
         await UniTask.WaitForSeconds(1f);
@@ -282,6 +308,9 @@ public class DialogueManager : MonoBehaviour, IViewFrame
 
     public void Begin()
     {
+        HideSpeaker(RightSpeaker);
+        HideSpeaker(LeftSpeaker);
+        HideSpeaker(LeftSpeakerSmall);
         PlayerInputSystem.Instance.playerInput.UI.Dialogue.performed += ButtonClick;
         GameManager.Instance.player.CanInteract = false;
         ViewManager.instance.frameLock = true;

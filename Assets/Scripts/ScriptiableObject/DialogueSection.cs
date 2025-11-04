@@ -30,7 +30,8 @@ public struct DialogueData
     public Sprite speakerSprite;
     public AudioClip Voice;
     public string speakerName;
-    public string message;
+    public bool IsSingle;
+    [TextArea]public string message;
     public float duration;
     public Sprite image;
     public List<DialogueOption> options;
@@ -41,7 +42,6 @@ public struct DialogueData
 public class DialogueSection : ScriptableObject
 {
     public string Speaker;
-    public bool IsSingle;
     public bool IsEvent;
     public GameEvent OnEvent;
     public QuestObject giveQuest;

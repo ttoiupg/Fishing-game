@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Bootstrapper : MonoBehaviour
 {
+    public Animator intro;
     void Start()
     {
         DontDestroyOnLoad(gameObject);          // if this object holds managers
@@ -11,8 +12,10 @@ public class Bootstrapper : MonoBehaviour
     }
 
     private async UniTask LoadScene()
-    { 
+    {
+        await UniTask.Delay(2000);
         await SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Single);
+        intro.SetTrigger("Start");
         await UniTask.Delay(100);
         DataPersistenceManager.Instance.LoadGlobalSettings();
     }
