@@ -15,20 +15,23 @@ MonoBehaviour:
   Speaker: Carlo
   IsEvent: 0
   OnEvent: {fileID: 0}
+  giveQuest: {fileID: 0}
   chats:
   - speaker: 0
     speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
-    Voice: {fileID: 8300000, guid: dca36b507e932b444b3590803bb9c282, type: 3}
+    Voice: {fileID: 8300000, guid: 803c7713f089c6941bf372475ce1020e, type: 3}
     speakerName: Carlo
-    message: Have you caught the fish i told you?
+    IsSingle: 0
+    message: Huh. New face, who are you?
     duration: 1
+    image: {fileID: 0}
     options:
-    - name: yes
-      text: Yes i caught two of them
-      to: {fileID: 11400000, guid: da037d5b0b20b7948a881b1739433d86, type: 2}
-    - name: no
-      text: No! its not that easy ok?
-      to: {fileID: 11400000, guid: a344b1c13ebe54648b05d57c4bea9cea, type: 2}
-    - name: Sell fish
-      text: Sell fish
-      to: {fileID: 11400000, guid: 5742bd58717b7c44e8563acf1c5361c8, type: 2}
+    - name: B
+      text: Introduce yourself
+      to: {fileID: 11400000, guid: 21935c484d67e4546b325a0259bb342b, type: 2}
+    - name: C
+      text: Be a bad girl
+      to: {fileID: 11400000, guid: a56af5f247e5c98498e9d342d6b51a9f, type: 2}
+    - name: A
+      text: Keep quiet
+      to: {fileID: 11400000, guid: c517833cb01fc1e4bbc1f641cd2db12f, type: 2}

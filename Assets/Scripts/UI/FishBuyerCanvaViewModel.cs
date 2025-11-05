@@ -85,7 +85,7 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
             }
             icon.navigation = nav;
         }
-
+        if (_fishIconDisplayers.Count == 0) return;
         var closeNav = new Navigation { mode = Navigation.Mode.Explicit };
         var sellNav = new Navigation { mode = Navigation.Mode.Explicit };
         closeNav.selectOnUp = _fishIconDisplayers[^1].GetComponent<Button>();
@@ -98,7 +98,6 @@ public class FishBuyerCanvaViewModel : MonoBehaviour,IViewFrame
         sellNav.selectOnRight = closeButton;
         closeButton.navigation = closeNav;
         sellButton.navigation = sellNav;
-        Debug.Log("Order finished");
         _eventSystem.SetSelectedGameObject(_fishIconDisplayers[0].gameObject, null);
     }
     public void ShowInventory()

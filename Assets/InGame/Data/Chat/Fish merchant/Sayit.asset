@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
+  m_Name: Sayit
+  m_EditorClassIdentifier: 
+  Speaker: Carlo
+  IsEvent: 0
+  OnEvent: {fileID: 0}
+  giveQuest: {fileID: 0}
+  chats:
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: c22f898430dd6264e8218685317df722, type: 3}
+    speakerName: You
+    IsSingle: 0
+    message: his name is Martin, i heard he is a... not a good person in this town.
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: 6905f5b8dd2bba04bb7ca33baa0c92fb, type: 3}
+    speakerName: Carlo
+    IsSingle: 0
+    message: That Martin? i didn't know he have a niece...
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: cde65e8b421b94442a1156c05cf6240f, type: 3}
+    speakerName: You
+    IsSingle: 0
+    message: (Oh no... is he mad?) Listen! i have nothing to do with..
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: b0ca80c4dc0505a42bdafb92a0355c37, type: 3}
+    speakerName: Carlo
+    IsSingle: 0
+    message: Don't worry! Umm.. girl! i don't hate him. although many others do...
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: a7075f7494d76024ba2eb6eb35c8761e, type: 3}
+    speakerName: Player
+    IsSingle: 0
+    message: My name is PLAYERNAME. Sorry i was a little mean
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 0
+    speakerSprite: {fileID: 21300000, guid: 1b9bebdd2c042a54cbd675f6c8281085, type: 3}
+    Voice: {fileID: 8300000, guid: d766370fc85a6c44089eb14475aa55cb, type: 3}
+    speakerName: Carlo
+    IsSingle: 0
+    message: Anyway, if you want to sell your fish, or you want to buy some fishing
+      gears, just come to me, my name is Carlo
+    duration: 1
+    image: {fileID: 0}
+    options: []
