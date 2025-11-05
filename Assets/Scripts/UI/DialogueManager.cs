@@ -88,6 +88,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             option.GetComponentInChildren<TextMeshProUGUI>().text = optionData.text;
             option.GetComponent<Button>().onClick.AddListener(() =>
             {
+                if (!choosing) return;
                 JumpDialouge(optionData.to);
                 choosing = false;
             });

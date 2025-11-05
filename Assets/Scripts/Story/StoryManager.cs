@@ -24,7 +24,7 @@ public class StoryManager : MonoBehaviour, IDataPersistence
         boolVariableDict["Bool_IsNewGame"].Value = false;
         GameManager.Instance.player.playerName.Value = nameInputField.text;
         GameManager.Instance.player.isActive = true;
-        DialogueManager.Instance.StartDialogue(introDialogue,GameManager.Instance.player.transform);
+        DialogueManager.Instance.StartDialogue(introDialogue,GameManager.Instance.player.transform);//start tutorial dialogue
     }
 
     private void Start()
