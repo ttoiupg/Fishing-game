@@ -10,38 +10,53 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6b28dce6db7484f95958e09948982d6, type: 3}
-  m_Name: NewGameChat
+  m_Name: FirstFail
   m_EditorClassIdentifier: 
   Speaker: You
   IsEvent: 0
   OnEvent: {fileID: 0}
-  giveQuest: {fileID: 0}
+  giveQuest: {fileID: 11400000, guid: 36ab953d0319ae943920753d8b7023db, type: 2}
   storyVariable: {fileID: 0}
   storyValue: 0
   chats:
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: 9fea83f01b0b21d4ba9071e771c7cf09, type: 3}
+    Voice: {fileID: 0}
     speakerName: You
     IsSingle: 1
     Unskipable: 1
-    message: "Hi!\_guess you're new to here, let me teach you about this game!"
+    message: It's ok, losting a fish or two isn't rare
     duration: 1
     image: {fileID: 0}
     options: []
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
-    Voice: {fileID: 8300000, guid: 0fa1c9601e4f9594192d839e50910a22, type: 3}
+    Voice: {fileID: 0}
     speakerName: You
     IsSingle: 1
     Unskipable: 1
-    message: Which device are you using?
+    message: Embracing failure makes you <b>STRONGER</b>
     duration: 1
     image: {fileID: 0}
-    options:
-    - name: PC
-      text: Mouse & Keyboard
-      to: {fileID: 11400000, guid: 11b58f2900ed01a46b12374c885d9446, type: 2}
-    - name: Gamepad
-      text: Gamepad
-      to: {fileID: 11400000, guid: a0c57adf6c390904594675912e0c6cbb, type: 2}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 0}
+    speakerName: You
+    IsSingle: 1
+    Unskipable: 1
+    message: Lets try one more time!
+    duration: 1
+    image: {fileID: 0}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 0}
+    speakerName: You
+    IsSingle: 1
+    Unskipable: 1
+    message: After you finished, you can go to the right side of the map, there is
+      a beach!
+    duration: 1
+    image: {fileID: 0}
+    options: []

@@ -36,6 +36,11 @@ public class GameManager : MonoBehaviour
     public Image seaBackground;
     public Sprite aquaIcon;
     public Battle CurrentBattle;
+    public GameEvent closeAwardViewEvent;
+    public BoolVariable isFirstFail;
+    public BoolVariable isFirstFish;
+    public DialogueSection FirstCatchDialogue;
+    public DialogueSection FirstFailDialogue;
 
     private void Start()
     {
@@ -45,6 +50,14 @@ public class GameManager : MonoBehaviour
         {
             if (!CurrentBattle.battleStarted) return;
             EndBattle();
+        };
+        closeAwardViewEvent.Raised += () =>
+        {
+            if (isFirstFish.Value)
+            {
+                isFirstFish.Value = false;
+                DialogueManager.Instance.StartDialogue(FirstCatchDialogue,player.characterTransform);
+            }
         };
     }
 
@@ -103,6 +116,8 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+
+                    FishFailed();
                     player.ID.playerEvents.OnFishFailed?.Invoke();
                     FishEnemy = null;
                     player.ReelCanvaManager.UpdateFishHealth(0, CurrentBattle.battleStats.enemy.maxHealth);
@@ -115,6 +130,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FishFailed()
+    {
+        if (isFirstFail.Value)
+        {
+            isFirstFail.Value = false;
+            DialogueManager.Instance.StartDialogue(FirstFailDialogue,player.characterTransform);
+        }
+    }
     public Fish NewEnemyFish()
     {
         _availableFishes = player.currentZone.GetSortedFeaturedFish();

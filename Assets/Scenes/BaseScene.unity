@@ -1924,6 +1924,7 @@ MonoBehaviour:
     Voice: {fileID: 0}
     speakerName: 
     IsSingle: 0
+    Unskipable: 0
     message: 
     duration: 0
     image: {fileID: 0}
@@ -2467,6 +2468,8 @@ MonoBehaviour:
   boolVariables:
   - {fileID: 11400000, guid: 15eb29d23b05eb440bf8ada61f9692dd, type: 2}
   - {fileID: 11400000, guid: 789cf7a4f97194f45858045d32f2f860, type: 2}
+  - {fileID: 11400000, guid: 2d4dad33c2469d142b1347f3997d40ca, type: 2}
+  - {fileID: 11400000, guid: 15eb29d23b05eb440bf8ada61f9692dd, type: 2}
 --- !u!4 &488355478
 Transform:
   m_ObjectHideFlags: 0
@@ -6519,7 +6522,7 @@ MonoBehaviour:
   sceneDatas:
   - name: CenterTown
     loaded: 0
-  - name: TeleportTest
+  - name: Left beach
     loaded: 0
   currentScene: 
   teleporting: 0
@@ -11838,7 +11841,7 @@ RectTransform:
   m_GameObject: {fileID: 2091793176974085283}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 800949892106675048}
@@ -14449,7 +14452,7 @@ MonoBehaviour:
   tempCritMultiplier: 0
   tempresilience: 0
   templuck: 0
-  DebugAgent: {fileID: 4291264919441695753}
+  DebugAgent: {fileID: 0}
   inputMoveDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &1143712935075359916
 GameObject:
@@ -14466,7 +14469,6 @@ GameObject:
   - component: {fileID: 5596824006857481663}
   - component: {fileID: 5663568566033231313}
   - component: {fileID: 1234432913445899412}
-  - component: {fileID: 4291264919441695753}
   - component: {fileID: 937679548524662891}
   - component: {fileID: 8677188317566572348}
   - component: {fileID: 8677188317566572349}
@@ -20673,6 +20675,11 @@ MonoBehaviour:
       lastDamageDealt: 0
     timeLimit: 0
     battleStarted: 0
+  closeAwardViewEvent: {fileID: 11400000, guid: 05df3327bcbe7d44b92ad9744ee3fee0, type: 2}
+  isFirstFail: {fileID: 11400000, guid: 7bccb53cf320197408478bf4bcacf8a8, type: 2}
+  isFirstFish: {fileID: 11400000, guid: 2d4dad33c2469d142b1347f3997d40ca, type: 2}
+  FirstCatchDialogue: {fileID: 11400000, guid: 98a9c9697c7917c41845f7560f074860, type: 2}
+  FirstFailDialogue: {fileID: 11400000, guid: 23346f64d051b3243910110ea1cd192f, type: 2}
 --- !u!114 &2718163265634629911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26525,19 +26532,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4291264919441695753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1143712935075359916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 516c57eae7e54659877a70b2948f3284, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testIcon: {fileID: 21300000, guid: 95d785a1873174007916a664df2c6115, type: 3}
 --- !u!114 &4294472005995281273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27779,7 +27773,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -280878850, y: 182786220}
+  m_AnchoredPosition: {x: -281588100, y: 183261000}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &4603943534130282238
@@ -29350,6 +29344,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: 05df3327bcbe7d44b92ad9744ee3fee0, type: 2}
+        m_TargetAssemblyTypeName: GameEvent, Assembly-CSharp
+        m_MethodName: Raise
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -36845,6 +36851,7 @@ MonoBehaviour:
   landOnRedSoundFX: {fileID: 8300000, guid: fd03799e5c96d5f41a6a2ee9934b7ef0, type: 3}
   fishCatchedSoundFX: {fileID: 8300000, guid: cc9e86aadb8339f44813e7d1811b042e, type: 3}
   fishFailedSoundFX: {fileID: 8300000, guid: 193a581f621a3d341be816a871ce7e14, type: 3}
+  swingFishingRodSoundFX: {fileID: 8300000, guid: cf2e07047c8c7b040b68236a46f3ecda, type: 3}
   rumbleLowFreq: 0.16
 --- !u!1 &7226803755806310852
 GameObject:

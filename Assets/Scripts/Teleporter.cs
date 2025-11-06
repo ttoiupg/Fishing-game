@@ -6,7 +6,7 @@ public class Teleporter : MonoBehaviour
 {
     public string Scene;
     public string PlaceName;
-    public RectTransform teleportPoint;
+    public Transform teleportPoint;
 
     private void OnTriggerEnter2D(Collider2D other)
     {

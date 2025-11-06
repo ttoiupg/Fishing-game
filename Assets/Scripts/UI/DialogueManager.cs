@@ -312,6 +312,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         {
             QuestManager.Instance.AddQuestEmpty(section.giveQuest);
         }
+        if (section.storyVariable != null)
+        {
+            section.storyVariable.Value = section.storyValue;
+        }
         currentSection = section;
         currentChatIndex = 0;
         currentData = currentSection.chats[currentChatIndex];
@@ -339,6 +343,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             currentChatIndex = 0;
             section.OnEvent.Raise();
             return;
+        }
+        if (section.storyVariable != null)
+        {
+           section.storyVariable.Value = section.storyValue;
         }
         if (section.giveQuest != null)
         {
@@ -385,8 +393,9 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public void ButtonClick(InputAction.CallbackContext ctx)
     {
         if (choosing || !canClick) return;
-        if (textCoroutine != null)
+        if (textCoroutine != null )
         {
+            if (currentData.Unskipable) return;
             Debug.Log("stop");
             StopDialogue();
             textCoroutine = null;

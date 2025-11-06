@@ -410,7 +410,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef5382ad73725d64cb71908aa27187a0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 36d65aea1ae49914787d2c69fa11a405, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -546,6 +546,8 @@ MonoBehaviour:
   QuestList:
   - {fileID: 11400000, guid: 5a812861daa3fd24f916c3eeeb0352fb, type: 2}
   - {fileID: 11400000, guid: 2ee6757931101af43904e815c072fe95, type: 2}
+  - {fileID: 11400000, guid: f1b913f411ec75248af9d2af0f1ede05, type: 2}
+  - {fileID: 11400000, guid: 36ab953d0319ae943920753d8b7023db, type: 2}
   craftElements:
   - {fileID: 11400000, guid: 5285f1911734466408e120dacbf724e9, type: 2}
   - {fileID: 11400000, guid: b8faf42670c35ac418b60fbd44363e5f, type: 2}
@@ -698,7 +700,7 @@ PrefabInstance:
     - target: {fileID: 7219582481024865134, guid: ece47ebfbde4b4d40992cd57469f81e8, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: ebe789b9699aab1478055994c8056bf0, type: 3}
+      objectReference: {fileID: 8300000, guid: 9d6510f55b0e9ad45b6e4e8f8cfded84, type: 3}
     - target: {fileID: 8582113443075778746, guid: ece47ebfbde4b4d40992cd57469f81e8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 23.625

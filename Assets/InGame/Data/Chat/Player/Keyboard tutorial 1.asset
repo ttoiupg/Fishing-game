@@ -16,12 +16,15 @@ MonoBehaviour:
   IsEvent: 0
   OnEvent: {fileID: 0}
   giveQuest: {fileID: 0}
+  storyVariable: {fileID: 0}
+  storyValue: 0
   chats:
   - speaker: 1
     speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
     Voice: {fileID: 8300000, guid: ccfc72c4202ac8a438197730d212fa60, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: Here are the basic controls!
     duration: 1
     image: {fileID: 8810017340889447223, guid: 3dd6ff121e8eafe46a69400e9da18f16, type: 3}
@@ -31,6 +34,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 5a38a4e67de39ed46950740f382e6650, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: The core gameplay is <b>fishing</b>! so let's learn how to fish!
     duration: 1
     image: {fileID: 0}
@@ -40,6 +44,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 65c167583ff97214a991898a477dc8fa, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: "You can only fish when you\u2019re in a <b>fishing area</b>.\nWhen
       you\u2019re there, press the <b>space bar</b> to start fishing."
     duration: 1
@@ -50,6 +55,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: d2cc0a200a9baae4e912f44d53c91df6, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: "Once you start, you\u2019ll see two bars on the screen \u2014 a red
       <b><color=#F43C64>CONTROL BAR </color></b>and a white <b>FISH BAR</b>.\n"
     duration: 1
@@ -60,6 +66,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: e12a4654d33416f4b8341d34f75dbb58, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: Use the <b>space bar</b> to move the red <color=#F43C64><b>CONTROL BAR</color>.
     duration: 1
     image: {fileID: -8047757282469321913, guid: 846de85844a11aa4296ac43b09ec35df, type: 3}
@@ -69,6 +76,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 2e9863f7c2b4b0342aaf8818364b4359, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: "Your goal is to keep the red bar overlapping the white bar.\nThe white
       <b>FISH BAR</b> moves around on its own \u2014 <b>stronger fish move faster
       and are harder to keep up with</b>."
@@ -80,6 +88,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 737a5f29c4985864db76affa053fa9e4, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 0
     message: "When the bars overlap, you\u2019ll hear three ticks that charge your
       attack:\n\nFirst tick = weak power\nSecond tick = medium power\nThird tick
       = full power"
@@ -91,6 +100,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 7d4d77fa74a19d948befa3716e13cb55, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 1
     message: 'After three ticks, or if you lose the overlap, your attack is made.
 
       Each
@@ -104,8 +114,19 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 759280f5a5cb69347b5da942a98b5567, type: 3}
     speakerName: You
     IsSingle: 1
+    Unskipable: 0
     message: Stay focused, time your movements, and keep those bars lined up to catch
       your fish.
     duration: 1
     image: {fileID: -5038403972423828304, guid: 1061bcb0569006b4bb5e2a35254c20e1, type: 3}
+    options: []
+  - speaker: 1
+    speakerSprite: {fileID: 21300000, guid: 0e903f73d17325c40abdd2efde53391f, type: 3}
+    Voice: {fileID: 0}
+    speakerName: You
+    IsSingle: 1
+    Unskipable: 1
+    message: Let's go to the right side and find the first Fishing Area!
+    duration: 1
+    image: {fileID: 0}
     options: []

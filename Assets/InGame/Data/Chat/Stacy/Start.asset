@@ -15,13 +15,18 @@ MonoBehaviour:
   Speaker: Carlo
   IsEvent: 0
   OnEvent: {fileID: 0}
+  giveQuest: {fileID: 0}
+  storyEvent: {fileID: 0}
+  storyValue: 0
   chats:
   - speaker: 0
     speakerSprite: {fileID: 21300000, guid: 43f9716259be0074390149258027e3ab, type: 3}
     Voice: {fileID: 8300000, guid: 2540ca74b10ee6d49904ae4eb35698e7, type: 3}
     speakerName: Stacy
+    IsSingle: 0
     message: Hi! what do you want?
     duration: 0.5
+    image: {fileID: 0}
     options:
     - name: Craft
       text: Craft

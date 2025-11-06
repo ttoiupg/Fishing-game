@@ -73,6 +73,8 @@ public class FishingController : PlayerSystem
     [FormerlySerializedAs("FishFailedSoundFX")]
     public AudioClip fishFailedSoundFX;
 
+    public AudioClip swingFishingRodSoundFX;
+
     private AudioSource _reelSoundSource;
     private Transform _playerTransform;
     private InputAction _controlBarAction;
@@ -227,6 +229,7 @@ public class FishingController : PlayerSystem
     {
         _animator.SetBool(IsMoving, false);
         player.ID.playerEvents.OnEnterFishingState?.Invoke();
+        SoundFXManger.Instance.PlaySoundFXClip(swingFishingRodSoundFX, _playerTransform, 1f);
     }
 
     private void SpawnFishingBobber()
