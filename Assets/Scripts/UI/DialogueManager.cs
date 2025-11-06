@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -10,8 +11,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using static System.Collections.Specialized.BitVector32;
 
+[Serializable]
+public struct DialogueKeyword
+{
+    public string Key;
+    public StringVariable Value;
+}
 public class DialogueManager : MonoBehaviour, IViewFrame
 {
     public static DialogueManager Instance;
@@ -32,7 +38,10 @@ public class DialogueManager : MonoBehaviour, IViewFrame
     public GameObject optionPrefab;
     public Transform optionContainer;
     public Image rightSpeaker;
-
+    [Space]
+    [Header("Keywords")]
+    [SerializeField] private List<DialogueKeyword> keywords;
+    public Dictionary<string, StringVariable> KeywordsDict = new Dictionary<string, StringVariable>();
     public float volume;
     private EventSystem eventSystem;
     private bool canClick;
@@ -53,13 +62,94 @@ public class DialogueManager : MonoBehaviour, IViewFrame
         }
         eventSystem = EventSystem.current;
     }
-
+    private void Start()
+    {
+        KeywordsDict.Clear();
+        foreach (var keyword in keywords)
+        {
+            KeywordsDict.Add(keyword.Key, keyword.Value);
+        }
+    }
+    private bool IsRichTextStart(char c)
+    {
+        return c == '<';
+    }
+    private bool IsRichTextEnd(char c)
+    {
+        return c == '>';
+    }
+    private bool IskeywordStart(char c)
+    {
+        return c == '{';
+    }
+    private bool IskeywordEnd(char c)
+    {
+        return c == '}';
+    }
+    private void InstantText(string text)
+    {
+        dialogueTextLabel.text = "";
+        for (int i = 0; i < text.Length; i++)
+        {
+            var c = text[i];
+            if (IsRichTextStart(c))
+            {
+                var buffer = "";
+                while (!IsRichTextEnd(text[i]))
+                {
+                    buffer += text[i];
+                    i++;
+                }
+                dialogueTextLabel.text += buffer + text[i];
+            }
+            else if (IskeywordStart(c))
+            {
+                var key = "";
+                i++;
+                while (!IskeywordEnd(text[i]))
+                {
+                    key += text[i];
+                    i++;
+                }
+                dialogueTextLabel.text += KeywordsDict[key].Value;
+            }
+            else
+            {
+                dialogueTextLabel.text += text[i];
+            }
+        }
+    }
     private IEnumerator TextEffect(string text,float duration)
     {
         dialogueTextLabel.text = "";
         for (int i = 0; i < text.Length; i++)
         {
-            dialogueTextLabel.text += text[i];
+            var c = text[i];
+            if (IsRichTextStart(c))
+            {
+                var buffer = "";
+                while (!IsRichTextEnd(text[i]))
+                {
+                    buffer += text[i];
+                    i++;
+                }
+                dialogueTextLabel.text += buffer + text[i];
+            }
+            else if (IskeywordStart(c))
+            {
+                var key = "";
+                i++;
+                while (!IskeywordEnd(text[i]))
+                {
+                    key += text[i];
+                    i++;
+                }
+                dialogueTextLabel.text += KeywordsDict[key].Value;
+            }
+            else
+            {
+                dialogueTextLabel.text += text[i];
+            }
             yield return new WaitForSeconds(duration/text.Length);
         }
         textCoroutine = null;
@@ -267,7 +357,7 @@ public class DialogueManager : MonoBehaviour, IViewFrame
             Destroy(currentAudio);
         }
         StopCoroutine(textCoroutine);
-        dialogueTextLabel.text = currentData.message;
+        InstantText(currentData.message);
     }
     
     public void NextDialogue()

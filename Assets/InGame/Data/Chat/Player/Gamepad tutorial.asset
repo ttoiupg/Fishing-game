@@ -31,7 +31,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 5a38a4e67de39ed46950740f382e6650, type: 3}
     speakerName: You
     IsSingle: 1
-    message: The core gameplay is fishing! so let's learn how to fish!
+    message: The core gameplay is <b>fishing</b>! so let's learn how to fish!
     duration: 1
     image: {fileID: 6164373776970289300, guid: 58cbc300e8290f843a47f2adf754981d, type: 3}
     options: []
@@ -40,8 +40,8 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 7ba7fd17cd540cc4d98ce48f9a953964, type: 3}
     speakerName: You
     IsSingle: 1
-    message: "You can only fish when you\u2019re in a fishing area.\nWhen you\u2019re
-      there, press the south button to start fishing."
+    message: "You can only fish when you\u2019re in a <b>fishing area</b>.\nWhen
+      you\u2019re there, press the <b>south button</b> to start fishing."
     duration: 1
     image: {fileID: 6164373776970289300, guid: 58cbc300e8290f843a47f2adf754981d, type: 3}
     options: []
@@ -51,7 +51,7 @@ MonoBehaviour:
     speakerName: You
     IsSingle: 1
     message: "Once you start, you\u2019ll see two bars on the screen \u2014 a red
-      CONTROL BAR and a white FISH BAR.\n"
+      <b><color=#F43C64>CONTROL BAR </color></b>and a white <b>FISH BAR</b>.\n"
     duration: 1
     image: {fileID: -1525680888720008547, guid: cd04c8aef7c8aca49b3e8ad9bf54b175, type: 3}
     options: []
@@ -60,7 +60,8 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: c2194a406621fb84a9bcb26833f3795e, type: 3}
     speakerName: You
     IsSingle: 1
-    message: Use the right trigger to move the red CONTROL BAR.
+    message: Use the <b>right trigger</b> to move the red <color=#F43C64><b>CONTROL
+      BAR</color>.
     duration: 1
     image: {fileID: -7824788603683552011, guid: 941ce8ce19dbbb44aa2ccf851359fdaf, type: 3}
     options: []
@@ -70,8 +71,8 @@ MonoBehaviour:
     speakerName: You
     IsSingle: 1
     message: "Your goal is to keep the red bar overlapping the white bar.\nThe white
-      FISH BAR moves around on its own \u2014 stronger fish move faster and are harder
-      to keep up with."
+      <b>FISH BAR</b> moves around on its own \u2014 <b>stronger fish move faster
+      and are harder to keep up with</b>."
     duration: 1
     image: {fileID: 2695598510117126771, guid: b834ab3f051d5224bab3430fa770fc5e, type: 3}
     options: []
@@ -94,7 +95,8 @@ MonoBehaviour:
     message: 'After three ticks, or if you lose the overlap, your attack is made.
 
       Each
-      attack can miss, hit normally, or critically hit for extra damage.'
+      attack can<color=#F43C64> <b>MISS</b></color>, hit ,<b>NORMALY</b>, or <color=#FFBB00><b>CRITICALY</b></color>
+      hit for extra damage.'
     duration: 1
     image: {fileID: -5038403972423828304, guid: 1061bcb0569006b4bb5e2a35254c20e1, type: 3}
     options: []

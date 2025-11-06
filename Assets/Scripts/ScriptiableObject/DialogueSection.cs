@@ -31,7 +31,7 @@ public struct DialogueData
     public AudioClip Voice;
     public string speakerName;
     public bool IsSingle;
-    [TextArea]public string message;
+    [TextArea(4,50)]public string message;
     public float duration;
     public Sprite image;
     public List<DialogueOption> options;
@@ -47,3 +47,4 @@ public class DialogueSection : ScriptableObject
     public QuestObject giveQuest;
     public List<DialogueData> chats = new List<DialogueData>();
 }
+

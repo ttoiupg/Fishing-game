@@ -1,0 +1,16 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/DialogueDataUSS.uss?fileID=7433441132597879392&amp;guid=858235b4c3074a24fb816bad1f7e1697&amp;type=3#DialogueDataUSS" />
+    <ui:VisualElement style="flex-grow: 1; display: flex; visibility: visible; overflow: visible; position: relative;">
+        <uie:PropertyField binding-path="speaker" name="speaker" />
+        <uie:PropertyField binding-path="speakerSprite" name="SpeakerSprite" />
+        <uie:PropertyField binding-path="Voice" />
+        <uie:PropertyField binding-path="speakerName" />
+        <uie:PropertyField binding-path="IsSingle" />
+        <uie:PropertyField binding-path="message" name="Message" focusable="true" style="background-color: rgba(253, 44, 104, 0.58); border-left-color: rgb(255, 18, 120); border-right-color: rgb(255, 18, 120); border-top-color: rgb(255, 18, 120); border-bottom-color: rgb(255, 18, 120); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; -unity-text-outline-width: 0; font-size: 13px; height: auto; align-items: auto; align-content: auto; flex-wrap: nowrap; white-space: normal; overflow: visible; min-height: auto; flex-basis: auto; flex-grow: 0; flex-shrink: 0; flex-direction: column;" />
+        <ui:Button text="Toggle Text Effect" name="ShowEffect" style="transition-property: all; transition-duration: 0s; transition-timing-function: ease; transition-delay: 0s; background-color: rgb(127, 124, 130);" />
+        <ui:Label text="Label" binding-path="message" enable-rich-text="true" name="Display" enabled="true" class="Textdisplay" style="color: rgb(255, 255, 255);" />
+        <uie:PropertyField binding-path="duration" />
+        <uie:PropertyField binding-path="image" />
+        <uie:PropertyField binding-path="options" />
+    </ui:VisualElement>
+</ui:UXML>

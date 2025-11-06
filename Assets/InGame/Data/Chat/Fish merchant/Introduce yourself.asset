@@ -22,7 +22,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: ad30099bf32fae442bbfd46d1ed893d9, type: 3}
     speakerName: You
     IsSingle: 0
-    message: I'm Weni, just got here
+    message: I'm {PlayerName}, just got here
     duration: 1
     image: {fileID: 0}
     options: []
@@ -31,7 +31,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: 5bc38ffcb85bad14f8fc12bfb4859431, type: 3}
     speakerName: Carlo
     IsSingle: 0
-    message: Weni? Sounds oddly familiar... Do You have any family here?
+    message: '{PlayerName}? Sounds oddly familiar... Do You have any family here?'
     duration: 1
     image: {fileID: 0}
     options: []
@@ -40,8 +40,8 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: d3a26a3f9a6da8d438dc1172f087b8aa, type: 3}
     speakerName: You
     IsSingle: 0
-    message: Just my uncle, his name is Mar... (should i tell him my uncle's name?
-      i heard he's hated in this town)
+    message: Just my uncle, his name is Mar... <color=#c5c5c5>(should i tell him
+      my uncle's name? i heard he's hated in this town)</color>
     duration: 1
     image: {fileID: 0}
     options:

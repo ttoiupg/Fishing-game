@@ -22,7 +22,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: c22f898430dd6264e8218685317df722, type: 3}
     speakerName: You
     IsSingle: 0
-    message: his name is Martin, i heard he is a... not a good person in this town.
+    message: his name is Martin, i heard he...done some bad things before
     duration: 1
     image: {fileID: 0}
     options: []
@@ -40,7 +40,8 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: cde65e8b421b94442a1156c05cf6240f, type: 3}
     speakerName: You
     IsSingle: 0
-    message: (Oh no... is he mad?) Listen! i have nothing to do with..
+    message: <color=#c5c5c5>(Oh no... is he mad?)</color> Listen! i have nothing
+      to do with..
     duration: 1
     image: {fileID: 0}
     options: []
@@ -58,7 +59,7 @@ MonoBehaviour:
     Voice: {fileID: 8300000, guid: a7075f7494d76024ba2eb6eb35c8761e, type: 3}
     speakerName: Player
     IsSingle: 0
-    message: My name is PLAYERNAME. Sorry i was a little mean
+    message: My name is {PlayerName}. Sorry i was a little mean
     duration: 1
     image: {fileID: 0}
     options: []
@@ -68,7 +69,7 @@ MonoBehaviour:
     speakerName: Carlo
     IsSingle: 0
     message: Anyway, if you want to sell your fish, or you want to buy some fishing
-      gears, just come to me, my name is Carlo
+      gears, just come to me, my name is <color=#FFBB00><b>Carlo</b></color>
     duration: 1
     image: {fileID: 0}
     options: []

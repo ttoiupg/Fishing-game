@@ -1,0 +1,33 @@
+:root {
+}
+
+.Textdisplay {
+    background-color: rgba(44, 144, 131, 0.61);
+    border-left-color: rgb(52, 214, 192);
+    border-right-color: rgb(52, 214, 192);
+    border-top-color: rgb(52, 214, 192);
+    border-bottom-color: rgb(52, 214, 192);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-top: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    -unity-font-definition: url("project://database/Assets/Material/DOMINICA.TTF?fileID=12800000&guid=76827ec5952a11c43868fff60d7ba93f&type=3#DOMINICA");
+    height: auto;
+    flex-wrap: wrap;
+    white-space: normal;
+    font-size: 18px;
+    scale: 1 1;
+    display: flex;
+}

@@ -12,7 +12,6 @@ public class QuestObject : ScriptableObject
     public QuestObject next;
 }
 
-
 public abstract class QuestStepDef :ScriptableObject
 {
     public string text;
