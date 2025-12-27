@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class ReelCanvaManager : MonoBehaviour
 {
@@ -68,6 +69,8 @@ public class ReelCanvaManager : MonoBehaviour
     private bool _timerStarted = false;
     private static readonly Color32 Red = new Color32(217, 77, 88, 255);
     private static readonly Color32 Blue = new Color32(0, 135, 164, 255);
+    public bool gampadShaking = false;
+    public float prevShakeTime = 0;
     
     private Animator animator;
 
@@ -217,6 +220,8 @@ public class ReelCanvaManager : MonoBehaviour
     }
     public void ShakeUI()
     {
+        gampadShaking = true;
+        prevShakeTime = Time.time;
         pullCanva.DOShakePosition(0.3f,50f,10,90f,false,true,ShakeRandomnessMode.Full);
     }
     public async UniTask RandomFishBarPosition()
@@ -250,14 +255,20 @@ public class ReelCanvaManager : MonoBehaviour
         Debug.Log("RandomFishBarPosition finished");
         _fishBarMoved = true;
     }
-
     public void GamepadVibration()
     {
         float lowfreq = 0.5f;
-        float highfreq = player.PlayerInputs.Fishing.ControlFishingRod.ReadValue<float>() * 0.6f;
+        float highfreq = player.PlayerInputs.Fishing.ControlFishingRod.ReadValue<float>() * 0.45f;
         if (player.fishingController.ReelingBarOverlaping)
         {
             lowfreq = 0f;
+        }
+        if(gampadShaking) {
+            lowfreq = 1f;
+            highfreq = 1f;
+            if (Time.time - prevShakeTime > 0.25f) {
+                gampadShaking = false;
+            }
         }
 
         if (Gamepad.current != null)

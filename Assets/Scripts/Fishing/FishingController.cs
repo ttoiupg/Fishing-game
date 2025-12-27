@@ -75,6 +75,8 @@ public class FishingController : PlayerSystem
 
     public AudioClip swingFishingRodSoundFX;
 
+    public AudioClip buffSFX;
+
     private AudioSource _reelSoundSource;
     private Transform _playerTransform;
     private InputAction _controlBarAction;
@@ -89,6 +91,8 @@ public class FishingController : PlayerSystem
     private Vector2 _biteNoticeScreenPosition = new Vector2(-0.3777781f, 0.09147596f);
     private float prevValue;
     private Tween _cameraTween;
+
+    private int buffStage = 0;
 
     [FormerlySerializedAs("RumbleLowFreq")] [Header("Gamepad")]
     public float rumbleLowFreq = 0.25f;
@@ -145,7 +149,7 @@ public class FishingController : PlayerSystem
 
     public void HandleInput(InputAction.CallbackContext callbackContext)
     {
-        if (player.currentZone == null) return;
+        if (player.currentZone == null || !player.isActive) return;
         if (!isFishing)
         {
             if (castDebounce) return;
@@ -175,7 +179,14 @@ public class FishingController : PlayerSystem
         _damageCooldownTimer = new Countdowntimer(0.5f);
         bonusTimer = new Countdowntimer(2f);
         bonusTimer.OnTimerStart += () => player.ReelCanvaManager.TweenBonusTimer(2f);
-        bonusTimer.OnTimerStop += () => player.ReelCanvaManager.StopBonusTimerTween(bonusTimer.IsFinished);
+        bonusTimer.OnTimerStop += () => {
+            player.ReelCanvaManager.StopBonusTimerTween(bonusTimer.IsFinished);
+        };
+        bonusTimer.OnCoundownFinished += () => {
+            SoundFXManger.Instance.PlaySoundFXClip(buffSFX, _playerTransform, 0.6f);
+            GameManager.Instance.battleTimer.ChangeTime(15f);
+            player.ReelCanvaManager.StopBonusTimerTween(bonusTimer.IsFinished);
+        };
         _timers = new List<Timer>(5)
             { _castRodCooldownTimer, _retractDebounceTimer, damageBoostTimer, _damageCooldownTimer ,bonusTimer};
         damageBoostTimer.OnSectionMeet += DamageSectionMet;
@@ -467,7 +478,7 @@ public class FishingController : PlayerSystem
                 SoundFXManger.Instance.PlaySoundFXClip(landOnOrangeSoundFX, _playerTransform, 0.4f);
                 break;
             default:
-                player.pullProgressBuff = 10f;
+                player.pullProgressBuff = 0f;
                 SoundFXManger.Instance.PlaySoundFXClip(landOnRedSoundFX, _playerTransform, 1.2f);
                 player.ReelCanvaManager.ShakeUI();
                 break;

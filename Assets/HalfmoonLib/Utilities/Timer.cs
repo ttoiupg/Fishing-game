@@ -48,6 +48,12 @@ namespace Halfmoon.Utilities
     public class Countdowntimer : Timer
     {
         public Countdowntimer(float value) : base(value) { }
+        public Action OnCoundownFinished = delegate { };
+
+        public void Finished() {
+            Stop();
+            OnCoundownFinished.Invoke();
+        }
         public override void Tick(float deltaTime)
         {
             if (IsRunning && Time > 0)
@@ -56,7 +62,7 @@ namespace Halfmoon.Utilities
             }
             if (IsRunning && Time <= 0)
             {
-                Stop();
+                Finished();
             }
         }
         public bool IsFinished => Time <= 0;

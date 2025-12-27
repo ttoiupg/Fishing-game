@@ -11157,10 +11157,12 @@ MonoBehaviour:
   gear: {fileID: 8609868287979612869}
   crankRotation: 0
   crankDirection: 0
-  crankSpeed: -2000
+  crankSpeed: -1200
   rawLeftBound: -286
   rawRightBound: 286
   player: {fileID: 1137550602937672745}
+  gampadShaking: 0
+  prevShakeTime: 0
 --- !u!114 &226229520183238779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27773,7 +27775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -281588100, y: 183261000}
+  m_AnchoredPosition: {x: -281643260, y: 183297010}
   m_SizeDelta: {x: -0.00048828, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &4603943534130282238
@@ -36852,6 +36854,7 @@ MonoBehaviour:
   fishCatchedSoundFX: {fileID: 8300000, guid: cc9e86aadb8339f44813e7d1811b042e, type: 3}
   fishFailedSoundFX: {fileID: 8300000, guid: 193a581f621a3d341be816a871ce7e14, type: 3}
   swingFishingRodSoundFX: {fileID: 8300000, guid: cf2e07047c8c7b040b68236a46f3ecda, type: 3}
+  buffSFX: {fileID: 8300000, guid: cce9463bfcb07ab47b19a9f59a02c2d4, type: 3}
   rumbleLowFreq: 0.16
 --- !u!1 &7226803755806310852
 GameObject:

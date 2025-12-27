@@ -9,6 +9,9 @@ public class ChatStoryStateChanger : MonoBehaviour
     {
         storyVariable.OnValueChanged += ChangeState;
     }
+    private void Start() {
+        chatInteract.startSection = sections[storyVariable.Value];
+    }
     private void OnDisable()
     {
         storyVariable.OnValueChanged -= ChangeState;

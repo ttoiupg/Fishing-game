@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
     {
         fishing = true;
         CurrentBattle.Start();
-        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.maxHealth,
+        player.ReelCanvaManager.UpdateFishHealth(CurrentBattle.battleStats.enemy.health,
             CurrentBattle.battleStats.enemy.maxHealth);
     }
 
@@ -116,7 +116,6 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-
                     FishFailed();
                     player.ID.playerEvents.OnFishFailed?.Invoke();
                     FishEnemy = null;
@@ -374,7 +373,7 @@ public class Battle
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
+        battleStats.enemy.health -= GameManager.Instance.player.pullProgressBuff;
         timeLimit = seconds;
     }
 

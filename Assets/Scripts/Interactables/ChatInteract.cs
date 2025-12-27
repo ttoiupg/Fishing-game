@@ -50,8 +50,8 @@ public class ChatInteract : MonoBehaviour, IInteractable
     }
     public void Interact(Player player)
     {
-        DialogueManager.Instance.StartDialogue(startSection,transform);
         triggered?.Invoke();
+        DialogueManager.Instance.StartDialogue(startSection,transform);
         Debug.Log(gameObject.name + " interacted");
     }
 }
