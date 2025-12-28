@@ -24,6 +24,7 @@ public class FishingReelState : BaseState
     {
         if (!GameManager.Instance.CurrentBattle.battleStarted) return;
         player.ReelCanvaManager.UpdatePosition();
+        player.ReelCanvaManager.UpdateWarningScreen();
         player.fishingController.ControlReelingBar();
         player.fishingController.ReelStateUpdateFunction();
         player.ReelCanvaManager.GamepadVibration();

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sea UI
-  m_Shader: {fileID: -6465566751694194690, guid: d249a9695ca294a49b33a2fa43d0c542, type: 3}
+  m_Name: FishingBonusFullScreen
+  m_Shader: {fileID: -6465566751694194690, guid: 0b41890853365a34ea545dfbf6ff7d12, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -42,7 +42,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _Height: 0
+    - _InnerBound: -0.15
+    - _OutterBound: 2.65
+    - _Speed: 0
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -50,11 +52,7 @@ Material:
     - _StencilWriteMask: 255
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
-    - _Wave_Speed: 3
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Foam_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Sea_Color_Bottom: {r: 0.0071199257, g: 0.37054524, b: 0.4528302, a: 1}
-    - _Sea_Color_Top: {r: 0, g: 0.7169812, b: 0.56413424, a: 0.28235295}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

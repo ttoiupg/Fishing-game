@@ -107,6 +107,7 @@ public class FishingController : PlayerSystem
 
     private bool _isReelingBarOverlap()
     {
+        if(!isFishing) return false;
         var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
         var bSizeDelta = player.ReelCanvaManager.fishNeedle.sizeDelta.x / 2;
         var a2 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
@@ -119,6 +120,7 @@ public class FishingController : PlayerSystem
     }
     private bool _isBonusBarOverlap()
     {
+        if(!isFishing) return false;
         var aSizeDelta = player.ReelCanvaManager.controlBar.sizeDelta.x / 2;
         var bSizeDelta = player.ReelCanvaManager.bonusBar.sizeDelta.x / 2;
         var a2 = player.ReelCanvaManager.controlBarPosition - aSizeDelta;
@@ -184,7 +186,8 @@ public class FishingController : PlayerSystem
         };
         bonusTimer.OnCoundownFinished += () => {
             SoundFXManger.Instance.PlaySoundFXClip(buffSFX, _playerTransform, 0.6f);
-            GameManager.Instance.battleTimer.ChangeTime(15f);
+            GameManager.Instance.battleTimer.ChangeTime(5f);
+            player.ReelCanvaManager.StartBonusScreenEffect();
             player.ReelCanvaManager.StopBonusTimerTween(bonusTimer.IsFinished);
         };
         _timers = new List<Timer>(5)
@@ -301,6 +304,7 @@ public class FishingController : PlayerSystem
 
     private void AttackFish()
     {
+        player.ReelCanvaManager.SetStageText(string.Empty, string.Empty);
         player.ReelCanvaManager.StopBuffTimerTween();
         player.canDamage = false;
         _damageCooldownTimer.Start();
@@ -548,6 +552,7 @@ public class FishingController : PlayerSystem
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage1);
                 player.ReelCanvaManager.SetTimerFlowIntensity(0.1f);
                 player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[1].Time);
+                player.ReelCanvaManager.SetStageText("1", "1");
                 break;
             case 1:
                 player.ReelCanvaManager.Flash();
@@ -555,6 +560,7 @@ public class FishingController : PlayerSystem
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage2);
                 player.ReelCanvaManager.SetTimerFlowIntensity(0.5f);
                 player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[2].Time - damageBoostTimer.Sections[1].Time);
+                player.ReelCanvaManager.SetStageText("2", "2");
                 break;
             case 2:
                 player.ReelCanvaManager.Flash();
@@ -562,6 +568,7 @@ public class FishingController : PlayerSystem
                 GameManager.Instance.CurrentBattle.SetDamageStage(DamageStage.Stage3);
                 player.ReelCanvaManager.SetTimerFlowIntensity(1f);
                 player.ReelCanvaManager.TweenBuffTimer(damageBoostTimer.Sections[3].Time - damageBoostTimer.Sections[2].Time);
+                player.ReelCanvaManager.SetStageText("3", "3");
                 break;
             case 3:
                 //AttackFish();

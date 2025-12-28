@@ -36,6 +36,12 @@ public class ReelCanvaManager : MonoBehaviour
     public GameObject healthContainer;
     public GameObject attackEffectText;
     public bool haveBonusBar;
+    public GameObject warningScreen;
+    public CanvasGroup bonusEffectScreenCanvas;
+    public CanvasGroup bonusEffectCanvas;
+    public TMP_Text bonusEffectText;
+    public TMP_Text leftStageText;
+    public TMP_Text rightStageText;
 
     [Header("Valus")] public Color normalAttackColor;
     public Color missColor;
@@ -171,7 +177,25 @@ public class ReelCanvaManager : MonoBehaviour
         crank.rotation = Quaternion.Euler(0, 0, crankRotation);
         fishNeedle.anchoredPosition = new Vector2(fishNeedlePosition, 137.1f);
     }
-
+    public void UpdateWarningScreen() {
+        if(!player.fishingController.isFishing) return;
+        if (player.fishingController.ReelingBarOverlaping) {
+            warningScreen.SetActive(false);
+        } else {
+            warningScreen.SetActive(true);
+        }
+    }
+    public void StartBonusScreenEffect() {
+        if(!player.fishingController.isFishing) return;
+        var seq = DOTween.Sequence();
+        bonusEffectText.text = "+ 5!";
+        seq.Append(bonusEffectScreenCanvas.DOFade(1f, 0.3f));
+        seq.Join(bonusEffectCanvas.DOFade(1f, 0.3f));
+        seq.AppendInterval(0.5f);
+        seq.Append(bonusEffectScreenCanvas.DOFade(0f, 0.3f));
+        seq.Join(bonusEffectCanvas.DOFade(0f, 0.3f));
+        seq.Play();
+    }
     public void UpdateTimer()
     {
         if (!_timerStarted) return;
@@ -255,6 +279,10 @@ public class ReelCanvaManager : MonoBehaviour
         Debug.Log("RandomFishBarPosition finished");
         _fishBarMoved = true;
     }
+    public void SetStageText(string leftText, string rightText) {
+        rightStageText.text = rightText;
+        leftStageText.text = leftText;
+    }
     public void GamepadVibration()
     {
         float lowfreq = 0.5f;
@@ -322,6 +350,13 @@ public class ReelCanvaManager : MonoBehaviour
         timer.localScale = Vector3.one;
         _timerStarted = false;
         controllCanva.DOKill();
+        warningScreen.SetActive(false);
+        bonusEffectScreenCanvas.DOKill();
+        bonusEffectScreenCanvas.DOFade(0f, 0.3f);
+        bonusEffectCanvas.DOKill();
+        bonusEffectCanvas.DOFade(0f, 0.3f);
+        rightStageText.text = string.Empty;
+        leftStageText.text = string.Empty;
     }
 
     private void Start()
