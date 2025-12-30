@@ -14,11 +14,7 @@ public class FishingReelState : BaseState
     public override void OnExit()
     {
         player.ReelCanvaManager.CloseUI();
-        if(Gamepad.current != null) {
-            if(Gamepad.current?.name != "DualShock4GamepadHID") {
-                Gamepad.current?.SetMotorSpeeds(0, 0);
-            }
-        }
+        VibrationHandler.Instance.SetMotorSpeed(0, 0);
     }
     public override void Update()
     {

@@ -298,14 +298,7 @@ public class ReelCanvaManager : MonoBehaviour
                 gampadShaking = false;
             }
         }
-
-        if (Gamepad.current != null)
-        {
-            if (Gamepad.current?.name != "DualShock4GamepadHID")
-            {
-                Gamepad.current?.SetMotorSpeeds(lowfreq, highfreq);
-            }
-        }
+        VibrationHandler.Instance.SetMotorSpeed(lowfreq, highfreq);
     }
     private async UniTask PlayAnimation()
     {

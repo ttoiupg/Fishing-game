@@ -321,13 +321,13 @@ public class FishingController : PlayerSystem
         SoundFXManger.Instance.PlaySoundFXClip(fishCatchedSoundFX, _playerTransform, 0.7f);
         _reelSoundSource.Stop();
         ConfigureCamera(player.defaultCameraDistance);
-        Gamepad.current?.SetMotorSpeeds(1f, 1f);
+        VibrationHandler.Instance.SetMotorSpeed(1f, 1f);
         await UniTask.Delay(200);
-        Gamepad.current?.SetMotorSpeeds(0, 0);
+        VibrationHandler.Instance.SetMotorSpeed(0, 0);
         await UniTask.Delay(100);
-        Gamepad.current?.SetMotorSpeeds(1f, 1f);
+        VibrationHandler.Instance.SetMotorSpeed(1f, 1f);
         await UniTask.Delay(100);
-        InputSystem.ResetHaptics();
+        VibrationHandler.Instance.SetMotorSpeed(0, 0);
     }
 
     private void FishCatched()
@@ -513,7 +513,7 @@ public class FishingController : PlayerSystem
         _animator.SetTrigger("FishBite");
         _reelSoundSource.Play();
         SoundFXManger.Instance.PlaySoundFXClip(biteNotify, _playerTransform, 1f);
-        Gamepad.current?.SetMotorSpeeds(rumbleLowFreq, 0);
+        VibrationHandler.Instance.SetMotorSpeed(rumbleLowFreq, 0);
     }
 
     #endregion
